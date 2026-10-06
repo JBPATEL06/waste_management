@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary-soft": "#DCFCE7",
+          "surface-container-low": "#f2f3ff",
+          "on-error-container": "#93000a",
+          "on-background": "#131b2e",
+          "inverse-primary": "#79db8d",
+          "on-secondary-fixed-variant": "#3a485b",
+          "badge-rts-text": "#6D28D9",
+          "surface-container-highest": "#dae2fd",
+          "error-container": "#ffdad6",
+          "background": "#F8FAFC",
+          "text": "#0F172A",
+          "tertiary-container": "#b64c62",
+          "primary-container": "#15803d",
+          "badge-transit-bg": "#FEF3C7",
+          "surface-variant": "#dae2fd",
+          "badge-deleted-bg": "#FEE2E2",
+          "badge-collected-bg": "#DBEAFE",
+          "surface": "#FFFFFF",
+          "badge-deleted-text": "#B91C1C",
+          "on-tertiary": "#ffffff",
+          "warning": "#D97706",
+          "tertiary": "#97344a",
+          "badge-rts-bg": "#EDE9FE",
+          "on-secondary-fixed": "#0d1c2e",
+          "inverse-surface": "#283044",
+          "border": "#E2E8F0",
+          "outline": "#6f7a6e",
+          "surface-container-high": "#e2e7ff",
+          "on-primary": "#ffffff",
+          "on-primary-container": "#d3ffd5",
+          "badge-transit-text": "#B45309",
+          "on-surface": "#131b2e",
+          "badge-superseded-text": "#64748B",
+          "on-tertiary-fixed-variant": "#81233b",
+          "surface-dim": "#d2d9f4",
+          "on-primary-fixed-variant": "#005323",
+          "error": "#DC2626",
+          "surface-container-lowest": "#ffffff",
+          "secondary-fixed-dim": "#b9c7df",
+          "on-primary-fixed": "#00210a",
+          "secondary-fixed": "#d5e3fc",
+          "tertiary-fixed": "#ffd9dd",
+          "text-disabled": "#94A3B8",
+          "badge-created-text": "#475569",
+          "primary-hover": "#166534",
+          "primary-fixed": "#95f8a7",
+          "surface-bright": "#faf8ff",
+          "secondary": "#515f74",
+          "badge-superseded-bg": "#F1F5F9",
+          "error-soft": "#FEE2E2",
+          "primary": "#00652c",
+          "text-muted": "#475569",
+          "surface-container": "#eaedff",
+          "surface-tint": "#006d30",
+          "badge-collected-text": "#1D4ED8",
+          "on-tertiary-container": "#fff1f1",
+          "outline-variant": "becabc",
+          "inverse-on-surface": "#eef0ff",
+          "on-tertiary-fixed": "#400013",
+          "tertiary-fixed-dim": "#ffb2bd",
+          "badge-created-bg": "#F1F5F9",
+          "on-secondary-container": "#57657a",
+          "on-surface-variant": "#3f493f",
+          "secondary-container": "#d5e3fc",
+          "warning-soft": "#FEF3C7",
+          "on-error": "#ffffff",
+          "badge-completed-text": "#15803D",
+          "primary-fixed-dim": "#79db8d",
+          "badge-completed-bg": "#DCFCE7",
+          "on-secondary": "#ffffff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-md": "0.75rem",
+          "space-sm": "0.5rem",
+          "margin-mobile": "1rem",
+          "margin": "1.5rem",
+          "space-xs": "0.25rem",
+          "gutter-mobile": "0.75rem",
+          "space-lg": "1rem",
+          "space-xl": "1.5rem",
+          "space-2xl": "2rem",
+          "gutter": "1rem"
+        },
+        "fontFamily": {
+          "kpi-number": [
+            "Inter"
+          ],
+          "body-medium": [
+            "Inter"
+          ],
+          "badge": [
+            "Inter"
+          ],
+          "section-title": [
+            "Inter"
+          ],
+          "label": [
+            "Inter"
+          ],
+          "page-title": [
+            "Inter"
+          ],
+          "batch-id": [
+            "Inter"
+          ],
+          "caption": [
+            "Inter"
+          ],
+          "body": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "kpi-number": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "600"
+            }
+          ],
+          "body-medium": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "badge": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "500"
+            }
+          ],
+          "section-title": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "label": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "500"
+            }
+          ],
+          "page-title": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "600"
+            }
+          ],
+          "batch-id": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "caption": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "body": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-background font-body text-text min-h-screen antialiased"><header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50"><div class="h-14 w-full px-6 flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary-container text-[24px]">eco</span><span class="font-section-title text-section-title tracking-tight text-text">Waste Journey Tracker</span></div><div class="flex items-center"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 flex flex-col justify-between py-space-lg px-space-md"><div class="flex flex-col gap-space-xs"><nav class="flex flex-col gap-1" data-active-classes="bg-primary-soft text-badge-completed-text font-medium"><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="batches" href="#"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span>Batches</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="export" href="#"><span class="material-symbols-outlined text-[20px]">download</span><span>Export</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span>Audit Log</span></a><div class="my-2 border-t border-border"></div><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[20px]">account_circle</span><span>Profile</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-error transition-colors" data-path="logout" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span>Logout</span></a></nav></div><div class="p-3 rounded-lg border border-border bg-background flex items-center justify-between"><div class="flex flex-col"><span class="font-label text-label text-text">Head Officer</span><span class="font-caption text-caption text-text-muted">Analytical Access</span></div><span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Active</span></div></aside><div class="pl-[240px]"><main class="w-full pt-14 px-margin bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Interactive Audit Page Core Content -->
+<div class="flex flex-col gap-space-xl pb-space-2xl">
+<!-- Top Action & Context Header -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<h1 class="font-page-title text-page-title text-text tracking-tight">Audit Log &amp; Custody Ledger</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-badge font-badge bg-primary-soft text-badge-completed-text">
+<span class="w-2 h-2 rounded-full bg-badge-completed-text animate-pulse"></span>
+            Surveillance Active
+          </span>
+</div>
+<p class="font-body text-body text-text-muted mt-1 max-w-4xl">
+          Read-only chronological trail of system transactions, custody handovers, weight revisions, and administrative events across all operational nodes.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm self-start lg:self-center">
+<!-- Live Stream Auto-sync status pill -->
+<div class="flex items-center gap-2 px-3 py-2 bg-surface rounded-lg shadow-sm border border-border">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="font-caption text-caption text-text-muted">Live Sync: <strong class="text-text font-medium">10s</strong></span>
+</div>
+<!-- Export CSV Secondary Button -->
+<button class="flex items-center gap-2 h-10 px-4 bg-surface hover:bg-background border border-border text-text font-body-medium text-body-medium rounded-lg transition-colors shadow-sm" id="exportLedgerBtn">
+<span class="material-symbols-outlined text-[18px] text-text-muted">download</span>
+<span>Export CSV</span>
+</button>
+</div>
+</div>
+<!-- Summary Metrics Strip (Strict DESIGN.md KPI standard) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Metric 1: Total Ledger Entries -->
+<div class="bg-surface rounded-xl p-5 border border-border shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">Total Ledger Entries</span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<div class="mt-3 flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-text tracking-tight">3,420</span>
+<span class="font-caption text-caption text-text-muted">Global Immutable Logs</span>
+</div>
+</div>
+<!-- Metric 2: Custody Handovers -->
+<div class="bg-surface rounded-xl p-5 border border-border shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">Custody Handovers</span>
+<span class="w-2 h-2 rounded-full bg-badge-collected-text"></span>
+</div>
+<div class="mt-3 flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-text tracking-tight">1,842</span>
+<span class="font-caption text-caption text-badge-collected-text font-medium">Stage Transfers</span>
+</div>
+</div>
+<!-- Metric 3: Corrections & Revisions -->
+<div class="bg-surface rounded-xl p-5 border border-border shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">Corrections &amp; Revisions</span>
+<span class="w-2 h-2 rounded-full bg-badge-transit-text"></span>
+</div>
+<div class="mt-3 flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-text tracking-tight">128</span>
+<span class="font-caption text-caption text-badge-transit-text font-medium">Recalibrated / Sup.</span>
+</div>
+</div>
+<!-- Metric 4: Flagged Weight Discrepancies -->
+<div class="bg-surface rounded-xl p-5 border border-border shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">Flagged Weight Discrepancies</span>
+<span class="w-2 h-2 rounded-full bg-error"></span>
+</div>
+<div class="mt-3 flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-error tracking-tight">14</span>
+<span class="font-caption text-caption text-error font-medium">&gt;10% Net Variance</span>
+</div>
+</div>
+</div>
+<!-- Filter Toolbar -->
+<div class="bg-surface rounded-xl border border-border shadow-sm p-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-sm items-end">
+<!-- Search Field -->
+<div class="lg:col-span-3 flex flex-col gap-1">
+<label class="font-label text-label text-text-muted" for="filterSearch">Search Audit Trail</label>
+<div class="relative">
+<span class="material-symbols-outlined text-[18px] text-text-disabled absolute left-3 top-2.5">search</span>
+<input class="w-full h-10 pl-9 pr-3 bg-surface border border-border rounded-lg font-body text-body text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-text-disabled transition-all" id="filterSearch" placeholder="Batch ID, Officer Name, IP..." type="text"/>
+</div>
+</div>
+<!-- Action Type Dropdown -->
+<div class="lg:col-span-2 flex flex-col gap-1">
+<label class="font-label text-label text-text-muted" for="filterAction">Action Type</label>
+<div class="relative">
+<select class="w-full h-10 px-3 bg-surface border border-border rounded-lg font-body text-body text-text focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="filterAction">
+<option value="ALL">All Actions</option>
+<option value="WEIGHT_REVISION">Weight Revision</option>
+<option value="STAGE_HANDOVER">Stage Handover</option>
+<option value="DISCREPANCY_FLAGGED">Discrepancy Flagged</option>
+<option value="ENTRY_CREATED">Entry Creation</option>
+<option value="REASSIGNMENT">User Reassignment</option>
+<option value="FINAL_PROCESSING">Final Processing</option>
+</select>
+<span class="material-symbols-outlined text-[18px] text-text-muted absolute right-2.5 top-2.5 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- User / Officer Dropdown -->
+<div class="lg:col-span-2 flex flex-col gap-1">
+<label class="font-label text-label text-text-muted" for="filterOfficer">Personnel</label>
+<div class="relative">
+<select class="w-full h-10 px-3 bg-surface border border-border rounded-lg font-body text-body text-text focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="filterOfficer">
+<option value="ALL">All Personnel</option>
+<option value="OP-1042">Suresh Kumar (OP-1042)</option>
+<option value="OP-2198">Ramesh Patel (OP-2198)</option>
+<option value="OP-3401">Anand Verma (OP-3401)</option>
+<option value="OP-4890">Dr. Priya Nair (OP-4890)</option>
+<option value="SYS-01">System Admin (SYS-01)</option>
+</select>
+<span class="material-symbols-outlined text-[18px] text-text-muted absolute right-2.5 top-2.5 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Date Range -->
+<div class="lg:col-span-2 flex flex-col gap-1">
+<label class="font-label text-label text-text-muted" for="filterDate">Time Window (IST)</label>
+<div class="relative">
+<span class="material-symbols-outlined text-[18px] text-text-disabled absolute left-3 top-2.5">calendar_today</span>
+<input class="w-full h-10 pl-9 pr-3 bg-surface border border-border rounded-lg font-body text-body text-text focus:outline-none focus:ring-2 focus:ring-primary text-xs sm:text-body transition-all" id="filterDate" type="text" value="01 Oct 2026 - 06 Oct 2026"/>
+</div>
+</div>
+<!-- Severity / Variance Flag Dropdown -->
+<div class="lg:col-span-2 flex flex-col gap-1">
+<label class="font-label text-label text-text-muted" for="filterFlag">Audit Severity</label>
+<div class="relative">
+<select class="w-full h-10 px-3 bg-surface border border-border rounded-lg font-body text-body text-text focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer" id="filterFlag">
+<option value="ALL">All Events</option>
+<option value="FLAGGED">Flagged Variances (&gt;10%)</option>
+<option value="SUPERSEDED">Superseded Entries</option>
+<option value="NORMAL">Normal Events</option>
+</select>
+<span class="material-symbols-outlined text-[18px] text-text-muted absolute right-2.5 top-2.5 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Reset Button -->
+<div class="lg:col-span-1 flex">
+<button class="w-full h-10 bg-background hover:bg-surface-variant/40 border border-border text-text-muted hover:text-text rounded-lg flex items-center justify-center font-body-medium text-body-medium transition-colors" id="resetFiltersBtn" title="Reset all applied filters">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+<span class="lg:hidden ml-1">Reset</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Audit Log Ledger Table Container -->
+<div class="bg-surface rounded-xl border border-border shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background border-b border-border h-12">
+<th class="w-8 px-3"></th>
+<th class="px-4 py-3 font-label text-label text-text-muted whitespace-nowrap">Timestamp (IST)</th>
+<th class="px-4 py-3 font-label text-label text-text-muted whitespace-nowrap">Action Type</th>
+<th class="px-4 py-3 font-label text-label text-text-muted whitespace-nowrap">Actor / Role</th>
+<th class="px-4 py-3 font-label text-label text-text-muted whitespace-nowrap">Batch ID</th>
+<th class="px-4 py-3 font-label text-label text-text-muted whitespace-nowrap">Node / Stage</th>
+<th class="px-4 py-3 font-label text-label text-text-muted whitespace-nowrap">Recorded Justification</th>
+<th class="px-4 py-3 font-label text-label text-text-muted whitespace-nowrap">Values Delta</th>
+<th class="px-4 py-3 font-label text-label text-text-muted text-right whitespace-nowrap pr-5">Ledger Seal</th>
+</tr>
+</thead>
+<tbody class="font-body text-body divide-y divide-border" id="auditTableBody">
+<!-- ROW 1 (EXPANDED BY DEFAULT TO DEMONSTRATE AUDIT DEPTH) -->
+<tr class="hover:bg-background/80 transition-colors bg-primary-soft/10 cursor-pointer" onclick="toggleRow('row-1-details', 'row-1-icon')">
+<td class="px-3 text-center">
+<span class="material-symbols-outlined text-[18px] text-text-muted transform transition-transform duration-200 rotate-90" id="row-1-icon">expand_more</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap font-batch-id text-batch-id text-text">
+                06 Oct 2026, 11:20:14
+              </td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-transit-bg text-badge-transit-text font-medium">
+                  WEIGHT REVISION
+                </span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Anand Verma</span>
+<span class="font-caption text-caption text-text-muted">Weighbridge Supv • OP-3401</span>
+</div>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary font-semibold hover:underline" href="#/ho/batches/WB-2026-8817" onclick="event.stopPropagation()">
+                  WB-2026-8817
+                </a>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-text-disabled">warehouse</span>
+<span class="text-text">East RTS Hub (Bay 4)</span>
+</div>
+</td>
+<td class="px-4 py-3.5 max-w-xs truncate" title="Tare scale recalibration after debris removal">
+<span class="text-text">Tare scale recalibration after debris removal</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="inline-flex items-center gap-1 font-batch-id text-caption">
+<span class="line-through text-text-muted">4,050 kg</span>
+<span class="material-symbols-outlined text-[14px] text-text-disabled">arrow_forward</span>
+<span class="font-semibold text-primary">4,120 kg</span>
+<span class="text-primary font-medium">(+70 kg)</span>
+</div>
+</td>
+<td class="px-4 py-3.5 text-right whitespace-nowrap pr-5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-background border border-border font-batch-id text-caption text-text-muted hover:border-primary cursor-help" title="Cryptographic SHA256 Signature Verified">
+<span class="material-symbols-outlined text-[13px] text-primary">verified</span>
+                  sha256:7e91…a4
+                </span>
+</td>
+</tr>
+<!-- ROW 1 EXPANDED DETAIL DRAWER -->
+<tr class="bg-background/90 border-t border-border" id="row-1-details">
+<td class="px-6 py-5" colspan="9">
+<div class="rounded-lg bg-surface border border-border p-4 shadow-sm space-y-4">
+<div class="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 rounded bg-badge-transit-bg text-badge-transit-text font-badge text-badge">Immutable Record ID: #TX-994812</span>
+<span class="font-caption text-caption text-text-muted">Terminal: <strong class="text-text font-medium">Static Terminal RTS-Bay-04 (192.168.14.88)</strong></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-caption text-caption text-text-muted">Signee Signature:</span>
+<code class="font-batch-id text-caption px-2 py-0.5 bg-background rounded text-text font-mono border border-border">0x9f4a21cb81a2ee091c491290bb3fa10e74b971a</code>
+</div>
+</div>
+<!-- Diff View Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Before JSON State -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-badge font-label text-error">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">history</span>
+                          Prior State Payload (Superseded)
+                        </span>
+<span class="font-caption">REV-0</span>
+</div>
+<pre class="bg-background p-3 rounded-lg border border-border font-batch-id text-caption text-text overflow-x-auto whitespace-pre leading-relaxed">
+{
+  "recorded_mass_kg": 4050,
+  "tare_weight_kg": 1280,
+  "net_weight_kg": 2770,
+  "scale_id": "WB-W22-01",
+  "status": "AT_RTS"
+}</pre>
+</div>
+<!-- After JSON State -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-badge font-label text-primary">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                          New Verified Payload (Active Ledger)
+                        </span>
+<span class="font-caption">REV-1</span>
+</div>
+<pre class="bg-primary-soft/20 p-3 rounded-lg border border-primary/20 font-batch-id text-caption text-text overflow-x-auto whitespace-pre leading-relaxed">
+{
+  "recorded_mass_kg": 4120,
+  "tare_weight_kg": 1210,
+  "net_weight_kg": 2910,
+  "scale_id": "WB-W22-01",
+  "recalibration_token": "RC-881",
+  "reason": "Debris clearing behind scale bed",
+  "supervisor_verified": true
+}</pre>
+</div>
+</div>
+<!-- Verification & Authorization strip -->
+<div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border text-caption font-caption text-text-muted">
+<div class="flex items-center gap-4">
+<span>Verification Protocol: <strong class="text-text font-medium">Head Officer Survelliance Auth</strong></span>
+<span>Scale Tolerance Check: <strong class="text-badge-completed-text font-medium">PASS (&lt;2.0%)</strong></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-badge-completed-text"></span>
+<span>Consensus Block #419277 Locked</span>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<!-- ROW 2: DISCREPANCY FLAGGED -->
+<tr class="hover:bg-background/80 transition-colors cursor-pointer" onclick="toggleRow('row-2-details', 'row-2-icon')">
+<td class="px-3 text-center">
+<span class="material-symbols-outlined text-[18px] text-text-muted transform transition-transform duration-200" id="row-2-icon">expand_more</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap font-batch-id text-batch-id text-text">
+                06 Oct 2026, 10:15:30
+              </td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-transit-bg text-warning font-medium">
+                  DISCREPANCY FLAGGED
+                </span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-body-medium text-body-medium text-text">System Daemon</span>
+<span class="font-caption text-caption text-text-muted">Surveillance Engine • SYS-01</span>
+</div>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary font-semibold hover:underline" href="#/ho/batches/WB-2026-8819" onclick="event.stopPropagation()">
+                  WB-2026-8819
+                </a>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-text-disabled">local_shipping</span>
+<span class="text-text">Transit Route TR-09</span>
+</div>
+</td>
+<td class="px-4 py-3.5 max-w-xs truncate" title="Transit net variance exceeds -10% threshold (-450 kg)">
+<span class="text-error font-medium">Transit net variance exceeds -10% (-450 kg)</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-error-soft text-badge-deleted-text font-batch-id text-caption font-semibold">
+                  Discrepancy: -450 kg (-10.9%)
+                </span>
+</td>
+<td class="px-4 py-3.5 text-right whitespace-nowrap pr-5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-background border border-border font-batch-id text-caption text-text-muted hover:border-primary cursor-help">
+<span class="material-symbols-outlined text-[13px] text-warning">warning</span>
+                  sha256:3d11…e0
+                </span>
+</td>
+</tr>
+<!-- ROW 2 EXPANDED DRAWER (HIDDEN INITIALLY) -->
+<tr class="hidden bg-background/90 border-t border-border" id="row-2-details">
+<td class="px-6 py-5" colspan="9">
+<div class="rounded-lg bg-surface border border-border p-4 shadow-sm space-y-3">
+<div class="flex items-center justify-between border-b border-border pb-3">
+<span class="font-caption text-caption text-text-muted">Rule ID: <strong class="text-text font-medium">RULE-AUTO-DEV-10 (Threshold breach detection)</strong></span>
+<span class="text-error font-body-medium text-body-medium flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[18px]">error</span> Investigation Hold Raised
+                    </span>
+</div>
+<p class="font-body text-body text-text-muted">
+                    Automated weighbridge reconciliation detected a drop of 450 kg between Ward 22 dispatch and West RTS receipt. Driver manifest is flagged for analytical review.
+                  </p>
+</div>
+</td>
+</tr>
+<!-- ROW 3: STAGE HANDOVER -->
+<tr class="hover:bg-background/80 transition-colors cursor-pointer" onclick="toggleRow('row-3-details', 'row-3-icon')">
+<td class="px-3 text-center">
+<span class="material-symbols-outlined text-[18px] text-text-muted transform transition-transform duration-200" id="row-3-icon">expand_more</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap font-batch-id text-batch-id text-text">
+                06 Oct 2026, 09:42:18
+              </td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-collected-bg text-badge-collected-text font-medium">
+                  STAGE HANDOVER
+                </span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Suresh Kumar</span>
+<span class="font-caption text-caption text-text-muted">Collection Supv • OP-1042</span>
+</div>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary font-semibold hover:underline" href="#/ho/batches/WB-2026-8820" onclick="event.stopPropagation()">
+                  WB-2026-8820
+                </a>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-text-disabled">domain</span>
+<span class="text-text">Ward 22 Whitefield</span>
+</div>
+</td>
+<td class="px-4 py-3.5 max-w-xs truncate" title="Routine handover acknowledgement">
+<span class="text-text">Routine handover acknowledgement</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="inline-flex items-center gap-1 font-batch-id text-caption">
+<span class="text-text-muted">Status:</span>
+<span class="line-through text-text-muted">Collected</span>
+<span class="material-symbols-outlined text-[14px] text-text-disabled">arrow_forward</span>
+<span class="font-semibold text-badge-transit-text">In Transit</span>
+</div>
+</td>
+<td class="px-4 py-3.5 text-right whitespace-nowrap pr-5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-background border border-border font-batch-id text-caption text-text-muted hover:border-primary cursor-help">
+<span class="material-symbols-outlined text-[13px] text-primary">verified</span>
+                  sha256:1a84…cc
+                </span>
+</td>
+</tr>
+<!-- ROW 3 DETAILS -->
+<tr class="hidden bg-background/90 border-t border-border" id="row-3-details">
+<td class="px-6 py-5" colspan="9">
+<div class="rounded-lg bg-surface border border-border p-4 shadow-sm space-y-3">
+<div class="flex items-center justify-between border-b border-border pb-2">
+<span class="font-caption text-caption text-text-muted">Vehicle Assigned: <strong class="text-text font-medium">KA-03-FA-4412 (Tipper Truck)</strong></span>
+<span class="font-caption text-caption text-text-muted">Driver ID: <strong class="text-text font-medium">DR-8820 (K. Venkat)</strong></span>
+</div>
+<p class="font-body text-body text-text-muted">
+                    Digital token generated and validated via handheld NFC scan at dispatch gate. Custody passed from Ward 22 collection team to logistics unit.
+                  </p>
+</div>
+</td>
+</tr>
+<!-- ROW 4: REASSIGNMENT -->
+<tr class="hover:bg-background/80 transition-colors cursor-pointer" onclick="toggleRow('row-4-details', 'row-4-icon')">
+<td class="px-3 text-center">
+<span class="material-symbols-outlined text-[18px] text-text-muted transform transition-transform duration-200" id="row-4-icon">expand_more</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap font-batch-id text-batch-id text-text">
+                06 Oct 2026, 08:30:00
+              </td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-rts-bg text-badge-rts-text font-medium">
+                  REASSIGNMENT
+                </span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Ramesh Patel</span>
+<span class="font-caption text-caption text-text-muted">Area Logistics Officer • OP-2198</span>
+</div>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary font-semibold hover:underline" href="#/ho/batches/WB-2026-8815" onclick="event.stopPropagation()">
+                  WB-2026-8815
+                </a>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-text-disabled">swap_horiz</span>
+<span class="text-text">Central Logistics Pool</span>
+</div>
+</td>
+<td class="px-4 py-3.5 max-w-xs truncate" title="Assigned driver changed due to vehicle maintenance">
+<span class="text-text">Driver change due to vehicle breakdown</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="inline-flex items-center gap-1 font-batch-id text-caption">
+<span class="line-through text-text-muted">DR-0912</span>
+<span class="material-symbols-outlined text-[14px] text-text-disabled">arrow_forward</span>
+<span class="font-semibold text-text">DR-1108 (M. Mohan)</span>
+</div>
+</td>
+<td class="px-4 py-3.5 text-right whitespace-nowrap pr-5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-background border border-border font-batch-id text-caption text-text-muted hover:border-primary cursor-help">
+<span class="material-symbols-outlined text-[13px] text-primary">verified</span>
+                  sha256:44ea…01
+                </span>
+</td>
+</tr>
+<!-- ROW 4 DETAILS -->
+<tr class="hidden bg-background/90 border-t border-border" id="row-4-details">
+<td class="px-6 py-5" colspan="9">
+<div class="rounded-lg bg-surface border border-border p-4 shadow-sm space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-caption text-caption text-text-muted">Operational Ticket: <strong class="text-text font-medium">#MAINT-V9801</strong></span>
+<span class="font-caption text-caption text-text-muted">Authorization: Analytical Supervisor Verified</span>
+</div>
+<p class="font-body text-body text-text-muted">
+                    Vehicle tire puncture reported 2.4 km into transit route. Secondary vehicle KA-03-GH-9912 dispatched and batch custody linked under continuous digital seal.
+                  </p>
+</div>
+</td>
+</tr>
+<!-- ROW 5: FINAL PROCESSING INTAKE -->
+<tr class="hover:bg-background/80 transition-colors cursor-pointer" onclick="toggleRow('row-5-details', 'row-5-icon')">
+<td class="px-3 text-center">
+<span class="material-symbols-outlined text-[18px] text-text-muted transform transition-transform duration-200" id="row-5-icon">expand_more</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap font-batch-id text-batch-id text-text">
+                06 Oct 2026, 07:12:05
+              </td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-completed-bg text-badge-completed-text font-medium">
+                  FINAL PROCESSING INTAKE
+                </span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Dr. Priya Nair</span>
+<span class="font-caption text-caption text-text-muted">Facility Lead • OP-4890</span>
+</div>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary font-semibold hover:underline" href="#/ho/batches/WB-2026-8812" onclick="event.stopPropagation()">
+                  WB-2026-8812
+                </a>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-text-disabled">factory</span>
+<span class="text-text">Apex Bio-Methanization Plant</span>
+</div>
+</td>
+<td class="px-4 py-3.5 max-w-xs truncate" title="Digestion intake validation verified">
+<span class="text-text">Digestion intake quality check &amp; hopper load</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="inline-flex items-center gap-1 font-batch-id text-caption">
+<span class="text-text-muted">Status:</span>
+<span class="line-through text-text-muted">At RTS</span>
+<span class="material-symbols-outlined text-[14px] text-text-disabled">arrow_forward</span>
+<span class="font-semibold text-badge-completed-text">Completed (Processed)</span>
+</div>
+</td>
+<td class="px-4 py-3.5 text-right whitespace-nowrap pr-5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-background border border-border font-batch-id text-caption text-text-muted hover:border-primary cursor-help">
+<span class="material-symbols-outlined text-[13px] text-primary">verified</span>
+                  sha256:99c2…8b
+                </span>
+</td>
+</tr>
+<!-- ROW 5 DETAILS -->
+<tr class="hidden bg-background/90 border-t border-border" id="row-5-details">
+<td class="px-6 py-5" colspan="9">
+<div class="rounded-lg bg-surface border border-border p-4 shadow-sm space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-caption text-caption text-text-muted">Digester Unit: <strong class="text-text font-medium">Anaerobic Cell #2</strong></span>
+<span class="font-caption text-caption text-badge-completed-text font-medium">Batch Journey Closed Successfully</span>
+</div>
+<p class="font-body text-body text-text-muted">
+                    Total batch mass 3,840 kg loaded into anaerobic fermentation cycle. Net journey loss: -1.2% (within nominal operational limits). Complete lifecycle seal signed.
+                  </p>
+</div>
+</td>
+</tr>
+<!-- ROW 6: ENTRY CREATED -->
+<tr class="hover:bg-background/80 transition-colors cursor-pointer" onclick="toggleRow('row-6-details', 'row-6-icon')">
+<td class="px-3 text-center">
+<span class="material-symbols-outlined text-[18px] text-text-muted transform transition-transform duration-200" id="row-6-icon">expand_more</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap font-batch-id text-batch-id text-text">
+                06 Oct 2026, 06:05:11
+              </td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-created-bg text-badge-created-text font-medium">
+                  ENTRY CREATED
+                </span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Suresh Kumar</span>
+<span class="font-caption text-caption text-text-muted">Collection Supv • OP-1042</span>
+</div>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary font-semibold hover:underline" href="#/ho/batches/WB-2026-8822" onclick="event.stopPropagation()">
+                  WB-2026-8822
+                </a>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-text-disabled">add_circle</span>
+<span class="text-text">Ward 22 Whitefield</span>
+</div>
+</td>
+<td class="px-4 py-3.5 max-w-xs truncate" title="First-mile segregation aggregation log">
+<span class="text-text">First-mile segregation aggregation log</span>
+</td>
+<td class="px-4 py-3.5 whitespace-nowrap">
+<span class="font-batch-id text-caption text-text font-medium">Initial Mass: 2,900 kg</span>
+</td>
+<td class="px-4 py-3.5 text-right whitespace-nowrap pr-5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-background border border-border font-batch-id text-caption text-text-muted hover:border-primary cursor-help">
+<span class="material-symbols-outlined text-[13px] text-primary">verified</span>
+                  sha256:0b31…fd
+                </span>
+</td>
+</tr>
+<!-- ROW 6 DETAILS -->
+<tr class="hidden bg-background/90 border-t border-border" id="row-6-details">
+<td class="px-6 py-5" colspan="9">
+<div class="rounded-lg bg-surface border border-border p-4 shadow-sm space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-caption text-caption text-text-muted">Origin Ward: <strong class="text-text font-medium">Zone 4 (Whitefield Ind. Area)</strong></span>
+<span class="font-caption text-caption text-text-muted">Waste Type: <strong class="text-text font-medium">Organic Wet Waste (Segregated)</strong></span>
+</div>
+<p class="font-body text-body text-text-muted">
+                    Origin QR Code generated at collection point. Initial tare weight verified against calibration block WB-REF-09.
+                  </p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="bg-surface px-6 py-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-4 text-text-muted font-body text-body">
+<span>Showing <strong class="text-text font-medium">1 - 6</strong> of <strong class="text-text font-medium">3,420</strong> entries</span>
+<div class="hidden sm:flex items-center gap-2">
+<span class="text-caption font-caption">Rows per page:</span>
+<select class="h-8 px-2 bg-surface border border-border rounded text-caption font-caption text-text focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer">
+<option selected="" value="10">10</option>
+<option value="25">25</option>
+<option value="50">50</option>
+<option value="100">100</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-1.5">
+<button class="h-8 px-3 rounded border border-border bg-surface text-text-disabled cursor-not-allowed flex items-center justify-center" disabled="">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+<span class="font-caption text-caption ml-1">Previous</span>
+</button>
+<button class="h-8 w-8 rounded border border-primary bg-primary-soft text-badge-completed-text font-body-medium text-caption">1</button>
+<button class="h-8 w-8 rounded border border-border bg-surface hover:bg-background text-text font-body-medium text-caption transition-colors">2</button>
+<button class="h-8 w-8 rounded border border-border bg-surface hover:bg-background text-text font-body-medium text-caption transition-colors">3</button>
+<span class="px-1 text-text-muted font-caption">…</span>
+<button class="h-8 w-8 rounded border border-border bg-surface hover:bg-background text-text font-body-medium text-caption transition-colors">342</button>
+<button class="h-8 px-3 rounded border border-border bg-surface hover:bg-background text-text flex items-center justify-center transition-colors">
+<span class="font-caption text-caption mr-1">Next</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Surveillance Integrity Note -->
+<div class="rounded-xl border border-border bg-surface p-4 flex items-start gap-3 shadow-sm">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">verified_user</span>
+<div class="flex flex-col gap-0.5">
+<span class="font-body-medium text-body-medium text-text">Cryptographic Ledger Assurance Active</span>
+<span class="font-caption text-caption text-text-muted">
+          Every entry recorded on this ledger is anchored using cryptographically signed transaction hashes. Revisions do not overwrite historical states; modifications spawn an immutable superseded trail verified under the Central Governance Protocol.
+        </span>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Function to toggle accordion detail drawers for table rows
+  function toggleRow(detailsId, iconId) {
+    const detailsRow = document.getElementById(detailsId);
+    const icon = document.getElementById(iconId);
+    
+    if (detailsRow) {
+      const isHidden = detailsRow.classList.contains('hidden');
+      if (isHidden) {
+        detailsRow.classList.remove('hidden');
+        if (icon) {
+          icon.classList.add('rotate-90');
+        }
+      } else {
+        detailsRow.classList.add('hidden');
+        if (icon) {
+          icon.classList.remove('rotate-90');
+        }
+      }
+    }
+  }
+
+  // Set active link visual state in App Shell sidebar
+  document.addEventListener("DOMContentLoaded", () => {
+    // Highlight audit-log navigation item in the shell aside
+    const navLinks = document.querySelectorAll('aside nav a');
+    navLinks.forEach(link => {
+      if (link.getAttribute('data-path') === 'audit-log') {
+        link.className = "flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium bg-primary-soft text-badge-completed-text font-medium transition-colors";
+        const icon = link.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.classList.add('text-badge-completed-text');
+        }
+      } else {
+        link.className = "flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors";
+      }
+    });
+
+    // Reset filters interaction
+    const resetBtn = document.getElementById('resetFiltersBtn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        const searchInput = document.getElementById('filterSearch');
+        const actionSelect = document.getElementById('filterAction');
+        const officerSelect = document.getElementById('filterOfficer');
+        const flagSelect = document.getElementById('filterFlag');
+        
+        if (searchInput) searchInput.value = '';
+        if (actionSelect) actionSelect.value = 'ALL';
+        if (officerSelect) officerSelect.value = 'ALL';
+        if (flagSelect) flagSelect.value = 'ALL';
+      });
+    }
+
+    // Export CSV Notification Toast micro-interaction
+    const exportBtn = document.getElementById('exportLedgerBtn');
+    if (exportBtn) {
+      exportBtn.addEventListener('click', () => {
+        const originalText = exportBtn.innerHTML;
+        exportBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[18px] animate-spin text-primary">progress_activity</span>
+          <span>Preparing Ledger CSV...</span>
+        `;
+        exportBtn.disabled = true;
+
+        setTimeout(() => {
+          exportBtn.innerHTML = `
+            <span class="material-symbols-outlined text-[18px] text-badge-completed-text">check</span>
+            <span>Downloaded (3,420 rows)</span>
+          `;
+          setTimeout(() => {
+            exportBtn.innerHTML = originalText;
+            exportBtn.disabled = false;
+          }, 2500);
+        }, 900);
+      });
+    }
+  });
+</script></main></div></body></html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"badge-transit-text":"#B45309","inverse-surface":"#283044","warning-soft":"#FEF3C7","surface-container":"#eaedff","badge-rts-text":"#6D28D9","badge-rts-bg":"#EDE9FE","tertiary-fixed-dim":"#ffb2bd","badge-superseded-text":"#64748B","on-secondary-container":"#57657a","secondary-container":"#d5e3fc","badge-deleted-bg":"#FEE2E2","border":"#E2E8F0","error":"#DC2626","badge-collected-bg":"#DBEAFE","on-secondary-fixed-variant":"#3a485b","on-error-container":"#93000a","on-surface":"#131b2e","outline":"#6f7a6e","secondary-fixed":"#d5e3fc","badge-created-bg":"#F1F5F9","text-disabled":"#94A3B8","primary-hover":"#166534","background":"#F8FAFC","warning":"#D97706","on-tertiary-fixed":"#400013","badge-created-text":"#475569","badge-completed-bg":"#DCFCE7","badge-superseded-bg":"#F1F5F9","inverse-primary":"#79db8d","on-primary":"#ffffff","surface-container-low":"#f2f3ff","on-tertiary":"#ffffff","surface-container-high":"#e2e7ff","on-background":"#131b2e","primary-soft":"#DCFCE7","badge-transit-bg":"#FEF3C7","tertiary":"#97344a","secondary-fixed-dim":"#b9c7df","text":"#0F172A","tertiary-container":"#b64c62","surface-container-highest":"#dae2fd","error-soft":"#FEE2E2","on-primary-fixed":"#00210a","on-surface-variant":"#3f493f","inverse-on-surface":"#eef0ff","on-tertiary-fixed-variant":"#81233b","surface-variant":"#dae2fd","primary":"#00652c","secondary":"#515f74","surface-tint":"#006d30","on-primary-fixed-variant":"#005323","text-muted":"#475569","on-secondary":"#ffffff","tertiary-fixed":"#ffd9dd","on-primary-container":"#d3ffd5","surface-bright":"#faf8ff","on-secondary-fixed":"#0d1c2e","badge-collected-text":"#1D4ED8","surface-dim":"#d2d9f4","primary-fixed-dim":"#79db8d","on-tertiary-container":"#fff1f1","primary-fixed":"#95f8a7","outline-variant":"#becabc","primary-container":"#15803d","badge-completed-text":"#15803D","on-error":"#ffffff","badge-deleted-text":"#B91C1C","error-container":"#ffdad6","surface-container-lowest":"#ffffff","surface":"#FFFFFF"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-xs":"0.25rem","space-sm":"0.5rem","space-xl":"1.5rem","margin":"1.5rem","space-lg":"1rem","space-md":"0.75rem","space-2xl":"2rem","margin-mobile":"1rem","gutter-mobile":"0.75rem","gutter":"1rem"},"fontFamily":{"section-title":["Inter"],"caption":["Inter"],"body":["Inter"],"page-title":["Inter"],"label":["Inter"],"badge":["Inter"],"kpi-number":["Inter"],"body-medium":["Inter"],"batch-id":["Inter"]},"fontSize":{"section-title":["18px",{"lineHeight":"24px","fontWeight":"600"}],"caption":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body":["14px",{"lineHeight":"20px","fontWeight":"400"}],"page-title":["24px",{"lineHeight":"32px","fontWeight":"600"}],"label":["13px",{"lineHeight":"18px","fontWeight":"500"}],"badge":["12px",{"lineHeight":"16px","fontWeight":"500"}],"kpi-number":["24px",{"lineHeight":"32px","fontWeight":"600"}],"body-medium":["14px",{"lineHeight":"20px","fontWeight":"500"}],"batch-id":["14px",{"lineHeight":"20px","letterSpacing":"0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-background font-body text-text antialiased"><header class="fixed top-0 left-0 right-0 h-14 bg-surface z-40 border-b border-border"><div class="h-14 w-full px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-primary-container text-[24px]">eco</span><span class="font-page-title text-section-title tracking-tight text-text">Waste Journey Tracker</span></div><div class="flex items-center gap-space-lg"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><aside class="fixed left-0 top-14 h-[calc(100vh-3.5rem)] w-60 bg-surface z-30 border-r border-border flex flex-col justify-between p-space-lg"><nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-soft text-primary-container font-body-medium"><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg transition-all bg-primary-soft text-primary-container font-body-medium whitespace-nowrap" data-path="queue-dashboard" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-body text-body whitespace-nowrap">Dashboard</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-text-muted hover:bg-background hover:text-text transition-all whitespace-nowrap" data-path="stage-history" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span class="font-body text-body whitespace-nowrap">History</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-text-muted hover:bg-background hover:text-text transition-all whitespace-nowrap" data-path="profile" href="#"><span class="material-symbols-outlined text-[20px]">account_circle</span><span class="font-body text-body whitespace-nowrap">Profile</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-text-muted hover:bg-background hover:text-error transition-all whitespace-nowrap" data-path="login" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span class="font-body text-body whitespace-nowrap">Logout</span></a></nav><div class="px-space-md py-space-sm rounded-lg bg-background border border-border"><p class="font-caption text-caption text-text-muted">Stage Operation Node</p><p class="font-label text-label text-text">Ward 12 Collection Hub</p></div></aside><div class="pl-60"><main class="relative pt-14 min-h-screen bg-background p-space-xl"><div class="flex flex-col w-full">
+<div class="flex flex-col gap-space-xl max-w-[1280px] w-full mx-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-space-lg">
+<div class="flex flex-col gap-space-xs">
+<h1 class="font-page-title text-page-title text-text">Queue Dashboard</h1>
+<p class="font-body text-body text-text-muted">Manage assigned batches awaiting collection, pending verification, and submitted manifests.</p>
+</div>
+<div class="w-full md:w-80 relative">
+<span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-text-disabled text-[20px] pointer-events-none">search</span>
+<input class="w-full h-10 pl-10 pr-space-md bg-surface border border-border rounded-lg font-body text-body text-text placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-container" id="batch-search-input" placeholder="Search by Batch ID, e.g. WB-2026..." type="text">
+</div>
+</div>
+<!-- Count / KPI Summary Cards (Exactly 3 from §4.1) -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-lg"><!-- Card 1: Ready -->
+<div class="cursor-pointer bg-surface rounded-xl border border-border p-space-xl flex flex-col justify-between hover:bg-background transition-colors" onclick="switchTab('ready')">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted whitespace-nowrap">Ready</span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+</div>
+<div class="mt-space-md flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-text">6</span>
+<span class="font-caption text-caption text-primary-container whitespace-nowrap">Action needed</span>
+</div>
+</div>
+<!-- Card 2: Locked -->
+<div class="cursor-pointer bg-surface rounded-xl border border-border p-space-xl flex flex-col justify-between hover:bg-background transition-colors" onclick="switchTab('locked')">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted whitespace-nowrap">Locked</span>
+<span class="material-symbols-outlined text-[18px] text-badge-transit-text">lock</span>
+</div>
+<div class="mt-space-md flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-text">2</span>
+<span class="font-caption text-caption text-badge-transit-text whitespace-nowrap">Waiting assignment</span>
+</div>
+</div>
+<!-- Card 3: Submitted -->
+<div class="cursor-pointer bg-surface rounded-xl border border-border p-space-xl flex flex-col justify-between hover:bg-background transition-colors" onclick="switchTab('submitted')">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted whitespace-nowrap">Submitted</span>
+<span class="w-2.5 h-2.5 rounded-full bg-badge-created-text"></span>
+</div>
+<div class="mt-space-md flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-text">28</span>
+<span class="font-caption text-caption text-text-muted whitespace-nowrap">Completed entries</span>
+</div>
+</div></div>
+<!-- Main Container: Tabs & Data View -->
+<div class="bg-surface border border-border rounded-xl flex flex-col overflow-hidden">
+<!-- Tab Header Strip -->
+<div class="flex items-center border-b border-border px-space-lg bg-surface"><button class="flex items-center gap-space-xs py-space-md px-space-md font-body-medium text-body-medium border-b-2 border-primary-container text-primary-container transition-colors whitespace-nowrap" id="tab-btn-ready" onclick="switchTab('ready')">
+<span class="whitespace-nowrap">Ready</span>
+<span class="font-badge text-badge px-space-xs py-[1px] rounded-full bg-badge-completed-bg text-badge-completed-text whitespace-nowrap">6</span>
+</button>
+<button class="flex items-center gap-space-xs py-space-md px-space-md font-body-medium text-body-medium border-b-2 border-transparent text-text-muted hover:text-text transition-colors whitespace-nowrap" id="tab-btn-locked" onclick="switchTab('locked')">
+<span class="whitespace-nowrap">Locked</span>
+<span class="font-badge text-badge px-space-xs py-[1px] rounded-full bg-badge-transit-bg text-badge-transit-text whitespace-nowrap">2</span>
+</button>
+<button class="flex items-center gap-space-xs py-space-md px-space-md font-body-medium text-body-medium border-b-2 border-transparent text-text-muted hover:text-text transition-colors whitespace-nowrap" id="tab-btn-submitted" onclick="switchTab('submitted')">
+<span class="whitespace-nowrap">Submitted</span>
+<span class="font-badge text-badge px-space-xs py-[1px] rounded-full bg-badge-created-bg text-badge-created-text whitespace-nowrap">28</span>
+</button></div>
+<!-- Tab Content: Ready Panel -->
+<div class="flex flex-col" id="panel-ready">
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background border-b border-border h-10">
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Batch ID</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Waste Type</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Qty (kg)</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Source / Area</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Route</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Assigned Date (IST)</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Status</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border font-body text-body">
+<!-- Row 1 -->
+<tr class="h-12 hover:bg-background transition-colors">
+<td class="px-space-lg whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary-container hover:underline" href="#">WB-2026-0124</a>
+</td>
+<td class="px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-text">Wet Waste</span>
+</div>
+</td>
+<td class="px-space-lg whitespace-nowrap font-medium text-text">2,400 kg</td>
+<td class="px-space-lg whitespace-nowrap text-text">Sector 14 Residential, Ward 4</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">RT-NORTH-01</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">06 Oct 2026, 08:00</td>
+<td class="px-space-lg whitespace-nowrap">
+<span class="font-badge text-badge px-space-sm py-[2px] rounded-full bg-badge-created-bg text-badge-created-text">Created</span>
+</td>
+<td class="px-space-lg whitespace-nowrap text-right">
+<a class="inline-flex items-center justify-center h-9 px-space-md bg-primary-container hover:bg-primary-hover text-on-primary font-body-medium text-body-medium rounded-lg transition-colors" href="#">
+                    Add Entry
+                  </a>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="h-12 hover:bg-background transition-colors">
+<td class="px-space-lg whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary-container hover:underline" href="#">WB-2026-0122</a>
+</td>
+<td class="px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-text">Wet Waste</span>
+</div>
+</td>
+<td class="px-space-lg whitespace-nowrap font-medium text-text">3,100 kg</td>
+<td class="px-space-lg whitespace-nowrap text-text">Central Market Complex, Ward 2</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">RT-EAST-02</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">06 Oct 2026, 07:30</td>
+<td class="px-space-lg whitespace-nowrap">
+<span class="font-badge text-badge px-space-sm py-[2px] rounded-full bg-badge-created-bg text-badge-created-text">Created</span>
+</td>
+<td class="px-space-lg whitespace-nowrap text-right">
+<a class="inline-flex items-center justify-center h-9 px-space-md bg-primary-container hover:bg-primary-hover text-on-primary font-body-medium text-body-medium rounded-lg transition-colors" href="#">
+                    Add Entry
+                  </a>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="h-12 hover:bg-background transition-colors">
+<td class="px-space-lg whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary-container hover:underline" href="#">WB-2026-0121</a>
+</td>
+<td class="px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-badge-transit-text"></span>
+<span class="text-text">Dry Waste</span>
+</div>
+</td>
+<td class="px-space-lg whitespace-nowrap font-medium text-text">1,850 kg</td>
+<td class="px-space-lg whitespace-nowrap text-text">Industrial Sector 9 Hub</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">RT-WEST-04</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">06 Oct 2026, 07:15</td>
+<td class="px-space-lg whitespace-nowrap">
+<span class="font-badge text-badge px-space-sm py-[2px] rounded-full bg-badge-created-bg text-badge-created-text">Created</span>
+</td>
+<td class="px-space-lg whitespace-nowrap text-right">
+<a class="inline-flex items-center justify-center h-9 px-space-md bg-primary-container hover:bg-primary-hover text-on-primary font-body-medium text-body-medium rounded-lg transition-colors" href="#">
+                    Add Entry
+                  </a>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="h-12 hover:bg-background transition-colors">
+<td class="px-space-lg whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary-container hover:underline" href="#">WB-2026-0119</a>
+</td>
+<td class="px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-text">Wet Waste</span>
+</div>
+</td>
+<td class="px-space-lg whitespace-nowrap font-medium text-text">2,900 kg</td>
+<td class="px-space-lg whitespace-nowrap text-text">Old Town Market Street</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">RT-CENTRAL-05</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">06 Oct 2026, 06:45</td>
+<td class="px-space-lg whitespace-nowrap">
+<span class="font-badge text-badge px-space-sm py-[2px] rounded-full bg-badge-created-bg text-badge-created-text">Created</span>
+</td>
+<td class="px-space-lg whitespace-nowrap text-right">
+<a class="inline-flex items-center justify-center h-9 px-space-md bg-primary-container hover:bg-primary-hover text-on-primary font-body-medium text-body-medium rounded-lg transition-colors" href="#">
+                    Add Entry
+                  </a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-md px-space-lg py-space-md border-t border-border bg-surface">
+<span class="font-caption text-caption text-text-muted">
+            Showing <span class="font-medium text-text">1</span> to <span class="font-medium text-text">4</span> of <span class="font-medium text-text">6</span> ready batches
+          </span>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs text-text-muted font-caption text-caption">
+<span class="">Rows per page:</span>
+<select class="bg-surface border border-border rounded px-1.5 py-0.5 font-caption text-caption text-text focus:outline-none">
+<option>10</option>
+<option selected="">4</option>
+<option>20</option>
+</select>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="h-8 w-8 flex items-center justify-center rounded border border-border text-text-disabled cursor-not-allowed bg-background" disabled="">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<button class="h-8 w-8 flex items-center justify-center rounded border border-primary-container bg-primary-soft text-primary-container font-body-medium text-caption">
+                1
+              </button>
+<button class="h-8 w-8 flex items-center justify-center rounded border border-border bg-surface text-text hover:bg-background font-body text-caption transition-colors">
+                2
+              </button>
+<button class="h-8 w-8 flex items-center justify-center rounded border border-border bg-surface text-text hover:bg-background transition-colors">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab Content: Locked Panel (Initially hidden or previewable) -->
+<div class="hidden flex-col" id="panel-locked">
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background border-b border-border h-10">
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Batch ID</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Waste Type</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Qty (kg)</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Source / Area</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Route</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Lock Reason</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border font-body text-body">
+<!-- Locked Row 1 -->
+<tr class="h-12 hover:bg-background transition-colors">
+<td class="px-space-lg whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text-muted">WB-2026-0125</span>
+</td>
+<td class="px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-text">Wet Waste</span>
+</div>
+</td>
+<td class="px-space-lg whitespace-nowrap font-medium text-text">3,450 kg</td>
+<td class="px-space-lg whitespace-nowrap text-text">Sector 21 Sub-Yard</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">RT-SOUTH-03</td>
+<td class="px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-space-xs text-badge-transit-text">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="font-caption text-caption">Waiting for Manifest Release by Dispatch</span>
+</div>
+</td>
+<td class="px-space-lg whitespace-nowrap text-right">
+<button class="inline-flex items-center justify-center h-9 px-space-md bg-badge-created-bg text-text-disabled font-body-medium text-body-medium rounded-lg cursor-not-allowed" disabled="">
+                    Locked
+                  </button>
+</td>
+</tr>
+<!-- Locked Row 2 -->
+<tr class="h-12 hover:bg-background transition-colors">
+<td class="px-space-lg whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text-muted">WB-2026-0126</span>
+</td>
+<td class="px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-badge-transit-text"></span>
+<span class="text-text">Dry Waste</span>
+</div>
+</td>
+<td class="px-space-lg whitespace-nowrap font-medium text-text">1,200 kg</td>
+<td class="px-space-lg whitespace-nowrap text-text">Municipal Transfer Point B</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">RT-WEST-01</td>
+<td class="px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-space-xs text-badge-transit-text">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span class="font-caption text-caption">Weighbridge Calibration in Progress</span>
+</div>
+</td>
+<td class="px-space-lg whitespace-nowrap text-right">
+<button class="inline-flex items-center justify-center h-9 px-space-md bg-badge-created-bg text-text-disabled font-body-medium text-body-medium rounded-lg cursor-not-allowed" disabled="">
+                    Locked
+                  </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-space-lg py-space-md border-t border-border bg-surface text-text-muted font-caption text-caption">
+          Showing 2 locked batches waiting previous step assignment
+        </div>
+</div>
+<!-- Tab Content: Submitted Panel (Initially hidden) -->
+<div class="hidden flex-col" id="panel-submitted">
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background border-b border-border h-10">
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Batch ID</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Waste Type</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Gross Qty</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Collected Timestamp</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Operator</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap">Status</th>
+<th class="px-space-lg font-label text-label text-text-muted font-medium whitespace-nowrap text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border font-body text-body">
+<tr class="h-12 hover:bg-background transition-colors">
+<td class="px-space-lg whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary-container hover:underline" href="#">WB-2026-0118</a>
+</td>
+<td class="px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-text">Wet Waste</span>
+</div>
+</td>
+<td class="px-space-lg whitespace-nowrap font-medium text-text">2,850 kg</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">05 Oct 2026, 17:40</td>
+<td class="px-space-lg whitespace-nowrap text-text">Rajesh Sharma</td>
+<td class="px-space-lg whitespace-nowrap">
+<span class="font-badge text-badge px-space-sm py-[2px] rounded-full bg-badge-collected-bg text-badge-collected-text">Collected</span>
+</td>
+<td class="px-space-lg whitespace-nowrap text-right">
+<a class="inline-flex items-center justify-center h-8 px-space-md bg-surface border border-border hover:bg-background text-text font-body-medium text-caption rounded-lg transition-colors" href="#">
+                    View Entry
+                  </a>
+</td>
+</tr>
+<tr class="h-12 hover:bg-background transition-colors">
+<td class="px-space-lg whitespace-nowrap">
+<a class="font-batch-id text-batch-id text-primary-container hover:underline" href="#">WB-2026-0115</a>
+</td>
+<td class="px-space-lg whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-badge-transit-text"></span>
+<span class="text-text">Dry Waste</span>
+</div>
+</td>
+<td class="px-space-lg whitespace-nowrap font-medium text-text">1,400 kg</td>
+<td class="px-space-lg whitespace-nowrap text-text-muted">05 Oct 2026, 16:15</td>
+<td class="px-space-lg whitespace-nowrap text-text">Rajesh Sharma</td>
+<td class="px-space-lg whitespace-nowrap">
+<span class="font-badge text-badge px-space-sm py-[2px] rounded-full bg-badge-collected-bg text-badge-collected-text">Collected</span>
+</td>
+<td class="px-space-lg whitespace-nowrap text-right">
+<a class="inline-flex items-center justify-center h-8 px-space-md bg-surface border border-border hover:bg-background text-text font-body-medium text-caption rounded-lg transition-colors" href="#">
+                    View Entry
+                  </a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-space-lg py-space-md border-t border-border bg-surface text-text-muted font-caption text-caption">
+          Showing 2 of 28 submitted manifests logged by this station
+        </div>
+</div>
+</div>
+</div>
+<script>
+    function switchTab(tabId) {
+      const tabs = ['ready', 'locked', 'submitted'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab-btn-' + t);
+        const panel = document.getElementById('panel-' + t);
+        
+        if (t === tabId) {
+          btn.className = 'flex items-center gap-space-xs py-space-md px-space-md font-body-medium text-body-medium border-b-2 border-primary-container text-primary-container transition-colors';
+          panel.classList.remove('hidden');
+          panel.classList.add('flex');
+        } else {
+          btn.className = 'flex items-center gap-space-xs py-space-md px-space-md font-body-medium text-body-medium border-b-2 border-transparent text-text-muted hover:text-text transition-colors';
+          panel.classList.remove('flex');
+          panel.classList.add('hidden');
+        }
+      });
+    }
+
+    // Client-side quick filter for the batch table
+    document.getElementById('batch-search-input').addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase().trim();
+      const rows = document.querySelectorAll('#panel-ready tbody tr, #panel-locked tbody tr, #panel-submitted tbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+      });
+    });
+  </script>
+</div></main></div>
+
+</body></html>

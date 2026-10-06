@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>Admin Dashboard - Waste Journey Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#F8FAFC",
+            "surface": "#FFFFFF",
+            "border": "#E2E8F0",
+            "primary": "#15803D",
+            "primary-hover": "#166534",
+            "primary-soft": "#DCFCE7",
+            "text": "#0F172A",
+            "text-muted": "#475569",
+            "text-disabled": "#94A3B8",
+            "badge-created-bg": "#F1F5F9",
+            "badge-created-text": "#475569",
+            "badge-collected-bg": "#DBEAFE",
+            "badge-collected-text": "#1D4ED8",
+            "badge-transit-bg": "#FEF3C7",
+            "badge-transit-text": "#B45309",
+            "badge-rts-bg": "#EDE9FE",
+            "badge-rts-text": "#6D28D9",
+            "badge-completed-bg": "#DCFCE7",
+            "badge-completed-text": "#15803D",
+            "badge-deleted-bg": "#FEE2E2",
+            "badge-deleted-text": "#B91C1C",
+            "warning": "#D97706",
+            "warning-soft": "#FEF3C7",
+            "error": "#DC2626",
+            "error-soft": "#FEE2E2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            "batch-id": ["Inter", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-body text-text antialiased min-h-screen">
+<!-- Top Bar (56px) -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50 flex items-center justify-between px-6">
+<!-- Left Logo -->
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">recycling</span>
+</div>
+<span class="font-semibold text-[17px] text-text tracking-tight">Waste Journey Tracker</span>
+</div>
+<!-- Right Side: Anil Mehta, Admin, Profile, Logout -->
+<div class="flex items-center gap-5">
+<div class="flex items-center gap-2.5">
+<span class="text-sm font-medium text-text">Anil Mehta</span>
+<span class="text-xs font-semibold bg-primary-soft text-primary px-2.5 py-0.5 rounded-full">Admin</span>
+</div>
+<div class="h-4 w-[1px] bg-border"></div>
+<a class="text-sm font-medium text-text-muted hover:text-text transition-colors" data-path="profile" href="#">Profile</a>
+<a class="text-sm font-medium text-text-muted hover:text-error transition-colors flex items-center gap-1.5" data-path="login" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</header>
+<!-- Left Sidebar (240px) -->
+<aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 overflow-y-auto">
+<div class="p-3">
+<nav class="flex flex-col gap-1">
+<!-- 1. Dashboard (Active) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="dashboard" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- 2. Batches -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="batches" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span>Batches</span>
+</a>
+<!-- 3. Create Batch -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="create-batch" href="#">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>Create Batch</span>
+</a>
+<!-- 4. Master Data -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="master-data" href="#">
+<span class="material-symbols-outlined text-[20px]">database</span>
+<span>Master Data</span>
+</a>
+<!-- 5. Users -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="users" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span>Users</span>
+</a>
+<!-- 6. Export -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="export" href="#">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Export</span>
+</a>
+<!-- 7. Audit Log -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="audit-log" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span>Audit Log</span>
+</a>
+<!-- 8. Settings -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="settings" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Area (max-width 1280px, padding 24px) -->
+<div class="pl-[240px]">
+<main class="pt-14 min-h-screen bg-background"><div class="flex flex-col w-full">
+<div class="p-6 max-w-[1280px] mx-auto w-full flex flex-col gap-6">
+<!-- Top Breadcrumb & Metadata Navigation -->
+<div class="flex items-center justify-between">
+<nav class="flex items-center gap-2 font-body text-body text-text-muted">
+<a class="hover:text-text flex items-center gap-1 transition-colors font-body-medium" data-path="batches" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span>Batches</span>
+</a>
+<span class="text-text-disabled">/</span>
+<span class="font-batch-id text-batch-id text-text">WB-2026-0094</span>
+</nav>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-caption font-medium bg-badge-rts-bg text-badge-rts-text">
+<span class="w-1.5 h-1.5 rounded-full bg-badge-rts-text"></span>
+          At RTS
+        </span>
+<span class="text-caption font-body text-text-muted border-l border-border pl-2.5">Chain of Custody ID: <span class="font-mono text-text">4f8a9e...c92b</span></span>
+</div>
+</div>
+<!-- Main Header Card with Primary Action Bar -->
+<div class="bg-surface rounded-xl border border-border p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<h1 class="font-page-title text-page-title text-text tracking-tight font-batch-id">WB-2026-0094</h1>
+<span class="px-2.5 py-0.5 rounded-full text-badge font-badge bg-badge-rts-bg text-badge-rts-text">At RTS</span>
+</div>
+<p class="font-body text-body text-text-muted flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-text-disabled">schedule</span>
+          Created on 06 Oct 2026, 07:45 IST by <span class="font-body-medium text-text">Anil Mehta (Admin)</span>
+</p>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-wrap items-center gap-2.5">
+<button class="h-10 px-3.5 rounded-lg border border-border bg-surface hover:bg-background text-text font-body-medium text-body flex items-center gap-2 transition-colors" onclick="alert('Downloading high-res manifest QR code...')" type="button">
+<span class="material-symbols-outlined text-[18px]">qr_code</span>
+<span>Download QR</span>
+</button>
+<button class="h-10 px-3.5 rounded-lg border border-border bg-surface hover:bg-background text-text font-body-medium text-body flex items-center gap-2 transition-colors" onclick="window.print()" type="button">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span>Print Manifest</span>
+</button>
+<button class="h-10 px-3.5 rounded-lg border border-border bg-surface hover:bg-background text-text font-body-medium text-body flex items-center gap-2 transition-colors" onclick="alert('Edit Batch metadata modal triggered')" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span>Edit Batch</span>
+</button>
+<button class="h-10 px-4 rounded-lg bg-primary hover:bg-primary-hover text-surface font-body-medium text-body flex items-center gap-2 transition-colors" onclick="alert('Stage Reassignment panel triggered')" type="button">
+<span class="material-symbols-outlined text-[18px]">manage_accounts</span>
+<span>Reassign Officers</span>
+</button>
+</div>
+</div>
+<!-- Alert: Active Stage Notification / Operational Status -->
+<div class="rounded-xl border border-warning bg-warning-soft px-4 py-3 flex items-start justify-between gap-3">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-warning text-[20px] mt-0.5">info</span>
+<div>
+<span class="font-body-medium text-body text-text">Stage 3 (RTS Transfer) Intake Registered</span>
+<p class="font-body text-caption text-text-muted mt-0.5">Payload arrived at Sector 4 RTS Facility. Net variance logged at -150 kg (-3.57%), within permitted natural moisture evaporation limit (≤ 5%).</p>
+</div>
+</div>
+<span class="text-caption font-mono text-warning font-semibold">TOLERANCE OK</span>
+</div>
+<!-- 3-Card Summary Grid (Batch Details, QR Manifest, Personnel Assignment) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Card 1: Batch Details (5 cols) -->
+<div class="lg:col-span-5 bg-surface rounded-xl border border-border p-5 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-3.5 border-b border-border">
+<h2 class="font-section-title text-section-title text-text">Batch Details</h2>
+<button class="text-primary hover:text-primary-hover font-label text-label flex items-center gap-1" onclick="alert('Edit Batch Metadata clicked')" type="button">
+<span class="material-symbols-outlined text-[15px]">edit</span>
+<span>Edit</span>
+</button>
+</div>
+<div class="mt-4 grid grid-cols-2 gap-y-4 gap-x-3 text-body">
+<div>
+<span class="block font-label text-label text-text-muted">Waste Type</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-body-medium text-text">Wet Waste (Organic)</span>
+</div>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Collection Date</span>
+<span class="font-body text-text mt-0.5 block">06 Oct 2026, 07:45 IST</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Initial Quantity</span>
+<span class="font-batch-id text-batch-id text-text mt-0.5 block">4,200 kg</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Current Logged Weight</span>
+<div class="mt-0.5 flex items-baseline gap-1.5">
+<span class="font-batch-id text-batch-id text-text">4,050 kg</span>
+<span class="text-caption text-text-muted font-normal">(-3.57%)</span>
+</div>
+</div>
+<div class="col-span-2 pt-1 border-t border-border">
+<span class="block font-label text-label text-text-muted">Source / Ward Origin</span>
+<span class="font-body text-text mt-0.5 block">South Extension Commercial Complex, Ward 8</span>
+</div>
+<div class="col-span-2">
+<span class="block font-label text-label text-text-muted">Assigned Route</span>
+<span class="font-body text-text mt-0.5 block">RT-SOUTH-03 (South Extension to Sector 4 RTS)</span>
+</div>
+<div class="col-span-2">
+<span class="block font-label text-label text-text-muted">Assigned Vehicle</span>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="material-symbols-outlined text-text-muted text-[18px]">local_shipping</span>
+<span class="font-body-medium text-text">MH-02-EF-9012</span>
+<span class="text-caption text-text-muted">Compactor Truck (5.0 MT)</span>
+</div>
+</div>
+<div class="col-span-2 bg-background p-3 rounded-lg border border-border">
+<span class="block font-label text-label text-text-muted">Initial Operator Instructions</span>
+<p class="font-body text-caption text-text mt-1 italic">"High moisture organic waste from food market. Seal #SL-8842 applied."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: QR Code & Manifest Block (3 cols) -->
+<div class="lg:col-span-3 bg-surface rounded-xl border border-border p-5 flex flex-col items-center justify-between text-center">
+<div class="w-full">
+<div class="flex items-center justify-between pb-3.5 border-b border-border w-full text-left">
+<h2 class="font-section-title text-section-title text-text">Manifest QR</h2>
+<span class="text-badge font-badge text-primary bg-primary-soft px-2 py-0.5 rounded-full">Secured</span>
+</div>
+<!-- Standard 160px QR Code Display -->
+<div class="mt-4 flex flex-col items-center">
+<div class="w-40 h-40 bg-surface border border-border rounded-lg p-2.5 flex items-center justify-center">
+<!-- Inline High-Fidelity SVG QR Representation -->
+<svg class="w-full h-full text-text" fill="currentColor" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<!-- Top-Left Corner Position Finder Pattern -->
+<rect fill="currentColor" height="28" width="28" x="5" y="5"></rect>
+<rect fill="white" height="20" width="20" x="9" y="9"></rect>
+<rect fill="currentColor" height="12" width="12" x="13" y="13"></rect>
+<!-- Top-Right Corner Position Finder Pattern -->
+<rect fill="currentColor" height="28" width="28" x="67" y="5"></rect>
+<rect fill="white" height="20" width="20" x="71" y="9"></rect>
+<rect fill="currentColor" height="12" width="12" x="75" y="13"></rect>
+<!-- Bottom-Left Corner Position Finder Pattern -->
+<rect fill="currentColor" height="28" width="28" x="5" y="67"></rect>
+<rect fill="white" height="20" width="20" x="9" y="71"></rect>
+<rect fill="currentColor" height="12" width="12" x="13" y="75"></rect>
+<!-- Timing patterns & Data Grid Representation -->
+<rect height="5" width="5" x="38" y="7"></rect>
+<rect height="5" width="5" x="48" y="7"></rect>
+<rect height="5" width="5" x="58" y="7"></rect>
+<rect height="5" width="5" x="7" y="38"></rect>
+<rect height="5" width="5" x="7" y="48"></rect>
+<rect height="5" width="5" x="7" y="58"></rect>
+<rect height="8" width="8" x="38" y="38"></rect>
+<rect height="6" width="6" x="50" y="38"></rect>
+<rect height="6" width="6" x="60" y="42"></rect>
+<rect height="8" width="8" x="74" y="38"></rect>
+<rect height="8" width="8" x="86" y="42"></rect>
+<rect height="6" width="6" x="38" y="52"></rect>
+<rect height="8" width="8" x="48" y="50"></rect>
+<rect height="6" width="6" x="62" y="56"></rect>
+<rect height="6" width="8" x="38" y="68"></rect>
+<rect height="8" width="6" x="50" y="66"></rect>
+<rect height="6" width="6" x="62" y="72"></rect>
+<rect height="8" width="6" x="74" y="60"></rect>
+<rect height="6" width="6" x="84" y="56"></rect>
+<rect height="8" width="8" x="74" y="74"></rect>
+<rect height="8" width="8" x="86" y="74"></rect>
+<rect height="6" width="6" x="42" y="82"></rect>
+<rect height="6" width="6" x="54" y="82"></rect>
+<rect height="6" width="6" x="66" y="82"></rect>
+<rect height="6" width="6" x="80" y="86"></rect>
+</svg>
+</div>
+<div class="mt-3">
+<span class="font-batch-id text-batch-id text-text tracking-wide">WB-2026-0094</span>
+<span class="block font-mono text-[11px] text-text-muted mt-0.5">SHA256: 4f8a9e...c92b</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2 w-full mt-4">
+<button class="w-full h-9 rounded-lg border border-border bg-surface hover:bg-background text-text font-label text-label flex items-center justify-center gap-1.5 transition-colors" onclick="alert('PNG saved')" type="button">
+<span class="material-symbols-outlined text-[16px]">download</span>
+<span>Download PNG</span>
+</button>
+<button class="w-full h-9 rounded-lg border border-border bg-surface hover:bg-background text-text font-label text-label flex items-center justify-center gap-1.5 transition-colors" onclick="window.print()" type="button">
+<span class="material-symbols-outlined text-[16px]">print</span>
+<span>Print Label</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Stage Personnel Assignment (4 cols) -->
+<div class="lg:col-span-4 bg-surface rounded-xl border border-border p-5 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-3.5 border-b border-border">
+<div>
+<h2 class="font-section-title text-section-title text-text">Personnel Assignment</h2>
+</div>
+<button class="text-primary hover:text-primary-hover font-label text-label flex items-center gap-1" onclick="alert('Reassign Personnel modal')" type="button">
+<span class="material-symbols-outlined text-[15px]">swap_horiz</span>
+<span>Reassign</span>
+</button>
+</div>
+<div class="mt-4 flex flex-col gap-3">
+<!-- Stage 1 Officer -->
+<div class="p-2.5 rounded-lg border border-border bg-background flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-primary-soft text-primary flex items-center justify-center text-xs font-semibold">1</div>
+<div>
+<span class="font-body-medium text-body text-text block">Rajesh Sharma</span>
+<span class="text-caption text-text-muted block">Collection (USR-COL-04)</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full text-caption font-medium bg-badge-completed-bg text-badge-completed-text">Completed</span>
+</div>
+<!-- Stage 2 Officer -->
+<div class="p-2.5 rounded-lg border border-border bg-background flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-primary-soft text-primary flex items-center justify-center text-xs font-semibold">2</div>
+<div>
+<span class="font-body-medium text-body text-text block">Suresh Patil</span>
+<span class="text-caption text-text-muted block">Transit (USR-TRN-09)</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full text-caption font-medium bg-badge-completed-bg text-badge-completed-text">Completed</span>
+</div>
+<!-- Stage 3 Officer -->
+<div class="p-2.5 rounded-lg border border-badge-rts-text/30 bg-surface flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-badge-rts-bg text-badge-rts-text flex items-center justify-center text-xs font-semibold">3</div>
+<div>
+<span class="font-body-medium text-text block">Vikram Desai</span>
+<span class="text-caption text-text-muted block">RTS Transfer (USR-RTS-02)</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full text-caption font-medium bg-badge-rts-bg text-badge-rts-text">Active</span>
+</div>
+<!-- Stage 4 Officer -->
+<div class="p-2.5 rounded-lg border border-border bg-background flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-border text-text-muted flex items-center justify-center text-xs font-semibold">4</div>
+<div>
+<span class="font-body-medium text-text block">Anita Roy</span>
+<span class="text-caption text-text-muted block">Processing Plant (USR-PRC-01)</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full text-caption font-medium bg-badge-created-bg text-badge-created-text">Pending</span>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-border mt-3 flex items-center justify-between text-caption text-text-muted">
+<span>Supervising Station: <strong class="text-text font-medium">Zone 4 Operations</strong></span>
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+</div>
+</div>
+</div>
+<!-- Timeline Section: Custodial Timeline & Current Stage Entries -->
+<div class="bg-surface rounded-xl border border-border p-5">
+<div class="flex items-center justify-between pb-4 border-b border-border">
+<div>
+<h2 class="font-section-title text-section-title text-text">Custodial Timeline &amp; Current Stage Entries</h2>
+<p class="font-body text-caption text-text-muted mt-0.5">Chronological chain-of-custody milestones and verified telemetry</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-caption font-body text-text-muted">Stage Progression:</span>
+<span class="px-2.5 py-0.5 rounded-full text-badge font-badge bg-primary-soft text-primary font-medium">3 of 4 Completed or Active</span>
+</div>
+</div>
+<!-- Vertical Chronological Timeline Grid -->
+<div class="mt-6 relative pl-6 border-l-2 border-border flex flex-col gap-8 ml-3">
+<!-- Stage 1 Node: Collection (Completed) -->
+<div class="relative group">
+<!-- Timeline Pin -->
+<div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-primary ring-4 ring-surface"></div>
+<div class="bg-background rounded-xl border border-border p-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border">
+<div class="flex items-center gap-2.5">
+<span class="font-section-title text-[15px] font-semibold text-text">Stage 1: Waste Collection</span>
+<span class="px-2 py-0.5 rounded-full text-badge font-badge bg-badge-completed-bg text-badge-completed-text">Completed</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-caption font-body text-text-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+                  06 Oct 2026, 08:15 IST
+                </span>
+<button class="text-primary hover:text-primary-hover font-label text-label flex items-center gap-1" onclick="alert('Edit Stage 1 Entry triggered. Note: Mandatory reason required for modifications.')" type="button">
+<span class="material-symbols-outlined text-[14px]">edit_note</span>
+<span>Edit Entry</span>
+</button>
+</div>
+</div>
+<!-- Field Data Points -->
+<div class="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-body">
+<div>
+<span class="block font-label text-label text-text-muted">Collection Officer</span>
+<span class="font-body-medium text-text mt-0.5 block">Rajesh Sharma (USR-COL-04)</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Collection Site</span>
+<span class="font-body text-text mt-0.5 block">South Extension Complex</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Gross &amp; Payload Weight</span>
+<span class="font-batch-id text-batch-id text-text mt-0.5 block">4,200 kg <span class="text-caption font-normal text-text-muted">(Tare: 1,850 kg)</span></span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Vehicle &amp; Driver</span>
+<span class="font-body text-text mt-0.5 block">MH-02-EF-9012 (Amit Verma)</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-border flex items-center justify-between text-caption text-text-muted">
+<span>Security Tag: <strong class="text-text font-mono font-medium">SL-8842-TAMPER-EVIDENT</strong></span>
+<span class="text-primary flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span> Verified at weighbridge</span>
+</div>
+</div>
+</div>
+<!-- Stage 2 Node: Transportation (Completed) -->
+<div class="relative group">
+<!-- Timeline Pin -->
+<div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-primary ring-4 ring-surface"></div>
+<div class="bg-background rounded-xl border border-border p-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border">
+<div class="flex items-center gap-2.5">
+<span class="font-section-title text-[15px] font-semibold text-text">Stage 2: Secure Transportation</span>
+<span class="px-2 py-0.5 rounded-full text-badge font-badge bg-badge-completed-bg text-badge-completed-text">Completed</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-caption font-body text-text-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">timelapse</span>
+                  Departure 08:30 → Arrival 09:25 IST (55 mins)
+                </span>
+<button class="text-primary hover:text-primary-hover font-label text-label flex items-center gap-1" onclick="alert('Edit Stage 2 Entry triggered. Reason mandatory.')" type="button">
+<span class="material-symbols-outlined text-[14px]">edit_note</span>
+<span>Edit Entry</span>
+</button>
+</div>
+</div>
+<!-- Field Data Points -->
+<div class="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-body">
+<div>
+<span class="block font-label text-label text-text-muted">Transport Officer</span>
+<span class="font-body-medium text-text mt-0.5 block">Suresh Patil (USR-TRN-09)</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Transit Route Log</span>
+<span class="font-body text-text mt-0.5 block">RT-SOUTH-03 via Ring Road</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Transit Status</span>
+<span class="font-body-medium text-text mt-0.5 block">Arrived at Sector 4 RTS</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Seal Verification</span>
+<span class="font-body text-primary font-medium mt-0.5 block flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">lock</span>
+                  Intact (#SL-8842)
+                </span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-border flex items-center justify-between text-caption text-text-muted">
+<span>Route Distance: <strong class="text-text font-medium">18.4 km</strong></span>
+<span>GPS Ping Interval: <strong class="text-text font-medium">100% Signal Integrity</strong></span>
+</div>
+</div>
+</div>
+<!-- Stage 3 Node: RTS / Transfer Station (Active / In Progress) -->
+<div class="relative group">
+<!-- Timeline Pin -->
+<div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-badge-rts-text ring-4 ring-surface"></div>
+<div class="bg-surface rounded-xl border-2 border-badge-rts-text/40 p-4 shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border">
+<div class="flex items-center gap-2.5">
+<span class="font-section-title text-[15px] font-semibold text-text">Stage 3: RTS / Transfer Station</span>
+<span class="px-2.5 py-0.5 rounded-full text-badge font-badge bg-badge-rts-bg text-badge-rts-text">Active / At RTS</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-caption font-body text-text-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">sensors</span>
+                  Intake 06 Oct 2026, 09:30 IST
+                </span>
+<button class="text-primary hover:text-primary-hover font-label text-label flex items-center gap-1" onclick="alert('Edit Stage 3 Entry')" type="button">
+<span class="material-symbols-outlined text-[14px]">edit_note</span>
+<span>Edit Entry</span>
+</button>
+<button class="text-error hover:text-badge-deleted-text font-label text-label flex items-center gap-1" onclick="confirm('Are you sure you want to delete this RTS stage entry? This action will log a deletion event in the audit trail.')" type="button">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+<span>Delete</span>
+</button>
+</div>
+</div>
+<!-- Field Data Points -->
+<div class="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-body">
+<div>
+<span class="block font-label text-label text-text-muted">RTS Officer</span>
+<span class="font-body-medium text-text mt-0.5 block">Vikram Desai (USR-RTS-02)</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Intake Weighment</span>
+<div class="mt-0.5">
+<span class="font-batch-id text-batch-id text-text block">4,050 kg</span>
+<span class="text-caption text-warning font-medium">Variance: -150 kg (-3.57%)</span>
+</div>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Receiving Facility</span>
+<span class="font-body text-text mt-0.5 block">Sector 4 RTS Transfer Hub</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Segregation Status</span>
+<span class="font-body-medium text-text mt-0.5 block">Secondary Sorting in Progress</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between text-caption text-text-muted gap-2">
+<span class="flex items-center gap-1 text-badge-rts-text font-medium">
+<span class="material-symbols-outlined text-[14px]">hourglass_top</span>
+                Current Stage active — Manifest pending processing plant handover
+              </span>
+<span class="font-mono text-[11px]">DOCK-ID: RTS-04-BAY-02</span>
+</div>
+</div>
+</div>
+<!-- Stage 4 Node: Processing Plant (Pending) -->
+<div class="relative group">
+<!-- Timeline Pin -->
+<div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-text-disabled ring-4 ring-surface"></div>
+<div class="bg-background rounded-xl border border-border p-4 opacity-75">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-border">
+<div class="flex items-center gap-2.5">
+<span class="font-section-title text-[15px] font-semibold text-text-muted">Stage 4: Final Processing &amp; Recovery</span>
+<span class="px-2 py-0.5 rounded-full text-badge font-badge bg-badge-created-bg text-badge-created-text">Pending Schedule</span>
+</div>
+<span class="text-caption font-body text-text-muted">Scheduled for 06 Oct, 13:00 IST</span>
+</div>
+<div class="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-body">
+<div>
+<span class="block font-label text-label text-text-muted">Assigned Facility</span>
+<span class="font-body text-text mt-0.5 block">EcoClean Organic Composting Plant</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Assigned Officer</span>
+<span class="font-body text-text mt-0.5 block">Anita Roy (USR-PRC-01)</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Expected Output</span>
+<span class="font-body text-text mt-0.5 block">Bio-compost (Estimated ~1,600 kg)</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Dispatch Readiness</span>
+<span class="font-body text-text-muted mt-0.5 block">Awaiting RTS outbound bay transfer</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- History / Audit Trail Section (pages_spec.md §3.6) -->
+<div class="bg-surface rounded-xl border border-border p-5">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-border">
+<div>
+<h2 class="font-section-title text-section-title text-text">Audit Trail &amp; Stage Version History</h2>
+<p class="font-body text-caption text-text-muted mt-0.5">Complete immutable log of all stage submissions, corrections, superseded entries, and deletions</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-caption text-text-muted bg-background border border-border px-2.5 py-1 rounded">Chain State: Verified</span>
+</div>
+</div>
+<!-- History Table Container -->
+<div class="mt-4 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background border-b border-border text-label font-label text-text-muted">
+<th class="py-2.5 px-3 font-medium">Stage &amp; Version</th>
+<th class="py-2.5 px-3 font-medium">Timestamp (IST)</th>
+<th class="py-2.5 px-3 font-medium">Performed By</th>
+<th class="py-2.5 px-3 font-medium">Action &amp; Log Description</th>
+<th class="py-2.5 px-3 font-medium">Status &amp; Reason</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border text-body font-body">
+<!-- Entry 1: Stage 3 Active -->
+<tr class="hover:bg-background/60 transition-colors">
+<td class="py-3 px-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-badge-rts-text"></span>
+<span class="font-body-medium text-text">Stage 3 (RTS Intake)</span>
+<span class="text-caption font-mono text-text-muted">v1.0</span>
+</div>
+</td>
+<td class="py-3 px-3 text-caption font-mono text-text">06 Oct 2026, 09:35</td>
+<td class="py-3 px-3">
+<span class="font-body-medium text-text block">Vikram Desai</span>
+<span class="text-caption text-text-muted block">USR-RTS-02</span>
+</td>
+<td class="py-3 px-3">
+<span class="text-text block">Stage Entry Recorded</span>
+<span class="text-caption text-text-muted block">Intake weight 4,050 kg logged. Net variance -150 kg (-3.57%).</span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full text-badge font-badge bg-badge-rts-bg text-badge-rts-text">Active Entry</span>
+</td>
+</tr>
+<!-- Entry 2: Stage 2 v2 Active -->
+<tr class="hover:bg-background/60 transition-colors">
+<td class="py-3 px-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-body-medium text-text">Stage 2 (Transit)</span>
+<span class="text-caption font-mono text-text-muted">v2.0</span>
+</div>
+</td>
+<td class="py-3 px-3 text-caption font-mono text-text">06 Oct 2026, 09:28</td>
+<td class="py-3 px-3">
+<span class="font-body-medium text-text block">Suresh Patil</span>
+<span class="text-caption text-text-muted block">USR-TRN-09</span>
+</td>
+<td class="py-3 px-3">
+<span class="text-text block">Transit Completed &amp; Gate Handoff</span>
+<span class="text-caption text-text-muted block">Final arrival confirmed at Sector 4 RTS bay. Seal verified unbroken.</span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full text-badge font-badge bg-badge-completed-bg text-badge-completed-text">Active Entry</span>
+</td>
+</tr>
+<!-- Entry 3: Stage 2 v1 Superseded -->
+<tr class="bg-background/40 hover:bg-background/80 transition-colors">
+<td class="py-3 px-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-text-disabled"></span>
+<span class="font-body text-text-muted line-through">Stage 2 (Transit)</span>
+<span class="text-caption font-mono text-text-muted">v1.0</span>
+</div>
+</td>
+<td class="py-3 px-3 text-caption font-mono text-text-muted">06 Oct 2026, 09:10</td>
+<td class="py-3 px-3">
+<span class="font-body text-text-muted block">Suresh Patil</span>
+<span class="text-caption text-text-disabled block">USR-TRN-09</span>
+</td>
+<td class="py-3 px-3">
+<span class="text-text-muted block">Arrival Time Updated</span>
+<span class="text-caption text-text-muted block italic">Reason: "Traffic congestion on South Ring Road adjusted estimated arrival from 09:15 to 09:25 IST"</span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full text-badge font-badge bg-badge-superseded-bg text-badge-superseded-text line-through">Superseded</span>
+</td>
+</tr>
+<!-- Entry 4: Stage 1 Initial Collection -->
+<tr class="hover:bg-background/60 transition-colors">
+<td class="py-3 px-3">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-body-medium text-text">Stage 1 (Collection)</span>
+<span class="text-caption font-mono text-text-muted">v1.0</span>
+</div>
+</td>
+<td class="py-3 px-3 text-caption font-mono text-text">06 Oct 2026, 08:15</td>
+<td class="py-3 px-3">
+<span class="font-body-medium text-text block">Rajesh Sharma</span>
+<span class="text-caption text-text-muted block">USR-COL-04</span>
+</td>
+<td class="py-3 px-3">
+<span class="text-text block">Initial Collection Entry Created</span>
+<span class="text-caption text-text-muted block">Gross weight 4,200 kg recorded at South Extension weigh point.</span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded-full text-badge font-badge bg-badge-completed-bg text-badge-completed-text">Active Entry</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-4 pt-3 border-t border-border flex items-center justify-between text-caption text-text-muted">
+<span>Showing 4 audited revisions for Batch WB-2026-0094</span>
+<a class="text-primary hover:text-primary-hover font-label text-label flex items-center gap-1" data-path="audit-log" href="#">
+<span>View full system audit record</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div></main>
+</div>
+</body></html>

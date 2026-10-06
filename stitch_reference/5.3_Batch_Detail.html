@@ -1,0 +1,629 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary-soft": "#DCFCE7",
+          "surface-container-low": "#f2f3ff",
+          "on-error-container": "#93000a",
+          "on-background": "#131b2e",
+          "inverse-primary": "#79db8d",
+          "on-secondary-fixed-variant": "#3a485b",
+          "badge-rts-text": "#6D28D9",
+          "surface-container-highest": "#dae2fd",
+          "error-container": "#ffdad6",
+          "background": "#F8FAFC",
+          "text": "#0F172A",
+          "tertiary-container": "#b64c62",
+          "primary-container": "#15803d",
+          "badge-transit-bg": "#FEF3C7",
+          "surface-variant": "#dae2fd",
+          "badge-deleted-bg": "#FEE2E2",
+          "badge-collected-bg": "#DBEAFE",
+          "surface": "#FFFFFF",
+          "badge-deleted-text": "#B91C1C",
+          "on-tertiary": "#ffffff",
+          "warning": "#D97706",
+          "tertiary": "#97344a",
+          "badge-rts-bg": "#EDE9FE",
+          "on-secondary-fixed": "#0d1c2e",
+          "inverse-surface": "#283044",
+          "border": "#E2E8F0",
+          "outline": "#6f7a6e",
+          "surface-container-high": "#e2e7ff",
+          "on-primary": "#ffffff",
+          "on-primary-container": "#d3ffd5",
+          "badge-transit-text": "#B45309",
+          "on-surface": "#131b2e",
+          "badge-superseded-text": "#64748B",
+          "on-tertiary-fixed-variant": "#81233b",
+          "surface-dim": "#d2d9f4",
+          "on-primary-fixed-variant": "#005323",
+          "error": "#DC2626",
+          "surface-container-lowest": "#ffffff",
+          "secondary-fixed-dim": "#b9c7df",
+          "on-primary-fixed": "#00210a",
+          "secondary-fixed": "#d5e3fc",
+          "tertiary-fixed": "#ffd9dd",
+          "text-disabled": "#94A3B8",
+          "badge-created-text": "#475569",
+          "primary-hover": "#166534",
+          "primary-fixed": "#95f8a7",
+          "surface-bright": "#faf8ff",
+          "secondary": "#515f74",
+          "badge-superseded-bg": "#F1F5F9",
+          "error-soft": "#FEE2E2",
+          "primary": "#00652c",
+          "text-muted": "#475569",
+          "surface-container": "#eaedff",
+          "surface-tint": "#006d30",
+          "badge-collected-text": "#1D4ED8",
+          "on-tertiary-container": "#fff1f1",
+          "outline-variant": "becabc",
+          "inverse-on-surface": "#eef0ff",
+          "on-tertiary-fixed": "#400013",
+          "tertiary-fixed-dim": "#ffb2bd",
+          "badge-created-bg": "#F1F5F9",
+          "on-secondary-container": "#57657a",
+          "on-surface-variant": "#3f493f",
+          "secondary-container": "#d5e3fc",
+          "warning-soft": "#FEF3C7",
+          "on-error": "#ffffff",
+          "badge-completed-text": "#15803D",
+          "primary-fixed-dim": "#79db8d",
+          "badge-completed-bg": "#DCFCE7",
+          "on-secondary": "#ffffff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-md": "0.75rem",
+          "space-sm": "0.5rem",
+          "margin-mobile": "1rem",
+          "margin": "1.5rem",
+          "space-xs": "0.25rem",
+          "gutter-mobile": "0.75rem",
+          "space-lg": "1rem",
+          "space-xl": "1.5rem",
+          "space-2xl": "2rem",
+          "gutter": "1rem"
+        },
+        "fontFamily": {
+          "kpi-number": [
+            "Inter"
+          ],
+          "body-medium": [
+            "Inter"
+          ],
+          "badge": [
+            "Inter"
+          ],
+          "section-title": [
+            "Inter"
+          ],
+          "label": [
+            "Inter"
+          ],
+          "page-title": [
+            "Inter"
+          ],
+          "batch-id": [
+            "Inter"
+          ],
+          "caption": [
+            "Inter"
+          ],
+          "body": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "kpi-number": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "600"
+            }
+          ],
+          "body-medium": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "badge": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "500"
+            }
+          ],
+          "section-title": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "label": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "500"
+            }
+          ],
+          "page-title": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "600"
+            }
+          ],
+          "batch-id": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "caption": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "body": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-background font-body text-text min-h-screen antialiased"><header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50"><div class="h-14 w-full px-6 flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary-container text-[24px]">eco</span><span class="font-section-title text-section-title tracking-tight text-text">Waste Journey Tracker</span></div><div class="flex items-center"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 flex flex-col justify-between py-space-lg px-space-md"><div class="flex flex-col gap-space-xs"><nav class="flex flex-col gap-1" data-active-classes="bg-primary-soft text-badge-completed-text font-medium"><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="">Dashboard</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="batches" href="#"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="">Batches</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="export" href="#"><span class="material-symbols-outlined text-[20px]">download</span><span class="">Export</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span class="">Audit Log</span></a><div class="my-2 border-t border-border"></div><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[20px]">account_circle</span><span class="">Profile</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-error transition-colors" data-path="logout" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span class="">Logout</span></a></nav></div><div class="p-3 rounded-lg border border-border bg-background flex items-center justify-between"><div class="flex flex-col"><span class="font-label text-label text-text">Head Officer</span><span class="font-caption text-caption text-text-muted">Inspection Mode</span></div></div></aside><div class="pl-[240px]"><main class="w-full pt-14 px-margin bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Top Command & Breadcrumb Strip -->
+<div class="flex flex-col gap-space-sm mb-6">
+<div class="flex items-center gap-space-xs font-caption text-caption text-text-muted">
+<a class="hover:text-text transition-colors" href="#">Overview</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-text transition-colors" href="#">Batches</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="font-body-medium text-body-medium text-text font-medium">WB-2026-8817</span>
+</div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+<div class="flex flex-wrap items-center gap-3">
+<h1 class="font-page-title text-page-title text-text tracking-tight">Batch WB-2026-8817</h1>
+<span class="font-badge text-badge px-2.5 py-0.5 rounded-full bg-badge-rts-bg text-badge-rts-text font-medium">At RTS</span>
+<span class="font-badge text-badge px-2.5 py-0.5 rounded-full bg-warning-soft text-badge-transit-text font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+          Flagged Variance: -10.9% (-450 kg)
+        </span>
+
+</div>
+<!-- Strict Read-Only Global Actions -->
+<div class="flex items-center gap-space-sm">
+<a class="h-10 px-4 rounded-lg bg-surface border border-border text-text font-body-medium text-body-medium flex items-center gap-2 hover:bg-background transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span class="">Back to Batches</span>
+</a>
+<button class="h-10 px-4 rounded-lg bg-surface border border-border text-text font-body-medium text-body-medium flex items-center gap-2 hover:bg-background transition-colors" onclick="window.print()">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span class="">Print Batch Sheet</span>
+</button>
+<button class="h-10 px-4 rounded-lg bg-surface border border-border text-text font-body-medium text-body-medium flex items-center gap-2 hover:bg-background transition-colors" id="qr-download-btn">
+<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+<span class="">Download QR Code</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Inline Discrepancy Alert Notice -->
+
+<!-- Section 1: Overview & QR Module -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+<!-- Left Metadata Grid -->
+<div class="lg:col-span-8 bg-surface rounded-xl border border-border p-5 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-4 border-b border-border mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[20px]">assignment</span>
+<span class="font-section-title text-section-title text-text">Batch Parameters &amp; Net Verified Metrics</span>
+</div>
+
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4">
+<div class="flex flex-col">
+<span class="font-label text-label text-text-muted">Created Timestamp</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 font-medium">06 Oct 2026, 08:45 IST</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-label text-text-muted">Waste Classification</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 font-medium flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+              Wet Organic (Segregated)
+            </span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-label text-text-muted">Origin Ward / Zone</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 font-medium">Ward 22 — Whitefield</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-label text-text-muted">Initial Collected Mass</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 font-medium">4,120 kg</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-label text-text-muted">Current Verified Mass</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 font-semibold">3,670 kg</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-label text-text-muted">Net Weight Discrepancy</span>
+<span class="font-body-medium text-body-medium text-badge-transit-text mt-0.5 font-semibold">-450 kg (-10.9%)</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-label text-text-muted">Transit Route Code</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 font-medium">Route 09 (Outer Ring Corridor)</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-label text-text-muted">Assigned Transit Vehicle</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 font-medium">KA-53-MC-1904 (Compactor 6T)</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label text-label text-text-muted">Surveillance Seal ID</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 font-medium">SL-IND-8817-A</span>
+</div>
+</div>
+</div>
+
+</div>
+<!-- Right QR Code Block -->
+<div class="lg:col-span-4 bg-surface rounded-xl border border-border p-5 flex flex-col items-center justify-center text-center"><span class="font-section-title text-section-title text-text mb-4">Batch QR Code</span><div class="p-3 bg-surface rounded-lg border border-border shadow-sm flex items-center justify-center"><svg class="w-36 h-36 text-text" fill="currentColor" viewBox="0 0 140 140"><rect fill="none" height="30" rx="3" stroke="currentColor" stroke-width="6" width="30" x="10" y="10"></rect><rect fill="currentColor" height="10" width="10" x="20" y="20"></rect><rect fill="none" height="30" rx="3" stroke="currentColor" stroke-width="6" width="30" x="100" y="10"></rect><rect fill="currentColor" height="10" width="10" x="110" y="20"></rect><rect fill="none" height="30" rx="3" stroke="currentColor" stroke-width="6" width="30" x="10" y="100"></rect><rect fill="currentColor" height="10" width="10" x="20" y="110"></rect><rect height="8" width="8" x="50" y="14"></rect><rect height="8" width="8" x="66" y="14"></rect><rect height="8" width="8" x="78" y="24"></rect><rect height="8" width="8" x="54" y="34"></rect><rect height="8" width="8" x="18" y="52"></rect><rect height="8" width="8" x="30" y="60"></rect><rect height="12" width="12" x="50" y="50"></rect><rect height="8" width="8" x="70" y="50"></rect><rect height="8" width="12" x="86" y="50"></rect><rect height="10" width="12" x="110" y="56"></rect><rect height="16" width="8" x="50" y="70"></rect><rect height="8" width="12" x="66" y="74"></rect><rect height="14" width="8" x="86" y="68"></rect><rect height="8" width="12" x="102" y="78"></rect><rect height="8" width="14" x="50" y="98"></rect><rect height="12" width="8" x="72" y="94"></rect><rect height="8" width="10" x="90" y="98"></rect><rect height="12" width="10" x="60" y="114"></rect><rect height="8" width="16" x="80" y="118"></rect><rect height="14" width="10" x="106" y="110"></rect></svg></div><span class="font-batch-id text-batch-id text-text mt-3 tracking-widest font-mono">WB-2026-8817</span><div class="flex items-center gap-2 mt-4 w-full"><button class="flex-1 h-9 px-3 rounded-lg border border-border bg-surface text-text font-body-medium text-body-medium flex items-center justify-center gap-1.5 hover:bg-background transition-colors"><span class="material-symbols-outlined text-[16px]">download</span><span class="">Download PNG</span></button></div></div>
+</div>
+<!-- Section 2: Custody Assignment Card (Read-Only) -->
+<div class="bg-surface rounded-xl border border-border p-5 mb-6">
+<div class="flex items-center justify-between pb-4 border-b border-border mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[20px]">badge</span>
+<span class="font-section-title text-section-title text-text">Custody Chain &amp; Officer Assignment</span>
+</div>
+
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Officer 1 -->
+<div class="p-3.5 rounded-lg border border-border bg-background flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-caption text-caption uppercase tracking-wider text-text-muted">Stage 1: Collection</span>
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Completed</span>
+</div>
+<span class="font-body-medium text-body-medium font-semibold text-text block">Suresh Kumar</span>
+<span class="font-caption text-caption text-text-muted">Collection Supervisor • OP-1042</span>
+</div>
+<div class="mt-3 pt-2.5 border-t border-border flex items-center justify-between text-caption font-caption text-text-muted">
+<span class="">Handoff: 08:50 IST</span>
+<span class="text-badge-completed-text flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+            Verified
+          </span>
+</div>
+</div>
+<!-- Officer 2 -->
+<div class="p-3.5 rounded-lg border border-border bg-background flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-caption text-caption uppercase tracking-wider text-text-muted">Stage 2: Transport</span>
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Completed</span>
+</div>
+<span class="font-body-medium text-body-medium font-semibold text-text block">Ramesh Patel</span>
+<span class="font-caption text-caption text-text-muted">Fleet Logistics Driver • OP-2198</span>
+</div>
+<div class="mt-3 pt-2.5 border-t border-border flex items-center justify-between text-caption font-caption text-text-muted">
+<span class="">Transit: 40 mins</span>
+<span class="text-badge-completed-text flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+            Logged
+          </span>
+</div>
+</div>
+<!-- Officer 3 (Current / Active) -->
+<div class="p-3.5 rounded-lg border-2 border-badge-rts-text/40 bg-surface shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 right-0 w-12 h-12 bg-badge-rts-bg rounded-bl-full flex items-start justify-end p-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-badge-rts-text animate-pulse"></span>
+</div>
+<div>
+<div class="flex items-center justify-between mb-2 pr-6">
+<span class="font-caption text-caption uppercase tracking-wider text-badge-rts-text font-medium">Stage 3: RTS Transfer</span>
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-rts-bg text-badge-rts-text font-medium">Active Custody</span>
+</div>
+<span class="font-body-medium text-body-medium font-semibold text-text block">Anand Verma</span>
+<span class="font-caption text-caption text-text-muted">RTS Weighbridge Officer • OP-3401</span>
+</div>
+<div class="mt-3 pt-2.5 border-t border-border flex items-center justify-between text-caption font-caption text-text-muted">
+<span class="">Intake: 10:15 IST</span>
+<span class="text-badge-transit-text font-medium flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">flag</span>
+            Discrepancy Hold
+          </span>
+</div>
+</div>
+<!-- Officer 4 (Pending) -->
+<div class="p-3.5 rounded-lg border border-border/80 bg-background/50 flex flex-col justify-between opacity-80">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-caption text-caption uppercase tracking-wider text-text-muted">Stage 4: Processing</span>
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-superseded-bg text-badge-superseded-text">Pending Handover</span>
+</div>
+<span class="font-body-medium text-body-medium font-semibold text-text block">Dr. Priya Nair</span>
+<span class="font-caption text-caption text-text-muted">Plant Incharge • OP-4890</span>
+</div>
+<div class="mt-3 pt-2.5 border-t border-border flex items-center justify-between text-caption font-caption text-text-muted">
+<span class="">Apex Bio-Methanization</span>
+<span class="">Awaiting Transit</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Sequential Journey Timeline -->
+<div class="bg-surface rounded-xl border border-border p-5 mb-6">
+<div class="flex items-center justify-between pb-4 border-b border-border mb-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[20px]">timeline</span>
+<span class="font-section-title text-section-title text-text">Sequential Waste Journey Path</span>
+</div>
+
+</div>
+<!-- Timeline Grid: 4 Connected Nodes -->
+<div class="relative flex flex-col md:flex-row md:items-start justify-between gap-6 md:gap-4 px-2">
+<!-- Horizontal Connector Bar (Desktop) -->
+<div class="hidden md:block absolute top-4 left-8 right-8 h-0.5 bg-border -z-0">
+<div class="h-full bg-primary-container w-[66%]"></div>
+</div>
+<!-- Node 1: Collection -->
+<div class="relative z-10 flex flex-col items-start md:items-center md:text-center max-w-xs flex-1">
+<div class="w-8 h-8 rounded-full bg-primary-container text-surface flex items-center justify-center shadow-sm mb-3">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-body-medium text-body-medium font-semibold text-text">1. Collection</span>
+<span class="font-caption text-caption text-text-muted mt-0.5">06 Oct 2026, 08:45 IST</span>
+<div class="mt-2.5 p-3 rounded-lg border border-border bg-background w-full text-left">
+<div class="flex justify-between items-center mb-1">
+<span class="font-caption text-caption text-text-muted">Recorded Scale</span>
+<span class="font-body-medium text-body-medium font-medium text-text">4,120 kg</span>
+</div>
+<span class="font-caption text-caption text-text-muted block">Ward 22 Whitefield weigh point</span>
+<span class="font-caption text-caption text-text-muted block mt-0.5">Scale ID: WB-W22-01</span>
+<div class="mt-2 pt-1.5 border-t border-border/80 flex items-center justify-between">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Validated</span>
+<span class="font-caption text-caption text-text-muted">Supv: S. Kumar</span>
+</div>
+</div>
+</div>
+<!-- Node 2: Transportation -->
+<div class="relative z-10 flex flex-col items-start md:items-center md:text-center max-w-xs flex-1">
+<div class="w-8 h-8 rounded-full bg-primary-container text-surface flex items-center justify-center shadow-sm mb-3">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+</div>
+<span class="font-body-medium text-body-medium font-semibold text-text">2. Transportation</span>
+<span class="font-caption text-caption text-text-muted mt-0.5">06 Oct 2026, 09:40 IST</span>
+<div class="mt-2.5 p-3 rounded-lg border border-border bg-background w-full text-left">
+<div class="flex justify-between items-center mb-1">
+<span class="font-caption text-caption text-text-muted">Corridor Transit</span>
+<span class="font-body-medium text-body-medium font-medium text-text">40 min run</span>
+</div>
+<span class="font-caption text-caption text-text-muted block">Dep: 08:55 | Arr RTS: 09:35</span>
+<span class="font-caption text-caption text-text-muted block mt-0.5">Truck KA-53-MC-1904</span>
+<div class="mt-2 pt-1.5 border-t border-border/80 flex items-center justify-between">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Handed Over</span>
+<span class="font-caption text-caption text-text-muted">Driver: R. Patel</span>
+</div>
+</div>
+</div>
+<!-- Node 3: RTS Transfer Hub -->
+<div class="relative z-10 flex flex-col items-start md:items-center md:text-center max-w-xs flex-1">
+<div class="w-8 h-8 rounded-full bg-badge-rts-bg border-2 border-badge-rts-text text-badge-rts-text flex items-center justify-center shadow-sm mb-3">
+<span class="material-symbols-outlined text-[18px]">sync_alt</span>
+</div>
+<span class="font-body-medium text-body-medium font-semibold text-badge-rts-text">3. RTS Transfer Hub</span>
+<span class="font-caption text-caption text-text-muted mt-0.5">06 Oct 2026, 10:15 IST</span>
+<div class="mt-2.5 p-3 rounded-lg border border-warning/40 bg-warning-soft/30 w-full text-left shadow-sm">
+<div class="flex justify-between items-center mb-1">
+<span class="font-caption text-caption text-text-muted">Inbound Scale</span>
+<span class="font-body-medium text-body-medium font-semibold text-text">3,670 kg</span>
+</div>
+<span class="font-caption text-caption text-badge-transit-text font-medium block">Live Variance: -450 kg (-10.9%)</span>
+<span class="font-caption text-caption text-text-muted block mt-0.5">East RTS Transfer Hub (Bay 4)</span>
+<div class="mt-2 pt-1.5 border-t border-border/80 flex items-center justify-between">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-warning-soft text-badge-transit-text font-medium">Variance Hold</span>
+<span class="font-caption text-caption text-text-muted">Officer: A. Verma</span>
+</div>
+</div>
+</div>
+<!-- Node 4: Processing Facility -->
+<div class="relative z-10 flex flex-col items-start md:items-center md:text-center max-w-xs flex-1">
+<div class="w-8 h-8 rounded-full bg-surface border-2 border-text-disabled text-text-disabled flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-[18px]">factory</span>
+</div>
+<span class="font-body-medium text-body-medium font-medium text-text-disabled">4. Processing Facility</span>
+<span class="font-caption text-caption text-text-muted mt-0.5">Pending Dispatch</span>
+<div class="mt-2.5 p-3 rounded-lg border border-border/80 bg-background/40 w-full text-left opacity-75">
+<div class="flex justify-between items-center mb-1">
+<span class="font-caption text-caption text-text-muted">Scheduled Target</span>
+<span class="font-body-medium text-body-medium font-normal text-text-muted">Awaiting RTS Clear</span>
+</div>
+<span class="font-caption text-caption text-text-muted block">Apex Bio-Methanization Plant</span>
+<span class="font-caption text-caption text-text-muted block mt-0.5">Incharge: Dr. Priya Nair</span>
+<div class="mt-2 pt-1.5 border-t border-border/80 flex items-center justify-between">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-superseded-bg text-badge-superseded-text">Queue</span>
+<span class="font-caption text-caption text-text-muted">Holding</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 4: Audit & Version History (Comprehensive Trail) -->
+<div class="bg-surface rounded-xl border border-border p-5 mb-8">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-2 mb-4">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[20px]">history</span>
+<span class="font-section-title text-section-title text-text">Immutable Audit Trail &amp; Version Revisions</span>
+</div>
+
+</div>
+<div class="flex items-center gap-2">
+<span class="font-caption text-caption px-2.5 py-1 rounded-md bg-background border border-border text-text-muted">Total Entries: 5</span>
+<button class="h-8 px-3 rounded-md bg-surface border border-border text-text font-body-medium text-body-medium hover:bg-background transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span class="">Export CSV</span>
+</button>
+</div>
+</div>
+<!-- Audit Data Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background text-text-muted font-label text-label border-b border-border">
+<th class="py-3 px-4 font-medium">Ver</th>
+<th class="py-3 px-4 font-medium">Stage</th>
+<th class="py-3 px-4 font-medium">Event / Action</th>
+<th class="py-3 px-4 font-medium">Timestamp (IST)</th>
+<th class="py-3 px-4 font-medium">Logged By</th>
+<th class="py-3 px-4 font-medium">Values Recorded</th>
+<th class="py-3 px-4 font-medium">Status / Flag</th>
+<th class="py-3 px-4 font-medium">Surveillance Notes &amp; Justification</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border text-body font-body text-text">
+<!-- Row 1: Active Discrepancy -->
+<tr class="hover:bg-background/80 transition-colors bg-warning-soft/10">
+<td class="py-3.5 px-4 font-mono font-semibold text-badge-rts-text">v2.0</td>
+<td class="py-3.5 px-4 font-medium">RTS Intake</td>
+<td class="py-3.5 px-4">Initial RTS Weighed Mass</td>
+<td class="py-3.5 px-4 font-caption text-caption whitespace-nowrap">06 Oct 2026, 10:15</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-medium">Anand Verma</span>
+<span class="font-caption text-caption text-text-muted block">OP-3401</span>
+</td>
+<td class="py-3.5 px-4 font-medium whitespace-nowrap">Received: 3,670 kg</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-warning-soft text-badge-transit-text font-medium">
+                Flagged Discrepancy (-10.9%)
+              </span>
+</td>
+<td class="py-3.5 px-4 font-caption text-caption text-text-muted min-w-[240px]">
+              High moisture runoff observed at discharge bay; static weighbridge recalibrated. Supervisor inspection triggered.
+            </td>
+</tr>
+<!-- Row 2: Transport Handover -->
+<tr class="hover:bg-background/80 transition-colors">
+<td class="py-3.5 px-4 font-mono font-medium text-text-muted">v1.0</td>
+<td class="py-3.5 px-4 font-medium">Transportation</td>
+<td class="py-3.5 px-4">Transfer Handover</td>
+<td class="py-3.5 px-4 font-caption text-caption whitespace-nowrap">06 Oct 2026, 09:40</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-medium">Ramesh Patel</span>
+<span class="font-caption text-caption text-text-muted block">OP-2198</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">KA-53-MC-1904 (40m transit)</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text font-medium">
+                Completed
+              </span>
+</td>
+<td class="py-3.5 px-4 font-caption text-caption text-text-muted">
+              Direct corridor transit without intermediate stops. GPS track validated.
+            </td>
+</tr>
+<!-- Row 3: Superseded Recalibration -->
+<tr class="hover:bg-background/80 transition-colors bg-badge-superseded-bg/30">
+<td class="py-3.5 px-4 font-mono text-text-muted">v1.1</td>
+<td class="py-3.5 px-4 text-text-muted">Collection</td>
+<td class="py-3.5 px-4 line-through text-badge-superseded-text">Weight Recalibration</td>
+<td class="py-3.5 px-4 font-caption text-caption text-text-muted whitespace-nowrap">06 Oct 2026, 08:50</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="text-text-muted">Suresh Kumar</span>
+<span class="font-caption text-caption text-text-disabled block">OP-1042</span>
+</td>
+<td class="py-3.5 px-4 line-through text-badge-superseded-text whitespace-nowrap">Qty: 4,120 kg (was 4,050 kg)</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-superseded-bg text-badge-superseded-text line-through">
+                Superseded
+              </span>
+</td>
+<td class="py-3.5 px-4 font-caption text-caption text-text-muted">
+              Reason: Tare weight adjustment for collection container #4.
+            </td>
+</tr>
+<!-- Row 4: Superseded Initial Entry -->
+<tr class="hover:bg-background/80 transition-colors bg-badge-superseded-bg/30">
+<td class="py-3.5 px-4 font-mono text-text-muted">v1.0</td>
+<td class="py-3.5 px-4 text-text-muted">Collection</td>
+<td class="py-3.5 px-4 line-through text-badge-superseded-text">Initial Collection Entry</td>
+<td class="py-3.5 px-4 font-caption text-caption text-text-muted whitespace-nowrap">06 Oct 2026, 08:45</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="text-text-muted">Suresh Kumar</span>
+<span class="font-caption text-caption text-text-disabled block">OP-1042</span>
+</td>
+<td class="py-3.5 px-4 line-through text-badge-superseded-text whitespace-nowrap">Qty: 4,050 kg</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-superseded-bg text-badge-superseded-text line-through">
+                Superseded
+              </span>
+</td>
+<td class="py-3.5 px-4 font-caption text-caption text-text-muted">
+              Reason: Initial gross load measurement before container tare calibration.
+            </td>
+</tr>
+<!-- Row 5: Admin Creation -->
+<tr class="hover:bg-background/80 transition-colors">
+<td class="py-3.5 px-4 font-mono text-text-muted">v1.0</td>
+<td class="py-3.5 px-4 text-text-muted">Admin Creation</td>
+<td class="py-3.5 px-4">Batch Generation &amp; Route Assignment</td>
+<td class="py-3.5 px-4 font-caption text-caption whitespace-nowrap">06 Oct 2026, 08:00</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-medium">Admin Portal</span>
+<span class="font-caption text-caption text-text-muted block">SYS-01</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">Initial Target: 4,000 kg</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-created-bg text-badge-created-text font-medium">
+                Created
+              </span>
+</td>
+<td class="py-3.5 px-4 font-caption text-caption text-text-muted">
+              Daily morning zone pickup allocation for Ward 22 commercial &amp; household line.
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Card Footer / Surveillance Integrity Confirmation -->
+
+</div>
+</div>
+<script>
+  // Simple toast trigger for simulated QR code export
+  document.getElementById('qr-download-btn')?.addEventListener('click', function() {
+    const toast = document.createElement('div');
+    toast.className = 'fixed top-16 right-6 z-50 px-4 py-2.5 rounded-lg bg-primary text-on-primary font-body-medium text-body-medium shadow-md flex items-center gap-2 transition-all';
+    toast.innerHTML = '<span class="material-symbols-outlined text-[18px]">download_done</span><span>QR Code WB-2026-8817 downloaded</span>';
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  });
+</script></main></div>
+
+</body></html>

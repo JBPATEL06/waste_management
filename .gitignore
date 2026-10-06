@@ -1,0 +1,24 @@
+# Environment & Secrets
+.env
+.env*.local
+docs/seed_credentials.md
+
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Supabase local temp
+supabase/.temp/
+
+# Build artifacts
+dist/
+build/
+.cache/
+
+docs/demo_creditional.md

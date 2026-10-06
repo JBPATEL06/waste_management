@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary-soft": "#DCFCE7",
+          "surface-container-low": "#f2f3ff",
+          "on-error-container": "#93000a",
+          "on-background": "#131b2e",
+          "inverse-primary": "#79db8d",
+          "on-secondary-fixed-variant": "#3a485b",
+          "badge-rts-text": "#6D28D9",
+          "surface-container-highest": "#dae2fd",
+          "error-container": "#ffdad6",
+          "background": "#F8FAFC",
+          "text": "#0F172A",
+          "tertiary-container": "#b64c62",
+          "primary-container": "#15803d",
+          "badge-transit-bg": "#FEF3C7",
+          "surface-variant": "#dae2fd",
+          "badge-deleted-bg": "#FEE2E2",
+          "badge-collected-bg": "#DBEAFE",
+          "surface": "#FFFFFF",
+          "badge-deleted-text": "#B91C1C",
+          "on-tertiary": "#ffffff",
+          "warning": "#D97706",
+          "tertiary": "#97344a",
+          "badge-rts-bg": "#EDE9FE",
+          "on-secondary-fixed": "#0d1c2e",
+          "inverse-surface": "#283044",
+          "border": "#E2E8F0",
+          "outline": "#6f7a6e",
+          "surface-container-high": "#e2e7ff",
+          "on-primary": "#ffffff",
+          "on-primary-container": "#d3ffd5",
+          "badge-transit-text": "#B45309",
+          "on-surface": "#131b2e",
+          "badge-superseded-text": "#64748B",
+          "on-tertiary-fixed-variant": "#81233b",
+          "surface-dim": "#d2d9f4",
+          "on-primary-fixed-variant": "#005323",
+          "error": "#DC2626",
+          "surface-container-lowest": "#ffffff",
+          "secondary-fixed-dim": "#b9c7df",
+          "on-primary-fixed": "#00210a",
+          "secondary-fixed": "#d5e3fc",
+          "tertiary-fixed": "#ffd9dd",
+          "text-disabled": "#94A3B8",
+          "badge-created-text": "#475569",
+          "primary-hover": "#166534",
+          "primary-fixed": "#95f8a7",
+          "surface-bright": "#faf8ff",
+          "secondary": "#515f74",
+          "badge-superseded-bg": "#F1F5F9",
+          "error-soft": "#FEE2E2",
+          "primary": "#00652c",
+          "text-muted": "#475569",
+          "surface-container": "#eaedff",
+          "surface-tint": "#006d30",
+          "badge-collected-text": "#1D4ED8",
+          "on-tertiary-container": "#fff1f1",
+          "outline-variant": "becabc",
+          "inverse-on-surface": "#eef0ff",
+          "on-tertiary-fixed": "#400013",
+          "tertiary-fixed-dim": "#ffb2bd",
+          "badge-created-bg": "#F1F5F9",
+          "on-secondary-container": "#57657a",
+          "on-surface-variant": "#3f493f",
+          "secondary-container": "#d5e3fc",
+          "warning-soft": "#FEF3C7",
+          "on-error": "#ffffff",
+          "badge-completed-text": "#15803D",
+          "primary-fixed-dim": "#79db8d",
+          "badge-completed-bg": "#DCFCE7",
+          "on-secondary": "#ffffff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-md": "0.75rem",
+          "space-sm": "0.5rem",
+          "margin-mobile": "1rem",
+          "margin": "1.5rem",
+          "space-xs": "0.25rem",
+          "gutter-mobile": "0.75rem",
+          "space-lg": "1rem",
+          "space-xl": "1.5rem",
+          "space-2xl": "2rem",
+          "gutter": "1rem"
+        },
+        "fontFamily": {
+          "kpi-number": [
+            "Inter"
+          ],
+          "body-medium": [
+            "Inter"
+          ],
+          "badge": [
+            "Inter"
+          ],
+          "section-title": [
+            "Inter"
+          ],
+          "label": [
+            "Inter"
+          ],
+          "page-title": [
+            "Inter"
+          ],
+          "batch-id": [
+            "Inter"
+          ],
+          "caption": [
+            "Inter"
+          ],
+          "body": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "kpi-number": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "600"
+            }
+          ],
+          "body-medium": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "badge": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "500"
+            }
+          ],
+          "section-title": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "label": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "500"
+            }
+          ],
+          "page-title": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "600"
+            }
+          ],
+          "batch-id": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "caption": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "body": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-background font-body text-text min-h-screen antialiased"><header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50"><div class="h-14 w-full px-6 flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary-container text-[24px]">eco</span><span class="font-section-title text-section-title tracking-tight text-text">Waste Journey Tracker</span></div><div class="flex items-center"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 flex flex-col justify-between py-space-lg px-space-md"><div class="flex flex-col gap-space-xs"><nav class="flex flex-col gap-1" data-active-classes="bg-primary-soft text-badge-completed-text font-medium"><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="batches" href="#"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span>Batches</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="export" href="#"><span class="material-symbols-outlined text-[20px]">download</span><span>Export</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span>Audit Log</span></a><div class="my-2 border-t border-border"></div><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[20px]">account_circle</span><span>Profile</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-error transition-colors" data-path="logout" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span>Logout</span></a></nav></div><div class="p-3 rounded-lg border border-border bg-background flex items-center justify-between"><div class="flex flex-col"><span class="font-label text-label text-text">Head Officer</span><span class="font-caption text-caption text-text-muted">Analytical Access</span></div><span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Active</span></div></aside><div class="pl-[240px]"><main class="w-full pt-14 px-margin bg-background min-h-screen"><div class="flex flex-col w-full">
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const activeNav = document.querySelector('nav a[data-path="batches"]');
+      if (activeNav) {
+        activeNav.classList.remove('text-text-muted', 'hover:bg-background');
+        activeNav.classList.add('bg-primary-soft', 'text-badge-completed-text', 'font-medium');
+      }
+    });
+  </script>
+<div class="flex flex-col gap-space-xl py-space-xl">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs font-caption text-caption text-text-muted">
+<span>Overview</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-text font-medium">Batches</span>
+</div>
+<h1 class="font-page-title text-page-title text-text tracking-tight">Batch Registry</h1>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface shadow-sm text-text-muted font-badge text-badge">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span>Read-Only Surveillance</span>
+</div>
+</div>
+</div>
+<div class="bg-surface rounded-xl shadow-sm p-5 flex flex-col gap-space-md">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-text-muted text-[20px] pointer-events-none">search</span>
+<input class="w-full h-10 pl-10 pr-3 rounded-lg bg-surface text-text font-body text-body placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-container shadow-sm" placeholder="Search by Batch ID e.g. WB-2026..." type="text" value=""/>
+</div>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-lg bg-surface text-text font-body text-body appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container cursor-pointer shadow-sm">
+<option value="">All Statuses</option>
+<option value="created">Created</option>
+<option value="collected">Collected</option>
+<option value="in_transit">In Transit</option>
+<option value="at_rts">At RTS</option>
+<option value="completed">Completed</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-text-muted pointer-events-none text-[20px]">expand_more</span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-text-muted text-[18px] pointer-events-none">calendar_today</span>
+<input class="w-full h-10 pl-10 pr-3 rounded-lg bg-surface text-text font-body text-body cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-container shadow-sm" readonly="" type="text" value="01 Oct 2026 - 06 Oct 2026"/>
+</div>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-lg bg-surface text-text font-body text-body appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container cursor-pointer shadow-sm">
+<option value="">All Routes</option>
+<option value="R-01">Route 01 (Central Loop)</option>
+<option value="R-04">Route 04 (North Corridor)</option>
+<option value="R-09">Route 09 (Outer Ring East)</option>
+<option value="R-12">Route 12 (South Express)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-text-muted pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-space-md pt-space-xs items-center">
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-lg bg-surface text-text font-body text-body appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container cursor-pointer shadow-sm">
+<option value="">All Vehicles</option>
+<option value="KA-04-TR-9921">KA-04-TR-9921</option>
+<option value="KA-01-EA-4102">KA-01-EA-4102</option>
+<option value="KA-53-MC-1108">KA-53-MC-1108</option>
+<option value="KA-03-TR-8819">KA-03-TR-8819</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-text-muted pointer-events-none text-[20px]">expand_more</span>
+</div>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-lg bg-surface text-text font-body text-body appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container cursor-pointer shadow-sm">
+<option value="">All Waste Types</option>
+<option value="wet">Wet Organic</option>
+<option value="dry">Dry Recyclable</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-text-muted pointer-events-none text-[20px]">expand_more</span>
+</div>
+<div class="flex items-center gap-space-sm md:col-span-1 lg:col-span-2 justify-end">
+<button class="h-10 px-4 rounded-lg bg-surface text-text hover:bg-background text-body-medium font-body-medium inline-flex items-center gap-1.5 transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-text-muted">restart_alt</span>
+<span>Reset Filters</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-surface rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[1100px]">
+<thead>
+<tr class="bg-background h-12 text-label font-label text-text-muted">
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px]">Batch ID</th>
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px]">Date &amp; Time</th>
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px]">Waste Type</th>
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px] text-right">Quantity</th>
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px]">Source / Ward</th>
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px]">Route</th>
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px]">Vehicle</th>
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px]">Status</th>
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px]">Current Stage</th>
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px]">Last Updated</th>
+<th class="px-4 py-3 font-semibold uppercase tracking-wider text-[11px] text-center">Action</th>
+</tr>
+</thead>
+<tbody class="text-body font-body text-text">
+<tr class="h-12 hover:bg-background transition-colors cursor-pointer" onclick="window.location.href='/ho/batches/WB-2026-8819'">
+<td class="px-4 py-2 font-batch-id text-batch-id text-primary-container whitespace-nowrap">WB-2026-8819</td>
+<td class="px-4 py-2 text-caption font-caption whitespace-nowrap">06 Oct 2026, 09:30</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 text-label font-label">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                  Wet Organic
+                </span>
+</td>
+<td class="px-4 py-2 font-medium text-right whitespace-nowrap">3,420 kg</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Ward 14 - Indiranagar</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Route 04 (North)</td>
+<td class="px-4 py-2 font-mono text-[12px] whitespace-nowrap text-text-muted">KA-04-TR-9921</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-transit-bg text-badge-transit-text inline-block">In Transit</span>
+</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Transit to RTS</td>
+<td class="px-4 py-2 text-caption font-caption text-text-muted whitespace-nowrap">10 mins ago</td>
+<td class="px-4 py-2 text-center whitespace-nowrap" onclick="event.stopPropagation()">
+<a class="p-1.5 rounded-lg text-text-muted hover:text-primary-container hover:bg-surface-container inline-flex items-center justify-center transition-colors" href="/ho/batches/WB-2026-8819" title="View Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+</td>
+</tr>
+<tr class="h-12 hover:bg-background transition-colors cursor-pointer" onclick="window.location.href='/ho/batches/WB-2026-8818'">
+<td class="px-4 py-2 font-batch-id text-batch-id text-primary-container whitespace-nowrap">WB-2026-8818</td>
+<td class="px-4 py-2 text-caption font-caption whitespace-nowrap">06 Oct 2026, 09:12</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 text-label font-label">
+<span class="w-2 h-2 rounded-full bg-badge-collected-text"></span>
+                  Dry Recyclable
+                </span>
+</td>
+<td class="px-4 py-2 font-medium text-right whitespace-nowrap">1,890 kg</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Ward 08 - Koramangala</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Route 01 (Central)</td>
+<td class="px-4 py-2 font-mono text-[12px] whitespace-nowrap text-text-muted">KA-01-EA-4102</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-rts-bg text-badge-rts-text inline-block">At RTS</span>
+</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">RTS East Hub</td>
+<td class="px-4 py-2 text-caption font-caption text-text-muted whitespace-nowrap">28 mins ago</td>
+<td class="px-4 py-2 text-center whitespace-nowrap" onclick="event.stopPropagation()">
+<a class="p-1.5 rounded-lg text-text-muted hover:text-primary-container hover:bg-surface-container inline-flex items-center justify-center transition-colors" href="/ho/batches/WB-2026-8818" title="View Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+</td>
+</tr>
+<tr class="h-12 hover:bg-background transition-colors cursor-pointer bg-warning-soft/20" onclick="window.location.href='/ho/batches/WB-2026-8817'">
+<td class="px-4 py-2 font-batch-id text-batch-id text-primary-container whitespace-nowrap flex items-center gap-1.5">
+<span>WB-2026-8817</span>
+<span class="material-symbols-outlined text-warning text-[16px]" title="Weight variance flag detected (+14.2%)">warning</span>
+</td>
+<td class="px-4 py-2 text-caption font-caption whitespace-nowrap">06 Oct 2026, 08:45</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 text-label font-label">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                  Wet Organic
+                </span>
+</td>
+<td class="px-4 py-2 font-medium text-right whitespace-nowrap text-warning">4,120 kg</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Ward 22 - Whitefield</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Route 09 (Outer Ring)</td>
+<td class="px-4 py-2 font-mono text-[12px] whitespace-nowrap text-text-muted">KA-53-MC-1108</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-rts-bg text-badge-rts-text inline-block">At RTS</span>
+</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">RTS North Hub (Flagged)</td>
+<td class="px-4 py-2 text-caption font-caption text-text-muted whitespace-nowrap">42 mins ago</td>
+<td class="px-4 py-2 text-center whitespace-nowrap" onclick="event.stopPropagation()">
+<a class="p-1.5 rounded-lg text-text-muted hover:text-primary-container hover:bg-surface-container inline-flex items-center justify-center transition-colors" href="/ho/batches/WB-2026-8817" title="View Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+</td>
+</tr>
+<tr class="h-12 hover:bg-background transition-colors cursor-pointer" onclick="window.location.href='/ho/batches/WB-2026-8816'">
+<td class="px-4 py-2 font-batch-id text-batch-id text-primary-container whitespace-nowrap">WB-2026-8816</td>
+<td class="px-4 py-2 text-caption font-caption whitespace-nowrap">06 Oct 2026, 08:15</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 text-label font-label">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                  Wet Organic
+                </span>
+</td>
+<td class="px-4 py-2 font-medium text-right whitespace-nowrap">2,980 kg</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Ward 11 - Malleshwaram</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Route 04 (North)</td>
+<td class="px-4 py-2 font-mono text-[12px] whitespace-nowrap text-text-muted">KA-04-TR-9921</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text inline-block">Completed</span>
+</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Processing MRF-02</td>
+<td class="px-4 py-2 text-caption font-caption text-text-muted whitespace-nowrap">09:50 IST</td>
+<td class="px-4 py-2 text-center whitespace-nowrap" onclick="event.stopPropagation()">
+<a class="p-1.5 rounded-lg text-text-muted hover:text-primary-container hover:bg-surface-container inline-flex items-center justify-center transition-colors" href="/ho/batches/WB-2026-8816" title="View Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+</td>
+</tr>
+<tr class="h-12 hover:bg-background transition-colors cursor-pointer" onclick="window.location.href='/ho/batches/WB-2026-8815'">
+<td class="px-4 py-2 font-batch-id text-batch-id text-primary-container whitespace-nowrap">WB-2026-8815</td>
+<td class="px-4 py-2 text-caption font-caption whitespace-nowrap">06 Oct 2026, 07:55</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 text-label font-label">
+<span class="w-2 h-2 rounded-full bg-badge-collected-text"></span>
+                  Dry Recyclable
+                </span>
+</td>
+<td class="px-4 py-2 font-medium text-right whitespace-nowrap">1,450 kg</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Ward 03 - Jayanagar</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Route 12 (South)</td>
+<td class="px-4 py-2 font-mono text-[12px] whitespace-nowrap text-text-muted">KA-05-AA-6644</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text inline-block">Completed</span>
+</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Recycling Plant S4</td>
+<td class="px-4 py-2 text-caption font-caption text-text-muted whitespace-nowrap">09:20 IST</td>
+<td class="px-4 py-2 text-center whitespace-nowrap" onclick="event.stopPropagation()">
+<a class="p-1.5 rounded-lg text-text-muted hover:text-primary-container hover:bg-surface-container inline-flex items-center justify-center transition-colors" href="/ho/batches/WB-2026-8815" title="View Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+</td>
+</tr>
+<tr class="h-12 hover:bg-background transition-colors cursor-pointer" onclick="window.location.href='/ho/batches/WB-2026-8814'">
+<td class="px-4 py-2 font-batch-id text-batch-id text-primary-container whitespace-nowrap">WB-2026-8814</td>
+<td class="px-4 py-2 text-caption font-caption whitespace-nowrap">06 Oct 2026, 07:30</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 text-label font-label">
+<span class="w-2 h-2 rounded-full bg-badge-collected-text"></span>
+                  Dry Recyclable
+                </span>
+</td>
+<td class="px-4 py-2 font-medium text-right whitespace-nowrap">2,110 kg</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Ward 19 - HSR Layout</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Route 12 (South)</td>
+<td class="px-4 py-2 font-mono text-[12px] whitespace-nowrap text-text-muted">KA-03-TR-8819</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-collected-bg text-badge-collected-text inline-block">Collected</span>
+</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Ward Collection Point</td>
+<td class="px-4 py-2 text-caption font-caption text-text-muted whitespace-nowrap">08:05 IST</td>
+<td class="px-4 py-2 text-center whitespace-nowrap" onclick="event.stopPropagation()">
+<a class="p-1.5 rounded-lg text-text-muted hover:text-primary-container hover:bg-surface-container inline-flex items-center justify-center transition-colors" href="/ho/batches/WB-2026-8814" title="View Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+</td>
+</tr>
+<tr class="h-12 hover:bg-background transition-colors cursor-pointer" onclick="window.location.href='/ho/batches/WB-2026-8813'">
+<td class="px-4 py-2 font-batch-id text-batch-id text-primary-container whitespace-nowrap">WB-2026-8813</td>
+<td class="px-4 py-2 text-caption font-caption whitespace-nowrap">06 Oct 2026, 07:05</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 text-label font-label">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                  Wet Organic
+                </span>
+</td>
+<td class="px-4 py-2 font-medium text-right whitespace-nowrap">3,680 kg</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Ward 05 - Rajajinagar</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Route 01 (Central)</td>
+<td class="px-4 py-2 font-mono text-[12px] whitespace-nowrap text-text-muted">KA-02-TR-3019</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-transit-bg text-badge-transit-text inline-block">In Transit</span>
+</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Transit to RTS</td>
+<td class="px-4 py-2 text-caption font-caption text-text-muted whitespace-nowrap">07:45 IST</td>
+<td class="px-4 py-2 text-center whitespace-nowrap" onclick="event.stopPropagation()">
+<a class="p-1.5 rounded-lg text-text-muted hover:text-primary-container hover:bg-surface-container inline-flex items-center justify-center transition-colors" href="/ho/batches/WB-2026-8813" title="View Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+</td>
+</tr>
+<tr class="h-12 hover:bg-background transition-colors cursor-pointer" onclick="window.location.href='/ho/batches/WB-2026-8812'">
+<td class="px-4 py-2 font-batch-id text-batch-id text-text whitespace-nowrap">WB-2026-8812</td>
+<td class="px-4 py-2 text-caption font-caption whitespace-nowrap">06 Oct 2026, 06:40</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 text-label font-label">
+<span class="w-2 h-2 rounded-full bg-text-disabled"></span>
+                  Wet Organic
+                </span>
+</td>
+<td class="px-4 py-2 font-medium text-right whitespace-nowrap">0 kg</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Ward 17 - Hebbal</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Route 04 (North)</td>
+<td class="px-4 py-2 font-mono text-[12px] whitespace-nowrap text-text-muted">Unassigned</td>
+<td class="px-4 py-2 whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-created-bg text-badge-created-text inline-block">Created</span>
+</td>
+<td class="px-4 py-2 whitespace-nowrap text-text-muted">Scheduled / Staged</td>
+<td class="px-4 py-2 text-caption font-caption text-text-muted whitespace-nowrap">06:40 IST</td>
+<td class="px-4 py-2 text-center whitespace-nowrap" onclick="event.stopPropagation()">
+<a class="p-1.5 rounded-lg text-text-muted hover:text-primary-container hover:bg-surface-container inline-flex items-center justify-center transition-colors" href="/ho/batches/WB-2026-8812" title="View Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-surface flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-caption text-caption text-text-muted">Showing 1-8 of 1,248 batches</span>
+<div class="flex items-center gap-1.5 font-caption text-caption text-text-muted">
+<span>Rows:</span>
+<select class="h-8 px-2 rounded-lg bg-surface text-text font-caption text-caption focus:outline-none focus:ring-1 focus:ring-primary-container cursor-pointer shadow-sm">
+<option selected="" value="10">10</option>
+<option value="25">25</option>
+<option value="50">50</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="h-8 px-2.5 rounded-lg bg-surface text-text-disabled font-body-medium text-body-medium inline-flex items-center justify-center cursor-not-allowed" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="h-8 w-8 rounded-lg bg-primary-soft text-badge-completed-text font-body-medium text-body-medium font-semibold flex items-center justify-center" type="button">
+            1
+          </button>
+<button class="h-8 w-8 rounded-lg bg-surface text-text hover:bg-background font-body-medium text-body-medium flex items-center justify-center transition-colors shadow-sm" type="button">
+            2
+          </button>
+<button class="h-8 w-8 rounded-lg bg-surface text-text hover:bg-background font-body-medium text-body-medium flex items-center justify-center transition-colors shadow-sm" type="button">
+            3
+          </button>
+<span class="h-8 w-6 flex items-center justify-center text-text-muted font-caption text-caption">...</span>
+<button class="h-8 w-8 rounded-lg bg-surface text-text hover:bg-background font-body-medium text-body-medium flex items-center justify-center transition-colors shadow-sm" type="button">
+            156
+          </button>
+<button class="h-8 px-2.5 rounded-lg bg-surface text-text hover:bg-background font-body-medium text-body-medium inline-flex items-center justify-center transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"error-soft":"#FEE2E2","badge-collected-bg":"#DBEAFE","inverse-primary":"#79db8d","surface-container-lowest":"#ffffff","warning":"#D97706","on-surface":"#131b2e","outline":"#6f7a6e","background":"#F8FAFC","on-primary":"#ffffff","tertiary-fixed-dim":"#ffb2bd","badge-rts-bg":"#EDE9FE","badge-deleted-text":"#B91C1C","secondary-fixed-dim":"#b9c7df","primary":"#00652c","error-container":"#ffdad6","surface-tint":"#006d30","on-secondary-fixed-variant":"#3a485b","on-tertiary-container":"#fff1f1","outline-variant":"#becabc","badge-transit-bg":"#FEF3C7","surface-container":"#eaedff","on-primary-container":"#d3ffd5","primary-fixed-dim":"#79db8d","on-tertiary-fixed":"#400013","surface-container-low":"#f2f3ff","tertiary-fixed":"#ffd9dd","secondary-fixed":"#d5e3fc","badge-superseded-text":"#64748B","on-background":"#131b2e","badge-completed-text":"#15803D","badge-created-text":"#475569","primary-hover":"#166534","primary-soft":"#DCFCE7","surface-container-high":"#e2e7ff","surface-container-highest":"#dae2fd","warning-soft":"#FEF3C7","badge-superseded-bg":"#F1F5F9","on-primary-fixed":"#00210a","primary-container":"#15803d","inverse-on-surface":"#eef0ff","tertiary-container":"#b64c62","text-disabled":"#94A3B8","secondary":"#515f74","error":"#DC2626","primary-fixed":"#95f8a7","on-surface-variant":"#3f493f","surface-variant":"#dae2fd","on-secondary-fixed":"#0d1c2e","tertiary":"#97344a","badge-created-bg":"#F1F5F9","badge-rts-text":"#6D28D9","surface":"#FFFFFF","badge-deleted-bg":"#FEE2E2","surface-bright":"#faf8ff","on-error-container":"#93000a","text-muted":"#475569","badge-completed-bg":"#DCFCE7","on-secondary":"#ffffff","on-secondary-container":"#57657a","text":"#0F172A","inverse-surface":"#283044","badge-collected-text":"#1D4ED8","border":"#E2E8F0","secondary-container":"#d5e3fc","badge-transit-text":"#B45309","on-primary-fixed-variant":"#005323","on-tertiary-fixed-variant":"#81233b","surface-dim":"#d2d9f4","on-error":"#ffffff","on-tertiary":"#ffffff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-xs":"0.25rem","margin":"1.5rem","gutter-mobile":"0.75rem","space-2xl":"2rem","gutter":"1rem","space-lg":"1rem","space-md":"0.75rem","margin-mobile":"1rem","space-sm":"0.5rem","space-xl":"1.5rem"},"fontFamily":{"label":["Inter"],"section-title":["Inter"],"batch-id":["Inter"],"body-medium":["Inter"],"page-title":["Inter"],"body":["Inter"],"kpi-number":["Inter"],"caption":["Inter"],"badge":["Inter"]},"fontSize":{"label":["13px",{"lineHeight":"18px","fontWeight":"500"}],"section-title":["18px",{"lineHeight":"24px","fontWeight":"600"}],"batch-id":["14px",{"lineHeight":"20px","letterSpacing":"0.02em","fontWeight":"600"}],"body-medium":["14px",{"lineHeight":"20px","fontWeight":"500"}],"page-title":["24px",{"lineHeight":"32px","fontWeight":"600"}],"body":["14px",{"lineHeight":"20px","fontWeight":"400"}],"kpi-number":["24px",{"lineHeight":"32px","fontWeight":"600"}],"caption":["12px",{"lineHeight":"16px","fontWeight":"400"}],"badge":["12px",{"lineHeight":"16px","fontWeight":"500"}]}}}};</script></head><body class="bg-background font-body text-text antialiased min-h-screen"><header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50 flex items-center justify-between px-margin"><div class="flex items-center gap-space-md"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><span class="font-section-title text-section-title text-text tracking-tight">Waste Journey Tracker</span></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><span class="font-body-medium text-body-medium text-text">Anil Mehta</span><span class="font-badge text-badge bg-primary-soft text-primary-hover px-space-sm py-space-xs rounded-full">Admin</span></div><div class="h-4 w-[1px] bg-border"></div><a class="font-body-medium text-body-medium text-text-muted hover:text-text transition-colors" data-path="profile" href="#">Profile</a><a class="font-body-medium text-body-medium text-text-muted hover:text-error transition-colors flex items-center gap-space-xs" data-path="login" href="#"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"></path></svg>Logout</a></div></header><aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 overflow-y-auto"><div class="p-space-md"><nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-soft text-primary-hover font-semibold"><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg transition-colors bg-primary-soft text-primary-hover font-semibold" data-path="dashboard" href="#"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Dashboard</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-text-muted hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-medium text-body-medium" data-path="batches" href="#"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Batches</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-text-muted hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-medium text-body-medium" data-path="create-batch" href="#"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Create Batch</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-text-muted hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-medium text-body-medium" data-path="master-data" href="#"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Master Data</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-text-muted hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-medium text-body-medium" data-path="users" href="#"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Users</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-text-muted hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-medium text-body-medium" data-path="export" href="#"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Export</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-text-muted hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-medium text-body-medium" data-path="audit-log" href="#"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Audit Log</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-text-muted hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-medium text-body-medium" data-path="settings" href="#"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Settings</span></a></nav></div></aside><div class="pl-[240px]"><main class="pt-14 min-h-screen bg-background"><div class="max-w-[1280px] mx-auto p-margin"><div class="flex flex-col w-full space-y-space-xl">
+<!-- 1. Header / Page Title -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-space-sm">
+<div>
+<h1 class="font-page-title text-page-title text-text tracking-tight">Admin Dashboard</h1>
+<p class="font-body text-body text-text-muted mt-space-xs">Real-time overview of waste collection, transit, and processing operations.</p>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-space-md py-1 bg-surface rounded-full border border-border text-text-muted font-caption text-caption">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+        System Live • Updated 10:24 AM IST
+      </span>
+</div>
+</div>
+<!-- 2. Filter Bar -->
+<section class="bg-surface rounded-xl border border-border p-5">
+<div class="flex flex-col lg:flex-row lg:items-end gap-space-md">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-space-md flex-1">
+<!-- Date Range -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted">Date Range</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 bg-surface rounded-lg border border-border font-body text-body text-text appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container">
+<option selected="">Last 7 Days (30 Sep - 06 Oct 2026)</option>
+<option>Today (06 Oct 2026)</option>
+<option>Yesterday (05 Oct 2026)</option>
+<option>Current Month (Oct 2026)</option>
+<option>Custom Window...</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-text-muted text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Waste Type -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted">Waste Type</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 bg-surface rounded-lg border border-border font-body text-body text-text appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container">
+<option selected="">All Types</option>
+<option>Wet</option>
+<option>Dry</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-text-muted text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Route -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted">Route</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 bg-surface rounded-lg border border-border font-body text-body text-text appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container">
+<option selected="">All Routes</option>
+<option>Route A-North</option>
+<option>Route B-Central</option>
+<option>Route C-East</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-text-muted text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Vehicle -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted">Vehicle</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 bg-surface rounded-lg border border-border font-body text-body text-text appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container">
+<option selected="">All Vehicles</option>
+<option>MH-02-AB-1234</option>
+<option>MH-02-CD-5678</option>
+<option>MH-02-EF-9012</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-text-muted text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- RTS -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted">RTS Location</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 bg-surface rounded-lg border border-border font-body text-body text-text appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container">
+<option selected="">All RTS Locations</option>
+<option>Sector 4 RTS</option>
+<option>Ward 12 Hub</option>
+<option>Central Transfer Station</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-text-muted text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Facility & Status Combos -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted">Facility</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 bg-surface rounded-lg border border-border font-body text-body text-text appearance-none focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container">
+<option selected="">All Facilities</option>
+<option>EcoClean Processing Plant</option>
+<option>GreenField Biogas Facility</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-text-muted text-[18px]">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Reset Action -->
+<div class="flex items-center gap-space-sm pt-2 lg:pt-0">
+<button class="h-10 px-4 bg-surface hover:bg-background border border-border rounded-lg font-body-medium text-body-medium text-text flex items-center gap-2 transition-colors whitespace-nowrap" type="button">
+<span class="material-symbols-outlined text-[18px] text-text-muted">restart_alt</span>
+<span>Reset Filters</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 3. KPI Cards Row -->
+<section class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-space-md">
+<!-- Total Batches -->
+<a class="bg-surface rounded-xl border border-border p-5 hover:border-text-disabled transition-all flex flex-col justify-between group" data-path="batches" href="#">
+<div>
+<p class="font-label text-label text-text-muted">Total Batches</p>
+<p class="font-kpi-number text-kpi-number text-text mt-1 group-hover:text-primary-container transition-colors">184</p>
+</div>
+<p class="font-caption text-caption text-text-muted mt-3">Across all stages</p>
+</a>
+<!-- Created -->
+<a class="bg-surface rounded-xl border border-border p-5 hover:border-text-disabled transition-all flex flex-col justify-between group" data-path="batches" href="#">
+<div>
+<div class="flex items-center justify-between">
+<p class="font-label text-label text-text-muted">Created</p>
+<span class="w-2 h-2 rounded-full bg-badge-created-text"></span>
+</div>
+<p class="font-kpi-number text-kpi-number text-text mt-1">18</p>
+</div>
+<div class="mt-3">
+<span class="inline-flex items-center font-badge text-badge text-badge-created-text bg-badge-created-bg px-2 py-0.5 rounded-full">
+          Pending collection
+        </span>
+</div>
+</a>
+<!-- Collected -->
+<a class="bg-surface rounded-xl border border-border p-5 hover:border-text-disabled transition-all flex flex-col justify-between group" data-path="batches" href="#">
+<div>
+<div class="flex items-center justify-between">
+<p class="font-label text-label text-text-muted">Collected</p>
+<span class="w-2 h-2 rounded-full bg-badge-collected-text"></span>
+</div>
+<p class="font-kpi-number text-kpi-number text-text mt-1">42</p>
+</div>
+<div class="mt-3">
+<span class="inline-flex items-center font-badge text-badge text-badge-collected-text bg-badge-collected-bg px-2 py-0.5 rounded-full">
+          In handoff
+        </span>
+</div>
+</a>
+<!-- In Transit -->
+<a class="bg-surface rounded-xl border border-border p-5 hover:border-text-disabled transition-all flex flex-col justify-between group" data-path="batches" href="#">
+<div>
+<div class="flex items-center justify-between">
+<p class="font-label text-label text-text-muted">In Transit</p>
+<span class="w-2 h-2 rounded-full bg-badge-transit-text"></span>
+</div>
+<p class="font-kpi-number text-kpi-number text-text mt-1">35</p>
+</div>
+<div class="mt-3">
+<span class="inline-flex items-center font-badge text-badge text-badge-transit-text bg-badge-transit-bg px-2 py-0.5 rounded-full">
+          En route to RTS
+        </span>
+</div>
+</a>
+<!-- At RTS -->
+<a class="bg-surface rounded-xl border border-border p-5 hover:border-text-disabled transition-all flex flex-col justify-between group" data-path="batches" href="#">
+<div>
+<div class="flex items-center justify-between">
+<p class="font-label text-label text-text-muted">At RTS</p>
+<span class="w-2 h-2 rounded-full bg-badge-rts-text"></span>
+</div>
+<p class="font-kpi-number text-kpi-number text-text mt-1">29</p>
+</div>
+<div class="mt-3">
+<span class="inline-flex items-center font-badge text-badge text-badge-rts-text bg-badge-rts-bg px-2 py-0.5 rounded-full">
+          Sorting & transfer
+        </span>
+</div>
+</a>
+<!-- Completed -->
+<a class="bg-surface rounded-xl border border-border p-5 hover:border-text-disabled transition-all flex flex-col justify-between group" data-path="batches" href="#">
+<div>
+<div class="flex items-center justify-between">
+<p class="font-label text-label text-text-muted">Completed</p>
+<span class="w-2 h-2 rounded-full bg-badge-completed-text"></span>
+</div>
+<p class="font-kpi-number text-kpi-number text-text mt-1 text-primary-container">60</p>
+</div>
+<div class="mt-3">
+<span class="inline-flex items-center font-badge text-badge text-badge-completed-text bg-badge-completed-bg px-2 py-0.5 rounded-full">
+          Processed
+        </span>
+</div>
+</a>
+</section>
+<!-- 4. Quantity Funnel & Variance Section -->
+<section class="bg-surface rounded-xl border border-border p-5">
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 pb-4 border-b border-border">
+<div>
+<h2 class="font-section-title text-section-title text-text">Quantity Funnel & Lifecycle Variance</h2>
+<p class="font-body text-body text-text-muted mt-0.5">Physical mass retention throughout the chain of custody</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-caption text-caption text-text-muted">Net Journey Variance:</span>
+<span class="inline-flex items-center font-batch-id text-batch-id text-badge-completed-text bg-badge-completed-bg px-2.5 py-0.5 rounded-md">
+          -4.05%
+        </span>
+<span class="font-caption text-caption text-text-muted">(Threshold: ±10.0%)</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5">
+<!-- Funnel Step 1 -->
+<div class="flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted uppercase tracking-wider">1. Initial Collection</span>
+<span class="font-caption text-caption text-text-muted">Baseline</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-kpi-number text-kpi-number text-text">124,500</span>
+<span class="font-body text-body text-text-muted">kg</span>
+</div>
+<div class="w-full bg-background rounded-full h-2.5 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 100%;"></div>
+</div>
+<p class="font-caption text-caption text-text-muted">100% aggregate input mass</p>
+</div>
+<!-- Funnel Step 2 -->
+<div class="flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted uppercase tracking-wider">2. Received at RTS</span>
+<span class="inline-flex items-center font-badge text-badge text-badge-completed-text bg-badge-completed-bg px-1.5 py-0.5 rounded">
+            -2.17% var
+          </span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-kpi-number text-kpi-number text-text">121,800</span>
+<span class="font-body text-body text-text-muted">kg</span>
+</div>
+<div class="w-full bg-background rounded-full h-2.5 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 97.83%;"></div>
+</div>
+<p class="font-caption text-caption text-text-muted">-2,700 kg standard moisture/loss</p>
+</div>
+<!-- Funnel Step 3 -->
+<div class="flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted uppercase tracking-wider">3. Final Processed</span>
+<span class="inline-flex items-center font-badge text-badge text-badge-completed-text bg-badge-completed-bg px-1.5 py-0.5 rounded">
+            -1.93% var
+          </span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-kpi-number text-kpi-number text-text">119,450</span>
+<span class="font-body text-body text-text-muted">kg</span>
+</div>
+<div class="w-full bg-background rounded-full h-2.5 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 95.94%;"></div>
+</div>
+<p class="font-caption text-caption text-text-muted">-2,350 kg sorting & processing yield</p>
+</div>
+</div>
+</section>
+<!-- 5. Breakdown Charts / Distribution (2-column grid) -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-space-md">
+<!-- Card 1: Distribution by Waste Type & Final Status -->
+<div class="bg-surface rounded-xl border border-border p-5 flex flex-col justify-between space-y-5">
+<div>
+<h3 class="font-section-title text-section-title text-text">Distribution by Waste Type & Final Status</h3>
+<p class="font-body text-body text-text-muted mt-0.5">Stream volume allocation and current operational state</p>
+</div>
+<div class="space-y-4">
+<!-- Waste Type Stacked Bar -->
+<div>
+<div class="flex justify-between items-center text-label font-label mb-1.5">
+<span class="text-text">Wet Waste (55% / 68,400 kg)</span>
+<span class="text-text-muted">Dry Waste (45% / 56,100 kg)</span>
+</div>
+<div class="w-full h-3 bg-background rounded-full flex overflow-hidden">
+<div class="bg-primary-container h-full" style="width: 55%;"></div>
+<div class="bg-secondary-container h-full" style="width: 45%;"></div>
+</div>
+<div class="flex items-center gap-4 mt-2 font-caption text-caption text-text-muted">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary-container"></span> Wet (Biodegradable / Composting)</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary-container"></span> Dry (Recyclables & RDF)</span>
+</div>
+</div>
+<!-- Status Breakdown Bar -->
+<div class="pt-2">
+<p class="font-label text-label text-text-muted mb-2">Batch Status Breakdown (184 Total)</p>
+<div class="w-full h-3 bg-background rounded-full flex overflow-hidden">
+<div class="bg-badge-completed-text h-full" style="width: 32.6%;"></div>
+<div class="bg-badge-transit-text h-full" style="width: 57.6%;"></div>
+<div class="bg-badge-created-text h-full" style="width: 9.8%;"></div>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-3 font-caption text-caption">
+<div class="p-2 bg-background rounded-lg">
+<span class="text-text-muted block">Completed</span>
+<span class="font-body-medium text-body-medium text-text">60 batches</span>
+</div>
+<div class="p-2 bg-background rounded-lg">
+<span class="text-text-muted block">In Progress</span>
+<span class="font-body-medium text-body-medium text-text">106 batches</span>
+</div>
+<div class="p-2 bg-background rounded-lg">
+<span class="text-text-muted block">Pending</span>
+<span class="font-body-medium text-body-medium text-text">18 batches</span>
+</div>
+</div>
+</div>
+</div>
+<div class="text-right pt-2">
+<a class="font-body-medium text-body-medium text-primary-hover hover:underline inline-flex items-center gap-1" data-path="batches" href="#">
+          Explore complete classification
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Card 2: Volume by RTS & Processing Facilities -->
+<div class="bg-surface rounded-xl border border-border p-5 flex flex-col justify-between space-y-4">
+<div>
+<h3 class="font-section-title text-section-title text-text">Volume by RTS & Processing Facilities</h3>
+<p class="font-body text-body text-text-muted mt-0.5">Aggregate tonnage handled by downstream nodes</p>
+</div>
+<div class="space-y-3">
+<!-- Item 1 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center font-body text-body">
+<span class="font-body-medium text-body-medium text-text">Sector 4 RTS</span>
+<span class="text-text font-batch-id">48,200 kg <span class="text-text-muted font-normal">(38 batches)</span></span>
+</div>
+<div class="w-full bg-background rounded-full h-2">
+<div class="bg-secondary h-2 rounded-full" style="width: 66.8%;"></div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center font-body text-body">
+<span class="font-body-medium text-body-medium text-text">Central Transfer Station</span>
+<span class="text-text font-batch-id">42,600 kg <span class="text-text-muted font-normal">(32 batches)</span></span>
+</div>
+<div class="w-full bg-background rounded-full h-2">
+<div class="bg-secondary h-2 rounded-full" style="width: 59.0%;"></div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center font-body text-body">
+<span class="font-body-medium text-body-medium text-text">EcoClean Processing Plant</span>
+<span class="text-text font-batch-id">72,100 kg <span class="text-text-muted font-normal">(54 batches)</span></span>
+</div>
+<div class="w-full bg-background rounded-full h-2">
+<div class="bg-primary-container h-2 rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center font-body text-body">
+<span class="font-body-medium text-body-medium text-text">GreenField Biogas Facility</span>
+<span class="text-text font-batch-id">47,350 kg <span class="text-text-muted font-normal">(36 batches)</span></span>
+</div>
+<div class="w-full bg-background rounded-full h-2">
+<div class="bg-primary-container h-2 rounded-full" style="width: 65.6%;"></div>
+</div>
+</div>
+</div>
+<div class="pt-2 text-right">
+<a class="font-body-medium text-body-medium text-primary-hover hover:underline inline-flex items-center gap-1" data-path="master-data" href="#">
+          Manage facility thresholds
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- 6. Operational Metrics & Pending per User (2-column grid) -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-space-md">
+<!-- Card 1: Operational Performance & Journey Duration -->
+<div class="bg-surface rounded-xl border border-border p-5 flex flex-col justify-between space-y-4">
+<div>
+<h3 class="font-section-title text-section-title text-text">Operational Performance & Journey Duration</h3>
+<p class="font-body text-body text-text-muted mt-0.5">Velocity KPIs and bottlenecks across transit checkpoints</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="p-3.5 bg-background rounded-lg border border-border">
+<span class="font-label text-label text-text-muted">Avg Journey Duration</span>
+<p class="font-kpi-number text-kpi-number text-text mt-1">4h 15m</p>
+<span class="font-caption text-caption text-text-muted mt-1 block">Collection to Final Processing</span>
+</div>
+<div class="p-3.5 bg-background rounded-lg border border-border">
+<span class="font-label text-label text-text-muted">Avg RTS Turnaround</span>
+<p class="font-kpi-number text-kpi-number text-text mt-1">1h 20m</p>
+<span class="font-caption text-caption text-text-muted mt-1 block">Intake weigh to outbound dispatch</span>
+</div>
+</div>
+<div class="p-3.5 bg-warning-soft rounded-lg border border-warning/20">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-warning text-[20px]">warning</span>
+<span class="font-body-medium text-body-medium text-text">Stuck Batches (> 6h in transit/RTS)</span>
+</div>
+<span class="font-badge text-badge bg-warning text-surface px-2 py-0.5 rounded-full font-medium">3 Flagged</span>
+</div>
+<p class="font-caption text-caption text-text-muted mt-1">Requires immediate follow-up with assigned transportation personnel:</p>
+<div class="flex flex-wrap gap-2 mt-2">
+<a class="font-batch-id text-batch-id px-2.5 py-1 bg-surface text-warning rounded border border-warning/30 hover:border-warning transition-colors inline-flex items-center gap-1" data-path="batches" href="#">
+            WB-2026-0089
+            <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+<a class="font-batch-id text-batch-id px-2.5 py-1 bg-surface text-warning rounded border border-warning/30 hover:border-warning transition-colors inline-flex items-center gap-1" data-path="batches" href="#">
+            WB-2026-0094
+            <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+<a class="font-batch-id text-batch-id px-2.5 py-1 bg-surface text-warning rounded border border-warning/30 hover:border-warning transition-colors inline-flex items-center gap-1" data-path="batches" href="#">
+            WB-2026-0102
+            <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Card 2: Pending Actions per Stage & User -->
+<div class="bg-surface rounded-xl border border-border p-5 flex flex-col justify-between space-y-4">
+<div>
+<h3 class="font-section-title text-section-title text-text">Pending Actions per Stage & User</h3>
+<p class="font-body text-body text-text-muted mt-0.5">Officers currently responsible for batch progression</p>
+</div>
+<div class="divide-y divide-border">
+<div class="py-2.5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-badge-created-bg flex items-center justify-center text-text-muted">
+<span class="material-symbols-outlined text-[18px]">inventory_2</span>
+</div>
+<div>
+<p class="font-body-medium text-body-medium text-text">Rajesh Sharma</p>
+<p class="font-caption text-caption text-text-muted">Stage: Collection / Ward Pickup</p>
+</div>
+</div>
+<span class="font-badge text-badge px-2.5 py-1 bg-badge-created-bg text-badge-created-text rounded-full">
+            4 batches pending
+          </span>
+</div>
+<div class="py-2.5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-badge-transit-bg flex items-center justify-center text-badge-transit-text">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+</div>
+<div>
+<p class="font-body-medium text-body-medium text-text">Suresh Patil</p>
+<p class="font-caption text-caption text-text-muted">Stage: Transportation en route</p>
+</div>
+</div>
+<span class="font-badge text-badge px-2.5 py-1 bg-badge-transit-bg text-badge-transit-text rounded-full">
+            6 batches en route
+          </span>
+</div>
+<div class="py-2.5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-badge-rts-bg flex items-center justify-center text-badge-rts-text">
+<span class="material-symbols-outlined text-[18px]">sync_alt</span>
+</div>
+<div>
+<p class="font-body-medium text-body-medium text-text">Vikram Desai</p>
+<p class="font-caption text-caption text-text-muted">Stage: RTS Intake Verification</p>
+</div>
+</div>
+<span class="font-badge text-badge px-2.5 py-1 bg-badge-rts-bg text-badge-rts-text rounded-full">
+            3 batches awaiting intake
+          </span>
+</div>
+<div class="py-2.5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-badge-completed-bg flex items-center justify-center text-badge-completed-text">
+<span class="material-symbols-outlined text-[18px]">recycling</span>
+</div>
+<div>
+<p class="font-body-medium text-body-medium text-text">Anita Roy</p>
+<p class="font-caption text-caption text-text-muted">Stage: Processing Plant Intake</p>
+</div>
+</div>
+<span class="font-badge text-badge px-2.5 py-1 bg-badge-completed-bg text-badge-completed-text rounded-full">
+            5 queued for digestion
+          </span>
+</div>
+</div>
+<div class="pt-1 text-right">
+<a class="font-body-medium text-body-medium text-primary-hover hover:underline inline-flex items-center gap-1" data-path="users" href="#">
+          View all field personnel
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- 7. Flagged Variances Alert List -->
+<section class="bg-surface rounded-xl border border-border p-5 space-y-4">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-section-title text-section-title text-text">Flagged Variances (> 10% Weight Discrepancy)</h3>
+<span class="font-badge text-badge bg-error-soft text-error px-2 py-0.5 rounded-full font-medium">Critical</span>
+</div>
+<p class="font-body text-body text-text-muted mt-0.5">2 batches exceeded the 10% variance threshold and require review.</p>
+</div>
+<a class="font-body-medium text-body-medium text-primary-hover hover:underline self-start sm:self-auto" data-path="audit-log" href="#">
+        Variance audit rules
+      </a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background font-label text-label text-text-muted border-b border-border">
+<th class="py-2.5 px-4">Batch ID</th>
+<th class="py-2.5 px-4">Route / RTS</th>
+<th class="py-2.5 px-4 text-right">Dispatched</th>
+<th class="py-2.5 px-4 text-right">Received</th>
+<th class="py-2.5 px-4 text-center">Variance %</th>
+<th class="py-2.5 px-4">Flagged At</th>
+<th class="py-2.5 px-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border font-body text-body">
+<tr class="hover:bg-background transition-colors">
+<td class="py-3 px-4 font-batch-id text-batch-id text-text">WB-2026-0077</td>
+<td class="py-3 px-4 text-text">Route A-North → Sector 4 RTS</td>
+<td class="py-3 px-4 text-right text-text">1,800 kg</td>
+<td class="py-3 px-4 text-right text-text font-medium">1,560 kg</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center font-badge text-badge px-2 py-0.5 rounded-full bg-error-soft text-error">
+                -13.3%
+              </span>
+</td>
+<td class="py-3 px-4 text-text-muted">06 Oct 2026, 08:15</td>
+<td class="py-3 px-4 text-right">
+<a class="font-body-medium text-body-medium text-primary-hover hover:underline" data-path="batches" href="#">
+                Review Batch
+              </a>
+</td>
+</tr>
+<tr class="hover:bg-background transition-colors">
+<td class="py-3 px-4 font-batch-id text-batch-id text-text">WB-2026-0081</td>
+<td class="py-3 px-4 text-text">Route C-East → Central Hub</td>
+<td class="py-3 px-4 text-right text-text">2,200 kg</td>
+<td class="py-3 px-4 text-right text-text font-medium">1,910 kg</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center font-badge text-badge px-2 py-0.5 rounded-full bg-error-soft text-error">
+                -13.1%
+              </span>
+</td>
+<td class="py-3 px-4 text-text-muted">06 Oct 2026, 09:40</td>
+<td class="py-3 px-4 text-right">
+<a class="font-body-medium text-body-medium text-primary-hover hover:underline" data-path="batches" href="#">
+                Review Batch
+              </a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- 8. Recent Activity & Corrections/Deletions -->
+<section class="bg-surface rounded-xl border border-border p-5 space-y-4">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-section-title text-section-title text-text">Recent Updates & Stage Corrections</h3>
+<p class="font-body text-body text-text-muted mt-0.5">Chronological record of recent modifications and stage sign-offs</p>
+</div>
+<a class="font-body-medium text-body-medium text-primary-hover hover:underline" data-path="audit-log" href="#">
+        Full Audit Log
+      </a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background font-label text-label text-text-muted border-b border-border">
+<th class="py-2.5 px-4">Timestamp</th>
+<th class="py-2.5 px-4">Batch ID</th>
+<th class="py-2.5 px-4">Stage</th>
+<th class="py-2.5 px-4">Action Summary</th>
+<th class="py-2.5 px-4">Performed By</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border font-body text-body">
+<tr class="hover:bg-background transition-colors">
+<td class="py-3 px-4 text-text-muted whitespace-nowrap">06 Oct 2026, 10:15</td>
+<td class="py-3 px-4 font-batch-id text-batch-id text-text">WB-2026-0112</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center font-badge text-badge px-2 py-0.5 rounded-full bg-badge-transit-bg text-badge-transit-text">
+                Transportation
+              </span>
+</td>
+<td class="py-3 px-4 text-text">Updated estimated arrival time to RTS</td>
+<td class="py-3 px-4 text-text-muted">Suresh Patil</td>
+</tr>
+<tr class="hover:bg-background transition-colors">
+<td class="py-3 px-4 text-text-muted whitespace-nowrap">06 Oct 2026, 09:50</td>
+<td class="py-3 px-4 font-batch-id text-batch-id text-text">WB-2026-0077</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center font-badge text-badge px-2 py-0.5 rounded-full bg-badge-rts-bg text-badge-rts-text">
+                RTS
+              </span>
+</td>
+<td class="py-3 px-4 text-text">
+              Weight entry correction <span class="text-text-muted font-caption">(Reason: Scale recalibrated; superseded v1 marked)</span>
+</td>
+<td class="py-3 px-4 text-text-muted">Vikram Desai</td>
+</tr>
+<tr class="hover:bg-background transition-colors">
+<td class="py-3 px-4 text-text-muted whitespace-nowrap">06 Oct 2026, 09:25</td>
+<td class="py-3 px-4 font-batch-id text-batch-id text-text">WB-2026-0115</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center font-badge text-badge px-2 py-0.5 rounded-full bg-badge-created-bg text-badge-created-text">
+                Collection
+              </span>
+</td>
+<td class="py-3 px-4 text-text">Batch created and assigned to vehicle MH-02-AB-1234</td>
+<td class="py-3 px-4 text-text-muted">Anil Mehta</td>
+</tr>
+<tr class="hover:bg-background transition-colors">
+<td class="py-3 px-4 text-text-muted whitespace-nowrap">06 Oct 2026, 08:40</td>
+<td class="py-3 px-4 font-batch-id text-batch-id text-text">WB-2026-0065</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">
+                Processing
+              </span>
+</td>
+<td class="py-3 px-4 text-text">Marked Completed (Composting cycle digestion finished)</td>
+<td class="py-3 px-4 text-text-muted">Anita Roy</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div></div></main></div></body></html>

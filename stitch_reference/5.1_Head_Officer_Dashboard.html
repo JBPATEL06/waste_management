@@ -1,0 +1,509 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary-soft": "#DCFCE7",
+          "surface-container-low": "#f2f3ff",
+          "on-error-container": "#93000a",
+          "on-background": "#131b2e",
+          "inverse-primary": "#79db8d",
+          "on-secondary-fixed-variant": "#3a485b",
+          "badge-rts-text": "#6D28D9",
+          "surface-container-highest": "#dae2fd",
+          "error-container": "#ffdad6",
+          "background": "#F8FAFC",
+          "text": "#0F172A",
+          "tertiary-container": "#b64c62",
+          "primary-container": "#15803d",
+          "badge-transit-bg": "#FEF3C7",
+          "surface-variant": "#dae2fd",
+          "badge-deleted-bg": "#FEE2E2",
+          "badge-collected-bg": "#DBEAFE",
+          "surface": "#FFFFFF",
+          "badge-deleted-text": "#B91C1C",
+          "on-tertiary": "#ffffff",
+          "warning": "#D97706",
+          "tertiary": "#97344a",
+          "badge-rts-bg": "#EDE9FE",
+          "on-secondary-fixed": "#0d1c2e",
+          "inverse-surface": "#283044",
+          "border": "#E2E8F0",
+          "outline": "#6f7a6e",
+          "surface-container-high": "#e2e7ff",
+          "on-primary": "#ffffff",
+          "on-primary-container": "#d3ffd5",
+          "badge-transit-text": "#B45309",
+          "on-surface": "#131b2e",
+          "badge-superseded-text": "#64748B",
+          "on-tertiary-fixed-variant": "#81233b",
+          "surface-dim": "#d2d9f4",
+          "on-primary-fixed-variant": "#005323",
+          "error": "#DC2626",
+          "surface-container-lowest": "#ffffff",
+          "secondary-fixed-dim": "#b9c7df",
+          "on-primary-fixed": "#00210a",
+          "secondary-fixed": "#d5e3fc",
+          "tertiary-fixed": "#ffd9dd",
+          "text-disabled": "#94A3B8",
+          "badge-created-text": "#475569",
+          "primary-hover": "#166534",
+          "primary-fixed": "#95f8a7",
+          "surface-bright": "#faf8ff",
+          "secondary": "#515f74",
+          "badge-superseded-bg": "#F1F5F9",
+          "error-soft": "#FEE2E2",
+          "primary": "#00652c",
+          "text-muted": "#475569",
+          "surface-container": "#eaedff",
+          "surface-tint": "#006d30",
+          "badge-collected-text": "#1D4ED8",
+          "on-tertiary-container": "#fff1f1",
+          "outline-variant": "becabc",
+          "inverse-on-surface": "#eef0ff",
+          "on-tertiary-fixed": "#400013",
+          "tertiary-fixed-dim": "#ffb2bd",
+          "badge-created-bg": "#F1F5F9",
+          "on-secondary-container": "#57657a",
+          "on-surface-variant": "#3f493f",
+          "secondary-container": "#d5e3fc",
+          "warning-soft": "#FEF3C7",
+          "on-error": "#ffffff",
+          "badge-completed-text": "#15803D",
+          "primary-fixed-dim": "#79db8d",
+          "badge-completed-bg": "#DCFCE7",
+          "on-secondary": "#ffffff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-md": "0.75rem",
+          "space-sm": "0.5rem",
+          "margin-mobile": "1rem",
+          "margin": "1.5rem",
+          "space-xs": "0.25rem",
+          "gutter-mobile": "0.75rem",
+          "space-lg": "1rem",
+          "space-xl": "1.5rem",
+          "space-2xl": "2rem",
+          "gutter": "1rem"
+        },
+        "fontFamily": {
+          "kpi-number": [
+            "Inter"
+          ],
+          "body-medium": [
+            "Inter"
+          ],
+          "badge": [
+            "Inter"
+          ],
+          "section-title": [
+            "Inter"
+          ],
+          "label": [
+            "Inter"
+          ],
+          "page-title": [
+            "Inter"
+          ],
+          "batch-id": [
+            "Inter"
+          ],
+          "caption": [
+            "Inter"
+          ],
+          "body": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "kpi-number": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "600"
+            }
+          ],
+          "body-medium": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "500"
+            }
+          ],
+          "badge": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "500"
+            }
+          ],
+          "section-title": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "600"
+            }
+          ],
+          "label": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "500"
+            }
+          ],
+          "page-title": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "fontWeight": "600"
+            }
+          ],
+          "batch-id": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "caption": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "body": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-background font-body text-text min-h-screen antialiased"><header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50"><div class="h-14 w-full px-6 flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary-container text-[24px]">eco</span><span class="font-section-title text-section-title tracking-tight text-text">Waste Journey Tracker</span></div><div class="flex items-center"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 flex flex-col justify-between py-space-lg px-space-md"><div class="flex flex-col gap-space-xs"><nav class="flex flex-col gap-1" data-active-classes="bg-primary-soft text-badge-completed-text font-medium"><a aria-current="page" class="flex items-center gap-space-md px-3 h-10 rounded-lg transition-colors bg-primary-soft text-badge-completed-text font-medium" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="">Dashboard</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="batches" href="#"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="">Batches</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="export" href="#"><span class="material-symbols-outlined text-[20px]">download</span><span class="">Export</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span class="">Audit Log</span></a><div class="my-2 border-t border-border"></div><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-text transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[20px]">account_circle</span><span class="">Profile</span></a><a class="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-error transition-colors" data-path="logout" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span class="">Logout</span></a></nav></div></aside><div class="pl-[240px]"><main class="w-full pt-14 px-margin bg-background min-h-screen"><div class="flex flex-col w-full pb-space-2xl space-y-space-xl">
+<!-- 1. Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-caption font-caption text-text-muted">
+<span class="">Overview</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-text font-medium">Head Officer Analytics</span>
+</div>
+<div class="flex flex-wrap items-center gap-space-md">
+<h1 class="font-page-title text-page-title text-text tracking-tight">Head Officer Dashboard</h1>
+
+</div>
+
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<a class="h-10 px-4 rounded-lg bg-surface border border-border text-text font-body-medium text-body-medium inline-flex items-center gap-2 hover:bg-background transition-colors focus:ring-2 focus:ring-primary-container focus:outline-none" href="/ho/export">
+<span class="material-symbols-outlined text-[18px] text-text-muted">download</span>
+<span class="">Export Data</span>
+</a>
+</div>
+</div>
+<!-- 2. Analytical Filter Bar -->
+<div class="w-full bg-surface border border-border rounded-xl p-4 shadow-sm">
+<div class="flex items-center justify-between pb-3 border-b border-border mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-text-muted text-[18px]">tune</span>
+<span class="font-label text-label text-text font-semibold uppercase tracking-wider">Multi-Stream Query Filters</span>
+</div>
+<button class="text-text-muted hover:text-text font-body-medium text-body-medium flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+        Reset Filters
+      </button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-space-sm">
+<!-- Date Range -->
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-text-muted">Date Range</label>
+<div class="h-10 px-3 bg-surface border border-border rounded-lg flex items-center justify-between text-body text-text cursor-default">
+<span class="truncate text-caption">07 Sep - 06 Oct 2026</span>
+<span class="material-symbols-outlined text-text-muted text-[18px]">calendar_today</span>
+</div>
+</div>
+<!-- Waste Type -->
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-text-muted">Waste Type</label>
+<select class="h-10 px-3 bg-surface border border-border rounded-lg text-body text-text focus:ring-2 focus:ring-primary-container focus:outline-none">
+<option>All Types</option>
+<option>Wet Organic</option>
+<option>Dry Recyclable</option>
+</select>
+</div>
+<!-- Route -->
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-text-muted">Route</label>
+<select class="h-10 px-3 bg-surface border border-border rounded-lg text-body text-text focus:ring-2 focus:ring-primary-container focus:outline-none">
+<option>All Routes</option>
+<option>Route 04 - North Corridor</option>
+<option>Route 12 - Metro Ring</option>
+<option>Route 09 - South Industrial</option>
+<option>Route 01 - City Central</option>
+</select>
+</div>
+<!-- Vehicle -->
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-text-muted">Vehicle</label>
+<select class="h-10 px-3 bg-surface border border-border rounded-lg text-body text-text focus:ring-2 focus:ring-primary-container focus:outline-none">
+<option>All Vehicles</option>
+<option>KA-01-EA-1042</option>
+<option>KA-04-TR-9921</option>
+<option>KA-03-MG-4122</option>
+</select>
+</div>
+<!-- RTS Hub -->
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-text-muted">RTS Transfer</label>
+<select class="h-10 px-3 bg-surface border border-border rounded-lg text-body text-text focus:ring-2 focus:ring-primary-container focus:outline-none">
+<option>All RTS Hubs</option>
+<option>Central Transfer Station A</option>
+<option>East RTS Hub</option>
+<option>West Primary Station</option>
+</select>
+</div>
+<!-- Facility -->
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-text-muted">Facility</label>
+<select class="h-10 px-3 bg-surface border border-border rounded-lg text-body text-text focus:ring-2 focus:ring-primary-container focus:outline-none">
+<option>All Processing Units</option>
+<option>Apex Bio-Methanization Plant</option>
+<option>GreenCity Aerobic Yard</option>
+<option>North Central MRF</option>
+</select>
+</div>
+<!-- Status -->
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-text-muted">Batch Status</label>
+<select class="h-10 px-3 bg-surface border border-border rounded-lg text-body text-text focus:ring-2 focus:ring-primary-container focus:outline-none">
+<option>All Statuses</option>
+<option>Created</option>
+<option>Collected</option>
+<option>In Transit</option>
+<option>At RTS</option>
+<option>Completed</option>
+</select>
+</div>
+</div>
+</div>
+<!-- 3. KPI Cards Grid -->
+<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-space-md"><div class="bg-surface border border-border rounded-xl p-5"><span class="font-label text-label text-text-muted block mb-2">Total Batches</span><div class="font-kpi-number text-kpi-number text-text tracking-tight">1,248</div></div><div class="bg-surface border border-border rounded-xl p-5"><span class="font-label text-label text-text-muted block mb-2">Created</span><div class="font-kpi-number text-kpi-number text-text tracking-tight">112</div></div><div class="bg-surface border border-border rounded-xl p-5"><span class="font-label text-label text-text-muted block mb-2">Collected</span><div class="font-kpi-number text-kpi-number text-text tracking-tight">245</div></div><div class="bg-surface border border-border rounded-xl p-5"><span class="font-label text-label text-text-muted block mb-2">In Transit</span><div class="font-kpi-number text-kpi-number text-text tracking-tight">184</div></div><div class="bg-surface border border-border rounded-xl p-5"><span class="font-label text-label text-text-muted block mb-2">At RTS</span><div class="font-kpi-number text-kpi-number text-text tracking-tight">196</div></div><div class="bg-surface border border-border rounded-xl p-5"><span class="font-label text-label text-text-muted block mb-2">Completed</span><div class="font-kpi-number text-kpi-number text-text tracking-tight">511</div></div></div>
+<!-- 4. Quantity Transit Funnel & Net Intake Card -->
+<div class="w-full bg-surface border border-border rounded-xl p-5"><div class="mb-4"><h2 class="font-section-title text-section-title text-text">Quantity Funnel</h2><p class="font-body text-body text-text-muted">Cumulative gross mass tracking across key custody handover points</p></div><div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg"><div class="p-4 rounded-xl bg-background border border-border flex flex-col justify-between"><span class="font-label text-label text-text-muted mb-2">Stage 1 · Ward Collection</span><div class="text-[28px] leading-8 font-semibold text-text tracking-tight">148,250 <span class="text-sm font-normal text-text-muted">kg</span></div><div class="mt-3 pt-2 border-t border-border text-caption font-caption text-text-muted">1,248 Batches</div></div><div class="p-4 rounded-xl bg-background border border-border flex flex-col justify-between"><span class="font-label text-label text-text-muted mb-2">Stage 2 · RTS Intake Gate</span><div class="text-[28px] leading-8 font-semibold text-text tracking-tight">146,120 <span class="text-sm font-normal text-text-muted">kg</span></div><div class="mt-3 pt-2 border-t border-border text-caption font-caption text-text-muted">Verified weight upon arrival</div></div><div class="p-4 rounded-xl bg-background border border-border flex flex-col justify-between"><span class="font-label text-label text-text-muted mb-2">Stage 3 · Facility Reception</span><div class="text-[28px] leading-8 font-semibold text-text tracking-tight">144,890 <span class="text-sm font-normal text-text-muted">kg</span></div><div class="mt-3 pt-2 border-t border-border text-caption font-caption text-text-muted">Delivered to bio &amp; MRF facilities</div></div></div></div>
+<!-- 5. Breakdown Cards & Distributions -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-xl">
+<!-- Card A: Waste Streams & Routes -->
+<div class="bg-surface border border-border rounded-xl p-5 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-section-title text-section-title text-text">Breakdown by Waste Stream &amp; Route</h2>
+<span class="text-caption font-caption text-text-muted">148,250 kg Total</span>
+</div>
+<!-- Waste Stream Proportion -->
+<div class="mb-6 p-4 rounded-lg bg-background border border-border">
+<div class="flex justify-between text-caption font-caption mb-1.5">
+<span class="font-medium text-text">Wet Organic (64% · 94,880 kg)</span>
+<span class="font-medium text-text">Dry Recyclable (36% · 53,370 kg)</span>
+</div>
+<div class="w-full h-2 rounded-full bg-border overflow-hidden flex">
+<div class="bg-primary-container h-full" style="width: 64%;"></div>
+<div class="bg-badge-collected-text h-full" style="width: 36%;"></div>
+</div>
+<div class="flex items-center gap-4 mt-2 text-caption font-caption text-text-muted">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-sm bg-primary-container"></span>
+<span class="">Wet (Bio-Degradable)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-sm bg-badge-collected-text"></span>
+<span class="">Dry (Recoverable)</span>
+</div>
+</div>
+</div>
+<!-- Top Routes List -->
+<span class="font-label text-label text-text-muted uppercase tracking-wider block mb-3">Top Intake Corridors</span>
+<div class="space-y-3">
+<div>
+<div class="flex justify-between text-body-medium font-body-medium mb-1">
+<span class="text-text">Route 04 (North Corridor)</span>
+<span class="text-text font-semibold">42,100 kg <span class="text-text-muted text-caption font-normal">(28.4%)</span></span>
+</div>
+<div class="w-full h-1.5 bg-background rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 28.4%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-medium font-body-medium mb-1">
+<span class="text-text">Route 12 (Metro Ring)</span>
+<span class="text-text font-semibold">38,400 kg <span class="text-text-muted text-caption font-normal">(25.9%)</span></span>
+</div>
+<div class="w-full h-1.5 bg-background rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 25.9%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-medium font-body-medium mb-1">
+<span class="text-text">Route 09 (South Industrial)</span>
+<span class="text-text font-semibold">35,250 kg <span class="text-text-muted text-caption font-normal">(23.8%)</span></span>
+</div>
+<div class="w-full h-1.5 bg-background rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 23.8%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-medium font-body-medium mb-1">
+<span class="text-text">Route 01 (City Central)</span>
+<span class="text-text font-semibold">32,500 kg <span class="text-text-muted text-caption font-normal">(21.9%)</span></span>
+</div>
+<div class="w-full h-1.5 bg-background rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 21.9%"></div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<!-- Card B: Facility Processing & Transit Duration -->
+<div class="bg-surface border border-border rounded-xl p-5 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-section-title text-section-title text-text">Facility Intake &amp; Velocity</h2>
+<span class="text-caption font-caption text-text-muted">144,890 kg Received</span>
+</div>
+<!-- Processing Facilities Summary -->
+<div class="space-y-2.5 mb-6">
+<div class="p-3 bg-background rounded-lg border border-border flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container">compost</span>
+<div>
+<div class="font-body-medium text-body-medium text-text">Apex Bio-Methanization Plant</div>
+<div class="font-caption text-caption text-text-muted">Wet Organic Stream</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-body-medium text-body-medium font-semibold text-text">62,400 kg</div>
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Completed</span>
+</div>
+</div>
+<div class="p-3 bg-background rounded-lg border border-border flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container">recycling</span>
+<div>
+<div class="font-body-medium text-body-medium text-text">Materials Recovery Facility (MRF Dry)</div>
+<div class="font-caption text-caption text-text-muted">Dry Recyclable Stream</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-body-medium text-body-medium font-semibold text-text">50,010 kg</div>
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Completed</span>
+</div>
+</div>
+<div class="p-3 bg-background rounded-lg border border-border flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container">eco</span>
+<div>
+<div class="font-body-medium text-body-medium text-text">GreenCity Aerobic Composting Yard</div>
+<div class="font-caption text-caption text-text-muted">Wet Organic Stream</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-body-medium text-body-medium font-semibold text-text">32,480 kg</div>
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Completed</span>
+</div>
+</div>
+</div>
+<!-- Duration Stats -->
+<span class="font-label text-label text-text-muted uppercase tracking-wider block mb-2">Transit Turnaround KPI</span>
+
+</div>
+<div class="mt-6 pt-3 border-t border-border flex items-center justify-between text-caption font-caption text-text-muted">
+<span class="">Tolerance threshold: 6h 00m</span>
+<span class="text-badge-completed-text font-medium">Optimal flow compliance</span>
+</div>
+</div>
+</div>
+<!-- 6. Flagged Variances & Operational Alerts Table -->
+<div class="bg-surface border border-border rounded-xl p-5">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<h2 class="font-section-title text-section-title text-text">Flagged RTS Weight Variances</h2>
+<span class="font-badge text-badge px-2.5 py-0.5 rounded-full bg-warning-soft text-badge-transit-text font-semibold">2 Flagged (&gt;10% Threshold)</span>
+</div>
+<span class="text-caption font-caption text-text-muted">Requires administrative review</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background text-label font-label text-text-muted border-b border-border">
+<th class="py-3 px-4">Batch ID</th>
+<th class="py-3 px-4">Route</th>
+<th class="py-3 px-4">Collected Weight</th>
+<th class="py-3 px-4">RTS Received</th>
+<th class="py-3 px-4">Variance (%)</th>
+<th class="py-3 px-4">Logged Time (IST)</th>
+<th class="py-3 px-4 text-right">Audit Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border font-body text-body text-text">
+<tr class="hover:bg-background transition-colors">
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text">WB-2026-1104</span>
+</td>
+<td class="py-3.5 px-4 text-body-medium">Route 04 (North Corridor)</td>
+<td class="py-3.5 px-4">3,200 kg</td>
+<td class="py-3.5 px-4 font-medium">2,750 kg</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-badge text-badge px-2.5 py-1 rounded-full bg-warning-soft text-badge-transit-text font-semibold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                -14.1% (-450 kg)
+              </span>
+</td>
+<td class="py-3.5 px-4 text-caption font-caption text-text-muted whitespace-nowrap">06 Oct 2026, 08:30 IST</td>
+<td class="py-3.5 px-4 text-right whitespace-nowrap">
+<a class="inline-flex items-center gap-1 text-primary-container hover:text-primary-hover font-body-medium text-body-medium" href="/ho/batches?id=WB-2026-1104">
+<span class="">View Details</span>
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</td>
+</tr>
+<tr class="hover:bg-background transition-colors">
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text">WB-2026-1088</span>
+</td>
+<td class="py-3.5 px-4 text-body-medium">Route 09 (South Industrial)</td>
+<td class="py-3.5 px-4">2,800 kg</td>
+<td class="py-3.5 px-4 font-medium">2,410 kg</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-badge text-badge px-2.5 py-1 rounded-full bg-warning-soft text-badge-transit-text font-semibold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                -13.9% (-390 kg)
+              </span>
+</td>
+<td class="py-3.5 px-4 text-caption font-caption text-text-muted whitespace-nowrap">05 Oct 2026, 17:15 IST</td>
+<td class="py-3.5 px-4 text-right whitespace-nowrap">
+<a class="inline-flex items-center gap-1 text-primary-container hover:text-primary-hover font-body-medium text-body-medium" href="/ho/batches?id=WB-2026-1088">
+<span class="">View Details</span>
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- 7. Recent Chain-of-Custody Events (Audit Preview) -->
+<div class="bg-surface border border-border rounded-xl p-5"><div class="flex items-center justify-between mb-4"><div><h2 class="font-section-title text-section-title text-text">Recent Updates</h2><p class="font-body text-body text-text-muted">Latest custody transfers and batch updates across nodes</p></div><a class="text-caption font-caption text-text-muted hover:text-text flex items-center gap-1" href="/ho/batches"><span class="">View All Batches</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span></a></div><div class="overflow-x-auto"><table class="w-full text-left border-collapse"><thead><tr class="bg-background text-label font-label text-text-muted border-b border-border"><th class="py-3 px-4">Batch ID</th><th class="py-3 px-4">Stage</th><th class="py-3 px-4">Details</th><th class="py-3 px-4">Timestamp (IST)</th></tr></thead><tbody class="divide-y divide-border font-body text-body text-text"><tr class="hover:bg-background transition-colors"><td class="py-3.5 px-4 whitespace-nowrap font-batch-id text-batch-id text-text">WB-2026-1248</td><td class="py-3.5 px-4 whitespace-nowrap"><span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Completed</span></td><td class="py-3.5 px-4"><div class="font-body-medium text-body-medium text-text">Apex Bio-Methanization Plant</div><div class="text-caption font-caption text-text-muted">3,420 kg delivered</div></td><td class="py-3.5 px-4 text-caption font-caption text-text-muted whitespace-nowrap">06 Oct 2026, 10:45 IST</td></tr><tr class="hover:bg-background transition-colors"><td class="py-3.5 px-4 whitespace-nowrap font-batch-id text-batch-id text-text">WB-2026-1247</td><td class="py-3.5 px-4 whitespace-nowrap"><span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-rts-bg text-badge-rts-text">At RTS</span></td><td class="py-3.5 px-4"><div class="font-body-medium text-body-medium text-text">East RTS Hub</div><div class="text-caption font-caption text-text-muted">Received from driver OP-3180</div></td><td class="py-3.5 px-4 text-caption font-caption text-text-muted whitespace-nowrap">06 Oct 2026, 10:30 IST</td></tr><tr class="hover:bg-background transition-colors"><td class="py-3.5 px-4 whitespace-nowrap font-batch-id text-batch-id text-text">WB-2026-1246</td><td class="py-3.5 px-4 whitespace-nowrap"><span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-transit-bg text-badge-transit-text">In Transit</span></td><td class="py-3.5 px-4"><div class="font-body-medium text-body-medium text-text">Vehicle KA-04-TR-9921</div><div class="text-caption font-caption text-text-muted">En route to East RTS Hub</div></td><td class="py-3.5 px-4 text-caption font-caption text-text-muted whitespace-nowrap">06 Oct 2026, 10:15 IST</td></tr></tbody></table></div></div>
+</div></main></div>
+
+</body></html>

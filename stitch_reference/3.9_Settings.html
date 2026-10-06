@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>Waste Journey Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-bright": "#faf8ff",
+            "on-secondary-fixed": "#0d1c2e",
+            "on-secondary-fixed-variant": "#3a485b",
+            "on-primary-fixed": "#00210a",
+            "surface-container": "#eaedff",
+            "on-tertiary-container": "#fff1f1",
+            "on-primary-fixed-variant": "#005323",
+            "primary-fixed-dim": "#79db8d",
+            "on-tertiary-fixed": "#400013",
+            "on-primary-container": "#d3ffd5",
+            "inverse-primary": "#79db8d",
+            "primary-hover": "#166534",
+            "on-tertiary-fixed-variant": "#81233b",
+            "badge-superseded-bg": "#F1F5F9",
+            "error-container": "#ffdad6",
+            "tertiary-container": "#b64c62",
+            "inverse-on-surface": "#eef0ff",
+            "on-secondary": "#ffffff",
+            "badge-created-bg": "#F1F5F9",
+            "on-background": "#131b2e",
+            "badge-completed-text": "#15803D",
+            "on-tertiary": "#ffffff",
+            "surface-dim": "#d2d9f4",
+            "on-surface-variant": "#3f493f",
+            "secondary-fixed": "#d5e3fc",
+            "on-surface": "#131b2e",
+            "badge-transit-text": "#B45309",
+            "badge-deleted-bg": "#FEE2E2",
+            "outline-variant": "#becabc",
+            "error-soft": "#FEE2E2",
+            "on-secondary-container": "#57657a",
+            "warning-soft": "#FEF3C7",
+            "border": "#E2E8F0",
+            "badge-completed-bg": "#DCFCE7",
+            "on-error-container": "#93000a",
+            "surface": "#FFFFFF",
+            "on-primary": "#ffffff",
+            "background": "#F8FAFC",
+            "badge-rts-text": "#6D28D9",
+            "surface-container-low": "#f2f3ff",
+            "badge-superseded-text": "#64748B",
+            "secondary-container": "#d5e3fc",
+            "primary": "#00652c",
+            "badge-deleted-text": "#B91C1C",
+            "tertiary-fixed-dim": "#ffb2bd",
+            "badge-collected-text": "#1D4ED8",
+            "secondary-fixed-dim": "#b9c7df",
+            "tertiary-fixed": "#ffd9dd",
+            "text-muted": "#475569",
+            "surface-container-highest": "#dae2fd",
+            "primary-soft": "#DCFCE7",
+            "badge-collected-bg": "#DBEAFE",
+            "on-error": "#ffffff",
+            "surface-variant": "#dae2fd",
+            "outline": "#6f7a6e",
+            "warning": "#D97706",
+            "inverse-surface": "#283044",
+            "badge-created-text": "#475569",
+            "badge-rts-bg": "#EDE9FE",
+            "badge-transit-bg": "#FEF3C7",
+            "secondary": "#515f74",
+            "primary-container": "#15803d",
+            "surface-tint": "#006d30",
+            "text": "#0F172A",
+            "error": "#DC2626",
+            "surface-container-high": "#e2e7ff",
+            "primary-fixed": "#95f8a7",
+            "surface-container-lowest": "#ffffff",
+            "tertiary": "#97344a",
+            "text-disabled": "#94A3B8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "1.5rem",
+            "space-sm": "0.5rem",
+            "margin-mobile": "1rem",
+            "space-md": "0.75rem",
+            "space-2xl": "2rem",
+            "space-lg": "1rem",
+            "margin": "1.5rem",
+            "gutter-mobile": "0.75rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "body-medium": ["Inter"],
+            "caption": ["Inter"],
+            "kpi-number": ["Inter"],
+            "label": ["Inter"],
+            "page-title": ["Inter"],
+            "batch-id": ["Inter"],
+            "badge": ["Inter"],
+            "body": ["Inter"],
+            "section-title": ["Inter"]
+          },
+          "fontSize": {
+            "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "kpi-number": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+            "label": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+            "page-title": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+            "batch-id": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "badge": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "body": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "section-title": ["18px", { "lineHeight": "24px", "fontWeight": "600" }]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-body text-text antialiased min-h-screen">
+<!-- Top Bar (56px) -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50 flex items-center justify-between px-margin">
+<!-- Left Logo -->
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]">recycling</span>
+</div>
+<span class="font-section-title text-section-title text-text tracking-tight">Waste Journey Tracker</span>
+</div>
+<!-- Right Side: Anil Mehta, Admin pill, Profile, Logout -->
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-sm">
+<span class="font-body-medium text-body-medium text-text">Anil Mehta</span>
+<span class="font-badge text-badge bg-primary-soft text-badge-completed-text px-space-sm py-0.5 rounded-full">Admin</span>
+</div>
+<div class="h-4 w-[1px] bg-border"></div>
+<nav class="flex items-center gap-space-md" data-active-classes="text-primary-container font-semibold">
+<a class="font-body-medium text-body-medium text-text-muted hover:text-text transition-colors" data-path="profile" href="#">Profile</a>
+<a class="font-body-medium text-body-medium text-text-muted hover:text-error transition-colors" data-path="login" href="#">Logout</a>
+</nav>
+</div>
+</header>
+<!-- Left Sidebar (240px) -->
+<aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 overflow-y-auto">
+<div class="p-space-md">
+<nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-soft text-badge-completed-text font-semibold">
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="dashboard" href="#">Dashboard</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="batches" href="#">Batches</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="create-batch" href="#">Create Batch</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="master-data" href="#">Master Data</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="users" href="#">Users</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="export" href="#">Export</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="audit-log" href="#">Audit Log</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="settings" href="#">Settings</a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="pl-[240px]">
+<main class="pt-14 min-h-screen bg-background"><div class="flex flex-col w-full">
+<script>
+    (function highlightActiveMenu() {
+      const links = document.querySelectorAll('aside nav a[data-path="settings"]');
+      links.forEach(el => {
+        el.classList.remove('text-text-muted', 'hover:bg-slate-100', 'hover:text-text');
+        el.classList.add('bg-primary-soft', 'text-badge-completed-text', 'font-semibold');
+      });
+    })();
+  </script>
+<div class="p-margin max-w-[808px] w-full flex flex-col gap-space-xl">
+<!-- Page Header -->
+<div class="flex flex-col gap-space-xs">
+<h1 class="font-page-title text-page-title text-text">Settings</h1>
+<p class="font-body text-body text-text-muted">Configure global system thresholds and validation parameters.</p>
+</div>
+<!-- Feedback Notification -->
+<div class="hidden flex items-center justify-between bg-primary-soft border border-primary text-badge-completed-text px-space-md py-space-sm rounded-lg" id="saveToast">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="font-label text-label font-medium" id="toastMessage">Settings updated successfully: Threshold set to 10%</span>
+</div>
+<button class="text-badge-completed-text hover:opacity-75 flex items-center" onclick="document.getElementById('saveToast').classList.add('hidden')" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Main Settings Card -->
+<div class="bg-surface rounded-xl border border-border p-[20px] flex flex-col gap-space-lg">
+<div class="flex flex-col gap-space-xs border-b border-border pb-space-md">
+<h2 class="font-section-title text-section-title text-text">Operational Thresholds</h2>
+<p class="font-body text-body text-text-muted">Thresholds governing automated variance detection and chain-of-custody alerts across transit checkpoints.</p>
+</div>
+<form class="flex flex-col gap-space-lg" id="settingsForm" onsubmit="handleSettingsSave(event)">
+<!-- Field: Variance Threshold -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label text-label text-text flex items-center gap-1" for="varianceThreshold">
+              Variance Threshold (%) <span aria-hidden="true" class="text-error">*</span>
+</label>
+<span class="font-caption text-caption text-text-muted">Default: 10%</span>
+</div>
+<div class="relative w-full max-w-[240px]">
+<input class="w-full h-10 px-space-md pr-9 bg-surface rounded-lg border border-border text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all" id="varianceThreshold" max="50" min="0.1" name="varianceThreshold" oninput="updatePreviewFormula(this.value)" required="" step="0.1" type="number" value="10"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-text-muted font-body-medium text-body-medium">
+              %
+            </div>
+</div>
+<p class="font-caption text-caption text-text-muted mt-0.5">
+            Permissible weight variance percentage between collection net weight and RTS arrival weight before an automated discrepancy flag is triggered.
+          </p>
+<div class="flex items-start gap-1.5 mt-1 text-text-muted font-caption text-caption bg-background p-2 rounded border border-border/60">
+<span class="material-symbols-outlined text-[15px] text-text-muted mt-[1px]">info</span>
+<span><strong class="font-medium text-text">Rule:</strong> Applies to new RTS entries. Existing flagged entries and historical logs remain unchanged.</span>
+</div>
+</div>
+<!-- Formula Evaluation Container -->
+<div class="bg-background rounded-lg border border-border p-3 flex flex-col gap-space-xs">
+<span class="font-caption text-caption text-text font-semibold uppercase tracking-wider">Evaluation Logic &amp; Preview</span>
+<div class="font-batch-id text-[12px] leading-5 text-text-muted bg-surface px-2.5 py-1.5 rounded border border-border inline-block overflow-x-auto">
+            | (Net Weight RTS - Net Weight Collection) / Net Weight Collection | × 100 &gt; <span class="text-text font-semibold" id="formulaThreshold">10</span>%
+          </div>
+<p class="font-caption text-caption text-text-muted" id="formulaExample">
+            For a 2,500 kg collection batch, a weight loss exceeding 250 kg (10.0%) will automatically flag the batch for supervisor review and require mandatory entry justification.
+          </p>
+</div>
+<!-- Form Actions -->
+<div class="flex items-center justify-between pt-space-md border-t border-border">
+<button class="h-10 px-space-md bg-surface text-text hover:bg-background border border-border rounded-lg font-body-medium text-body-medium transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-border" onclick="resetThresholdDefault()" type="button">
+<span class="material-symbols-outlined text-[16px] text-text-muted">restart_alt</span>
+            Reset to Default
+          </button>
+<button class="h-10 px-space-lg bg-primary-container text-on-primary hover:bg-primary-hover rounded-lg font-body-medium text-body-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-container flex items-center gap-1.5" type="submit">
+<span class="material-symbols-outlined text-[18px]">save</span>
+            Save Settings
+          </button>
+</div>
+</form>
+</div>
+<!-- System Configuration Metadata Card -->
+<div class="bg-surface rounded-xl border border-border p-[20px] flex flex-col gap-space-md">
+<div class="flex items-center justify-between border-b border-border pb-space-sm">
+<h3 class="font-section-title text-section-title text-text">Configuration Information</h3>
+<span class="font-badge text-badge bg-badge-created-bg text-badge-created-text px-2 py-0.5 rounded-full">System Controlled</span>
+</div>
+<dl class="grid grid-cols-1 md:grid-cols-2 gap-x-space-xl gap-y-space-md">
+<div class="flex flex-col gap-0.5">
+<dt class="font-label text-label text-text-muted">API Version</dt>
+<dd class="font-body-medium text-body-medium text-text">v1.4.2</dd>
+</div>
+<div class="flex flex-col gap-0.5">
+<dt class="font-label text-label text-text-muted">Configuration Scope</dt>
+<dd class="font-body-medium text-body-medium text-text">Global (All active routes &amp; RTS facilities)</dd>
+</div>
+<div class="flex flex-col gap-0.5">
+<dt class="font-label text-label text-text-muted">Last Modified</dt>
+<dd class="font-body-medium text-body-medium text-text" id="lastModifiedTimestamp">28 Sep 2026, 14:15 IST by Anil Mehta (Admin)</dd>
+</div>
+<div class="flex flex-col gap-0.5">
+<dt class="font-label text-label text-text-muted">Audit Reference</dt>
+<dd class="font-body-medium text-body-medium text-text flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-text-muted">receipt_long</span>
+<a class="text-primary-container hover:underline" data-path="audit-log" href="#">Audit Ledger #SET-2026-004</a>
+</dd>
+</div>
+</dl>
+</div>
+</div>
+<script>
+    function updatePreviewFormula(val) {
+      const num = parseFloat(val);
+      const displayVal = (!isNaN(num) && num > 0) ? num : 10;
+      const elFormula = document.getElementById('formulaThreshold');
+      const elExample = document.getElementById('formulaExample');
+
+      if (elFormula) elFormula.textContent = displayVal;
+
+      if (elExample) {
+        const thresholdKg = ((2500 * displayVal) / 100).toFixed(1).replace(/\.0$/, '');
+        elExample.textContent = `For a 2,500 kg collection batch, a weight loss exceeding ${thresholdKg} kg (${Number(displayVal).toFixed(1)}%) will automatically flag the batch for supervisor review and require mandatory entry justification.`;
+      }
+    }
+
+    function resetThresholdDefault() {
+      const input = document.getElementById('varianceThreshold');
+      input.value = "10";
+      updatePreviewFormula(10);
+    }
+
+    function handleSettingsSave(event) {
+      event.preventDefault();
+      const input = document.getElementById('varianceThreshold');
+      const val = parseFloat(input.value);
+      if (isNaN(val) || val <= 0) return;
+
+      const toast = document.getElementById('saveToast');
+      const toastMsg = document.getElementById('toastMessage');
+      const lastMod = document.getElementById('lastModifiedTimestamp');
+
+      if (toast && toastMsg) {
+        toastMsg.textContent = `Settings updated successfully: Threshold set to ${val}%`;
+        toast.classList.remove('hidden');
+      }
+
+      if (lastMod) {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+        lastMod.textContent = `${dateStr}, ${timeStr} IST by Anil Mehta (Admin)`;
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</div></main>
+</div>
+</body></html>

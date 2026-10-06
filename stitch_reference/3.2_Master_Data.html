@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>Admin Dashboard - Waste Journey Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#F8FAFC",
+            "surface": "#FFFFFF",
+            "border": "#E2E8F0",
+            "primary": "#15803D",
+            "primary-hover": "#166534",
+            "primary-soft": "#DCFCE7",
+            "text": "#0F172A",
+            "text-muted": "#475569",
+            "text-disabled": "#94A3B8",
+            "badge-created-bg": "#F1F5F9",
+            "badge-created-text": "#475569",
+            "badge-collected-bg": "#DBEAFE",
+            "badge-collected-text": "#1D4ED8",
+            "badge-transit-bg": "#FEF3C7",
+            "badge-transit-text": "#B45309",
+            "badge-rts-bg": "#EDE9FE",
+            "badge-rts-text": "#6D28D9",
+            "badge-completed-bg": "#DCFCE7",
+            "badge-completed-text": "#15803D",
+            "badge-deleted-bg": "#FEE2E2",
+            "badge-deleted-text": "#B91C1C",
+            "warning": "#D97706",
+            "warning-soft": "#FEF3C7",
+            "error": "#DC2626",
+            "error-soft": "#FEE2E2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            "batch-id": ["Inter", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-body text-text antialiased min-h-screen">
+<!-- Top Bar (56px) -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50 flex items-center justify-between px-6">
+<!-- Left Logo -->
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">recycling</span>
+</div>
+<span class="font-semibold text-[17px] text-text tracking-tight">Waste Journey Tracker</span>
+</div>
+<!-- Right Side: Anil Mehta, Admin, Profile, Logout -->
+<div class="flex items-center gap-5">
+<div class="flex items-center gap-2.5">
+<span class="text-sm font-medium text-text">Anil Mehta</span>
+<span class="text-xs font-semibold bg-primary-soft text-primary px-2.5 py-0.5 rounded-full">Admin</span>
+</div>
+<div class="h-4 w-[1px] bg-border"></div>
+<a class="text-sm font-medium text-text-muted hover:text-text transition-colors" data-path="profile" href="#">Profile</a>
+<a class="text-sm font-medium text-text-muted hover:text-error transition-colors flex items-center gap-1.5" data-path="login" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</header>
+<!-- Left Sidebar (240px) -->
+<aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 overflow-y-auto">
+<div class="p-3">
+<nav class="flex flex-col gap-1">
+<!-- 1. Dashboard (Active) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="dashboard" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- 2. Batches -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="batches" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span>Batches</span>
+</a>
+<!-- 3. Create Batch -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="create-batch" href="#">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>Create Batch</span>
+</a>
+<!-- 4. Master Data -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="master-data" href="#">
+<span class="material-symbols-outlined text-[20px]">database</span>
+<span>Master Data</span>
+</a>
+<!-- 5. Users -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="users" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span>Users</span>
+</a>
+<!-- 6. Export -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="export" href="#">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Export</span>
+</a>
+<!-- 7. Audit Log -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="audit-log" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span>Audit Log</span>
+</a>
+<!-- 8. Settings -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="settings" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Area (max-width 1280px, padding 24px) -->
+<div class="pl-[240px]">
+<main class="pt-14 min-h-screen bg-background"><div class="flex flex-col w-full">
+<!-- Active Sidebar Highlighter script simulation for App Shell -->
+<script>
+    (function highlightActiveNav() {
+      const activeLink = document.querySelector('a[data-path="master-data"]');
+      if (activeLink) {
+        activeLink.classList.remove('text-text-muted', 'hover:bg-slate-100');
+        activeLink.classList.add('bg-primary-soft', 'text-primary', 'font-semibold');
+      }
+    })();
+  </script>
+<div class="max-w-[1280px] w-full mx-auto p-6 flex flex-col gap-6">
+<!-- Page Header & Action Bar -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+<div>
+<h1 class="font-page-title text-page-title text-text">Master Data</h1>
+<p class="font-body text-body text-text-muted mt-1">Manage routes, vehicles, transit facilities, categories, and field personnel.</p>
+</div>
+<div class="flex items-center gap-3 self-start md:self-auto">
+<!-- Search Input -->
+<div class="relative w-64 md:w-72">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-text-disabled text-[18px]">search</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface text-text text-body placeholder:text-text-disabled shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm" id="table-search" placeholder="Filter records by name or code..." type="text"/>
+</div>
+<!-- Primary Action Trigger -->
+<button class="h-10 px-4 rounded-lg bg-primary hover:bg-primary-hover text-surface font-body-medium text-body-medium flex items-center gap-1.5 transition-colors shadow-sm whitespace-nowrap" id="btn-open-modal" onclick="document.getElementById('add-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>+ Add Route</span>
+</button>
+</div>
+</div>
+<!-- System Rules Notice / Banner -->
+<div class="rounded-lg bg-warning-soft px-4 py-2.5 flex items-center justify-between text-warning">
+<div class="flex items-center gap-2 text-caption font-caption">
+<span class="material-symbols-outlined text-[16px] text-warning">info</span>
+<span><strong>Operational Rule:</strong> Duplicate route codes are blocked. Deactivated items are hidden in active batch dropdowns but preserved in historical logs.</span>
+</div>
+<span class="text-xs uppercase tracking-wider font-semibold opacity-75 hidden sm:inline-block">Audit Guard Active</span>
+</div>
+<!-- Master Data Navigation Tabs -->
+<div class="bg-surface rounded-xl shadow-sm">
+<div class="flex items-center overflow-x-auto no-scrollbar px-3 pt-1">
+<button class="px-4 py-3.5 font-body-medium text-body-medium text-primary border-b-2 border-primary flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">alt_route</span>
+<span>Routes</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-soft text-primary text-xs font-semibold">14</span>
+</button>
+<button class="px-4 py-3.5 font-body text-body text-text-muted hover:text-text hover:bg-background rounded-t-lg transition-colors flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+<span>Vehicles</span>
+</button>
+<button class="px-4 py-3.5 font-body text-body text-text-muted hover:text-text hover:bg-background rounded-t-lg transition-colors flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">warehouse</span>
+<span>RTS Locations</span>
+</button>
+<button class="px-4 py-3.5 font-body text-body text-text-muted hover:text-text hover:bg-background rounded-t-lg transition-colors flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">factory</span>
+<span>Processing Facilities</span>
+</button>
+<button class="px-4 py-3.5 font-body text-body text-text-muted hover:text-text hover:bg-background rounded-t-lg transition-colors flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">settings_suggest</span>
+<span>Process Types</span>
+</button>
+<button class="px-4 py-3.5 font-body text-body text-text-muted hover:text-text hover:bg-background rounded-t-lg transition-colors flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">category</span>
+<span>Waste Categories</span>
+</button>
+<button class="px-4 py-3.5 font-body text-body text-text-muted hover:text-text hover:bg-background rounded-t-lg transition-colors flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+<span>Drivers &amp; Supervisors</span>
+</button>
+</div>
+<!-- Master Data Table Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-background text-text-muted font-label text-label">
+<th class="py-3.5 pl-6 pr-4">Route Code</th>
+<th class="py-3.5 px-4">Route Name</th>
+<th class="py-3.5 px-4">Description / Area Covered</th>
+<th class="py-3.5 px-4">Assigned Vehicle &amp; Driver</th>
+<th class="py-3.5 px-4">Status</th>
+<th class="py-3.5 pr-6 pl-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border/60 font-body text-body">
+<!-- Row 1 -->
+<tr class="hover:bg-background/80 transition-colors group">
+<td class="py-4 pl-6 pr-4 whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text tracking-wide bg-surface-container px-2 py-1 rounded">RT-NORTH-01</span>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="font-body-medium text-body-medium text-text">Route North A</span>
+<span class="text-caption text-text-muted block">(Ward 12 to Sector 4 RTS)</span>
+</td>
+<td class="py-4 px-4 min-w-[280px] max-w-sm text-text-muted text-caption">
+                Covers residential zones Sector 12A, 12B and Central Market Hub
+              </td>
+<td class="py-4 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2 text-sm text-text">
+<span class="font-batch-id text-xs text-text-muted bg-background px-1.5 py-0.5 rounded">MH-02-AB-1234</span>
+<span class="text-text-disabled">•</span>
+<span>Rajesh Sharma</span>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-badge font-badge bg-badge-completed-bg text-badge-completed-text">
+                  Active
+                </span>
+</td>
+<td class="py-4 pr-6 pl-4 whitespace-nowrap text-right text-sm">
+<div class="flex items-center justify-end gap-3 font-body-medium">
+<button class="text-primary hover:underline transition-colors" onclick="openEditModal('RT-NORTH-01', 'Route North A', 'Covers residential zones Sector 12A, 12B and Central Market Hub', 'RTS Sector 4')">Edit</button>
+<button class="text-text-muted hover:text-text transition-colors">Deactivate</button>
+<span class="relative group/tooltip cursor-not-allowed">
+<button class="text-text-disabled cursor-not-allowed" disabled="">Delete</button>
+<span class="absolute bottom-full mb-1 right-0 hidden group-hover/tooltip:block bg-text text-surface text-[11px] rounded px-2 py-1 whitespace-nowrap shadow-md z-10">Used in active batches</span>
+</span>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-background/80 transition-colors group">
+<td class="py-4 pl-6 pr-4 whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text tracking-wide bg-surface-container px-2 py-1 rounded">RT-EAST-02</span>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="font-body-medium text-body-medium text-text">Route East B</span>
+<span class="text-caption text-text-muted block">(East Zone to Central Transfer)</span>
+</td>
+<td class="py-4 px-4 min-w-[280px] max-w-sm text-text-muted text-caption">
+                Commercial district collection, daily morning corridor
+              </td>
+<td class="py-4 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2 text-sm text-text">
+<span class="font-batch-id text-xs text-text-muted bg-background px-1.5 py-0.5 rounded">MH-02-CD-5678</span>
+<span class="text-text-disabled">•</span>
+<span>Suresh Patil</span>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-badge font-badge bg-badge-completed-bg text-badge-completed-text">
+                  Active
+                </span>
+</td>
+<td class="py-4 pr-6 pl-4 whitespace-nowrap text-right text-sm">
+<div class="flex items-center justify-end gap-3 font-body-medium">
+<button class="text-primary hover:underline transition-colors" onclick="openEditModal('RT-EAST-02', 'Route East B', 'Commercial district collection, daily morning corridor', 'Central Transfer Station')">Edit</button>
+<button class="text-text-muted hover:text-text transition-colors">Deactivate</button>
+<button class="text-error hover:underline transition-colors">Delete</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-background/80 transition-colors group">
+<td class="py-4 pl-6 pr-4 whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text tracking-wide bg-surface-container px-2 py-1 rounded">RT-SOUTH-03</span>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="font-body-medium text-body-medium text-text">Route South C</span>
+<span class="text-caption text-text-muted block">(South Extension to Sector 4 RTS)</span>
+</td>
+<td class="py-4 px-4 min-w-[280px] max-w-sm text-text-muted text-caption">
+                High-density residential apartment complexes
+              </td>
+<td class="py-4 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2 text-sm text-text">
+<span class="font-batch-id text-xs text-text-muted bg-background px-1.5 py-0.5 rounded">MH-02-EF-9012</span>
+<span class="text-text-disabled">•</span>
+<span>Vikram Desai</span>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-badge font-badge bg-badge-completed-bg text-badge-completed-text">
+                  Active
+                </span>
+</td>
+<td class="py-4 pr-6 pl-4 whitespace-nowrap text-right text-sm">
+<div class="flex items-center justify-end gap-3 font-body-medium">
+<button class="text-primary hover:underline transition-colors" onclick="openEditModal('RT-SOUTH-03', 'Route South C', 'High-density residential apartment complexes', 'RTS Sector 4')">Edit</button>
+<button class="text-text-muted hover:text-text transition-colors">Deactivate</button>
+<button class="text-error hover:underline transition-colors">Delete</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-background/80 transition-colors group">
+<td class="py-4 pl-6 pr-4 whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text tracking-wide bg-surface-container px-2 py-1 rounded">RT-WEST-04</span>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="font-body-medium text-body-medium text-text">Route West D</span>
+<span class="text-caption text-text-muted block">(Industrial Corridor to EcoClean)</span>
+</td>
+<td class="py-4 px-4 min-w-[280px] max-w-sm text-text-muted text-caption">
+                Segregated dry waste transit line from light industrial park
+              </td>
+<td class="py-4 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2 text-sm text-text">
+<span class="font-batch-id text-xs text-text-muted bg-background px-1.5 py-0.5 rounded">MH-02-GH-3456</span>
+<span class="text-text-disabled">•</span>
+<span>Amit Verma</span>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-badge font-badge bg-badge-completed-bg text-badge-completed-text">
+                  Active
+                </span>
+</td>
+<td class="py-4 pr-6 pl-4 whitespace-nowrap text-right text-sm">
+<div class="flex items-center justify-end gap-3 font-body-medium">
+<button class="text-primary hover:underline transition-colors" onclick="openEditModal('RT-WEST-04', 'Route West D', 'Segregated dry waste transit line from light industrial park', 'EcoClean Center')">Edit</button>
+<button class="text-text-muted hover:text-text transition-colors">Deactivate</button>
+<button class="text-error hover:underline transition-colors">Delete</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-background/80 transition-colors group bg-slate-50/50">
+<td class="py-4 pl-6 pr-4 whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text-disabled tracking-wide bg-background px-2 py-1 rounded">RT-CENTRAL-05</span>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="font-body-medium text-body-medium text-text-muted">Route Central Old Town</span>
+<span class="text-caption text-text-disabled block">(Historic Market Hub)</span>
+</td>
+<td class="py-4 px-4 min-w-[280px] max-w-sm text-text-disabled text-caption">
+                Narrow lane manual cart consolidation point
+              </td>
+<td class="py-4 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2 text-sm text-text-muted">
+<span class="font-batch-id text-xs text-text-disabled bg-background px-1.5 py-0.5 rounded">MH-02-JK-7890</span>
+<span class="text-text-disabled">•</span>
+<span>Dinesh Kumar</span>
+</div>
+</td>
+<td class="py-4 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-badge font-badge bg-badge-created-bg text-badge-created-text">
+                  Inactive
+                </span>
+</td>
+<td class="py-4 pr-6 pl-4 whitespace-nowrap text-right text-sm">
+<div class="flex items-center justify-end gap-3 font-body-medium">
+<button class="text-primary hover:underline transition-colors" onclick="openEditModal('RT-CENTRAL-05', 'Route Central Old Town', 'Narrow lane manual cart consolidation point', 'Market Yard RTS')">Edit</button>
+<button class="text-primary hover:text-primary-hover transition-colors font-semibold">Activate</button>
+<button class="text-error hover:underline transition-colors">Delete</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-surface rounded-b-xl">
+<p class="font-caption text-caption text-text-muted">
+          Showing <span class="font-semibold text-text">1</span> to <span class="font-semibold text-text">5</span> of <span class="font-semibold text-text">14</span> routes
+        </p>
+<div class="flex items-center gap-1 self-end sm:self-auto">
+<button class="h-8 px-3 rounded-md bg-background text-text-muted hover:text-text font-caption text-caption disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled="">
+            Prev
+          </button>
+<button class="h-8 w-8 rounded-md bg-primary text-surface font-body-medium text-xs flex items-center justify-center">
+            1
+          </button>
+<button class="h-8 w-8 rounded-md hover:bg-background text-text font-body-medium text-xs flex items-center justify-center transition-colors">
+            2
+          </button>
+<button class="h-8 w-8 rounded-md hover:bg-background text-text font-body-medium text-xs flex items-center justify-center transition-colors">
+            3
+          </button>
+<button class="h-8 px-3 rounded-md bg-surface text-text font-caption text-caption hover:bg-background transition-colors">
+            Next
+          </button>
+</div>
+</div>
+</div>
+<!-- Quick Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-surface p-5 rounded-xl shadow-sm">
+<span class="font-label text-label text-text-muted block">Total Configured Routes</span>
+<div class="mt-2 flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-text">14</span>
+<span class="text-xs font-medium text-primary">13 Active</span>
+</div>
+</div>
+<div class="bg-surface p-5 rounded-xl shadow-sm">
+<span class="font-label text-label text-text-muted block">Fleet In Service</span>
+<div class="mt-2 flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-text">18</span>
+<span class="text-xs font-medium text-text-muted">Compactor Trucks</span>
+</div>
+</div>
+<div class="bg-surface p-5 rounded-xl shadow-sm">
+<span class="font-label text-label text-text-muted block">Primary RTS Facilities</span>
+<div class="mt-2 flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-text">4</span>
+<span class="text-xs font-medium text-primary">Operational 24/7</span>
+</div>
+</div>
+<div class="bg-surface p-5 rounded-xl shadow-sm">
+<span class="font-label text-label text-text-muted block">Field Operators</span>
+<div class="mt-2 flex items-baseline justify-between">
+<span class="font-kpi-number text-kpi-number text-text">32</span>
+<span class="text-xs font-medium text-text-muted">Drivers &amp; Supervisors</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Dialog: Add / Edit Route -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-text/40 backdrop-blur-sm hidden p-4" id="add-modal">
+<div class="bg-surface rounded-xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-150">
+<!-- Modal Header -->
+<div class="px-6 py-4 flex items-center justify-between bg-surface">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">add_road</span>
+<h3 class="font-section-title text-section-title text-text" id="modal-title">Add New Route</h3>
+</div>
+<button class="text-text-muted hover:text-text rounded-md p-1" onclick="document.getElementById('add-modal').classList.add('hidden')">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<form class="p-6 flex flex-col gap-4" id="route-form" onsubmit="event.preventDefault(); document.getElementById('add-modal').classList.add('hidden');">
+<!-- Route Code & Name -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="route-code">Route Code *</label>
+<input class="h-10 px-3 rounded-lg bg-surface text-text text-body placeholder:text-text-disabled shadow-sm focus:outline-none focus:ring-2 focus:ring-primary uppercase tracking-wide font-batch-id text-xs" id="route-code" placeholder="e.g. RT-NORTH-05" required="" type="text"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="route-name">Route Name *</label>
+<input class="h-10 px-3 rounded-lg bg-surface text-text text-body placeholder:text-text-disabled shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-sm" id="route-name" placeholder="e.g. Route North E" required="" type="text"/>
+</div>
+</div>
+<!-- Description -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="route-desc">Description / Area Covered</label>
+<textarea class="px-3 py-2 rounded-lg bg-surface text-text text-body placeholder:text-text-disabled shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-sm resize-none" id="route-desc" placeholder="Specify wards, housing complexes, or commercial districts..." rows="2"></textarea>
+</div>
+<!-- RTS Target Facility -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="rts-facility">Primary RTS Destination *</label>
+<select class="h-10 px-3 rounded-lg bg-surface text-text text-body shadow-sm focus:outline-none focus:ring-2 focus:ring-primary text-sm" id="rts-facility">
+<option value="RTS-01">Sector 4 RTS (Central Compactor)</option>
+<option value="RTS-02">East Zone Transfer Facility</option>
+<option value="RTS-03">South Extension Collection Bay</option>
+<option value="RTS-04">Market Yard Consolidation Hub</option>
+</select>
+</div>
+<!-- Active Toggle Switch -->
+<div class="flex items-center justify-between pt-2">
+<div>
+<span class="font-body-medium text-body-medium text-text block">Set as Active Route</span>
+<span class="font-caption text-caption text-text-muted">Immediately selectable during vehicle batch dispatch</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="route-active-toggle" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Modal Footer Actions -->
+<div class="mt-4 pt-4 flex items-center justify-end gap-3">
+<button class="h-10 px-4 rounded-lg bg-surface hover:bg-background text-text font-body-medium text-body-medium shadow-sm transition-colors" onclick="document.getElementById('add-modal').classList.add('hidden')" type="button">
+            Cancel
+          </button>
+<button class="h-10 px-5 rounded-lg bg-primary hover:bg-primary-hover text-surface font-body-medium text-body-medium shadow-sm transition-colors" type="submit">
+            Save Route
+          </button>
+</div>
+</form>
+</div>
+</div>
+<!-- Inline Script for dynamic modal behaviors -->
+<script>
+    function openEditModal(code, name, desc, rts) {
+      document.getElementById('modal-title').textContent = 'Edit Route: ' + code;
+      document.getElementById('route-code').value = code;
+      document.getElementById('route-name').value = name;
+      document.getElementById('route-desc').value = desc;
+      document.getElementById('add-modal').classList.remove('hidden');
+    }
+
+    // Live search filter simulation
+    document.getElementById('table-search')?.addEventListener('input', function(e) {
+      const term = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+      });
+    });
+  </script>
+</div></main>
+</div>
+</body></html>

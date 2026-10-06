@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary": "#97344a", "surface-container": "#eaedff", "border": "#E2E8F0", "surface-bright": "#faf8ff", "badge-created-text": "#475569", "on-error-container": "#93000a", "on-surface-variant": "#3f493f", "primary-fixed": "#95f8a7", "text-disabled": "#94A3B8", "outline-variant": "#becabc", "on-background": "#131b2e", "outline": "#6f7a6e", "badge-superseded-bg": "#F1F5F9", "on-tertiary": "#ffffff", "inverse-surface": "#283044", "on-tertiary-container": "#fff1f1", "badge-deleted-bg": "#FEE2E2", "secondary-fixed-dim": "#b9c7df", "badge-completed-bg": "#DCFCE7", "surface": "#FFFFFF", "on-primary-fixed": "#00210a", "badge-completed-text": "#15803D", "surface-container-highest": "#dae2fd", "background": "#F8FAFC", "inverse-on-surface": "#eef0ff", "on-primary-fixed-variant": "#005323", "surface-dim": "#d2d9f4", "on-tertiary-fixed-variant": "#81233b", "tertiary-fixed-dim": "#ffb2bd", "on-primary": "#ffffff", "error": "#DC2626", "on-secondary": "#ffffff", "badge-rts-text": "#6D28D9", "secondary": "#515f74", "badge-deleted-text": "#B91C1C", "tertiary-container": "#b64c62", "surface-container-high": "#e2e7ff", "error-container": "#ffdad6", "badge-transit-text": "#B45309", "on-secondary-fixed-variant": "#3a485b", "warning-soft": "#FEF3C7", "surface-variant": "#dae2fd", "badge-superseded-text": "#64748B", "error-soft": "#FEE2E2", "inverse-primary": "#79db8d", "primary-soft": "#DCFCE7", "text": "#0F172A", "on-tertiary-fixed": "#400013", "badge-rts-bg": "#EDE9FE", "on-surface": "#131b2e", "secondary-fixed": "#d5e3fc", "on-secondary-fixed": "#0d1c2e", "on-error": "#ffffff", "secondary-container": "#d5e3fc", "badge-created-bg": "#F1F5F9", "tertiary-fixed": "#ffd9dd", "badge-collected-text": "#1D4ED8", "primary-container": "#15803d", "text-muted": "#475569", "primary-fixed-dim": "#79db8d", "primary": "#00652c", "badge-transit-bg": "#FEF3C7", "surface-container-lowest": "#ffffff", "on-secondary-container": "#57657a", "on-primary-container": "#d3ffd5", "warning": "#D97706", "surface-tint": "#006d30", "primary-hover": "#166534", "badge-collected-bg": "#DBEAFE", "surface-container-low": "#f2f3ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "1.5rem", "space-xl": "1.5rem", "space-md": "0.75rem", "gutter-mobile": "0.75rem", "space-2xl": "2rem", "space-lg": "1rem", "space-xs": "0.25rem", "gutter": "1rem", "space-sm": "0.5rem", "margin-mobile": "1rem" }, "fontFamily": { "label": ["Inter"], "body-medium": ["Inter"], "body": ["Inter"], "kpi-number": ["Inter"], "badge": ["Inter"], "section-title": ["Inter"], "caption": ["Inter"], "page-title": ["Inter"], "batch-id": ["Inter"] }, "fontSize": { "label": ["13px", { "lineHeight": "18px", "fontWeight": "500" }], "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "kpi-number": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "badge": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "section-title": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "page-title": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "batch-id": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }] } } } };</script></head><body class="bg-background font-body text-text min-h-screen"><header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-lg bg-primary-soft flex items-center justify-center text-primary-container"><span class="material-symbols-outlined text-[20px]">recycling</span></div><span class="font-section-title text-section-title text-text">Waste Journey Tracker</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col text-left"><span class="font-label text-label text-text">Rajesh Sharma</span></div></div><span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-collected-bg text-badge-collected-text">Collection</span></div></header><aside class="fixed left-0 top-14 bottom-0 w-60 bg-surface border-r border-border z-40 flex flex-col justify-between p-space-md"><nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-soft text-primary-container font-body-medium"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg transition-colors bg-primary-soft text-primary-container font-body-medium" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body text-body text-text-muted hover:bg-background hover:text-text transition-colors" data-path="history" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span>History</span></a><div class="my-space-xs border-t border-border"></div><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body text-body text-text-muted hover:bg-background hover:text-text transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[20px]">account_circle</span><span>Profile</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body text-body text-text-muted hover:bg-error-soft hover:text-error transition-colors" data-path="logout" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span>Logout</span></a></nav><div class="px-space-md py-space-xs text-text-disabled font-caption text-caption">Operator ID: OP-8492</div></aside><div class="pl-60"><main class="relative pt-14 min-h-screen bg-background p-margin"><div class="flex flex-col w-full">
+<div class="max-w-[1080px] w-full mx-auto space-y-space-lg pb-space-2xl">
+<!-- Breadcrumb & Back Bar -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm text-text-muted font-caption text-caption">
+<a class="inline-flex items-center gap-1 hover:text-text transition-colors" href="/collection/queue">
+<span class="material-symbols-outlined text-[16px]">arrow_back</span>
+<span>Back to Queue</span>
+</a>
+<span class="text-text-disabled">/</span>
+<span class="hover:text-text transition-colors">Queue Dashboard</span>
+<span class="text-text-disabled">/</span>
+<span class="font-body-medium text-text">WB-2026-0124</span>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-md pt-space-xs">
+<div class="flex items-center gap-space-md">
+<h1 class="font-batch-id text-page-title text-text tracking-tight font-mono">WB-2026-0124</h1>
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-created-bg text-badge-created-text">Created</span>
+</div>
+<div class="flex items-center gap-1.5 text-text-muted font-caption text-caption">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Assigned: 06 Oct 2026, 08:00 IST</span>
+</div>
+</div>
+</div>
+<!-- Batch Information Card -->
+<section class="bg-surface rounded-xl border border-border p-5">
+<div class="flex items-center justify-between pb-space-md border-b border-border mb-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-text-muted text-[20px]">assignment</span>
+<h2 class="font-section-title text-section-title text-text">Batch Information</h2>
+</div>
+<span class="font-caption text-caption text-text-muted">Manifest Reference: MNF-2026-8841</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-space-xl gap-y-space-md">
+<div class="flex flex-col gap-0.5">
+<span class="font-label text-label text-text-muted">Waste Type</span>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="font-body-medium text-body-medium text-text">Wet Waste</span>
+</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label text-label text-text-muted">Quantity (Est.)</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5">2,400 kg</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label text-label text-text-muted">Source / Pickup Area</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5">Sector 14 Residential, Ward 4</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label text-label text-text-muted">Assigned Route</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5">RT-NORTH-01 (North Corridor Collection)</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label text-label text-text-muted">Assigned Vehicle</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5">DL-01-EA-4821 (Compactor Truck)</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label text-label text-text-muted">Created Date</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5">06 Oct 2026, 07:45 IST</span>
+</div>
+</div>
+</section>
+<!-- Previous Stages (Read-only) -->
+<section class="bg-surface rounded-xl border border-border p-5">
+<div class="flex items-center gap-space-sm pb-space-sm border-b border-border mb-space-md">
+<span class="material-symbols-outlined text-text-muted text-[20px]">history_edu</span>
+<h2 class="font-section-title text-section-title text-text">Previous Stages</h2>
+</div>
+<div class="rounded-lg bg-background border border-border p-space-md flex items-start gap-space-sm text-text-muted">
+<span class="material-symbols-outlined text-[20px] text-text-disabled mt-0.5">info</span>
+<div class="flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Initial Stage</span>
+<span class="font-caption text-caption text-text-muted mt-0.5">No prior stage entries required for Collection. This batch originated at pickup generation.</span>
+</div>
+</div>
+</section>
+<!-- Own Stage Section (Collection Stage Entry) -->
+<section class="bg-surface rounded-xl border border-border p-5">
+<div class="flex items-center justify-between pb-space-md border-b border-border mb-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary-container text-[20px]">local_shipping</span>
+<h2 class="font-section-title text-section-title text-text">Own Stage: Collection Manifest</h2>
+</div>
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-created-bg text-badge-created-text">Pending Submission</span>
+</div>
+<div class="flex flex-col gap-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md bg-background border border-border rounded-lg p-space-md">
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary-container text-[20px] mt-0.5">edit_note</span>
+<div class="flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Ready for data entry</span>
+<span class="font-caption text-caption text-text-muted">Collection manifest has not been submitted yet. Log gross weight, segregation grade, and driver signoff.</span>
+</div>
+</div>
+<a class="inline-flex items-center justify-center gap-space-xs h-10 px-space-md rounded-lg bg-primary-container hover:bg-primary-hover text-on-primary font-body-medium text-body-medium transition-colors shrink-0" href="/collection/batches/WB-2026-0124/entry">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Add Collection Entry</span>
+</a>
+</div>
+<!-- Lock Protocol & Operator Behavior Notice -->
+<div class="rounded-lg bg-warning-soft border border-warning/20 p-space-md flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-warning text-[20px] shrink-0 mt-0.5">lock_clock</span>
+<div class="flex flex-col gap-1 text-text">
+<span class="font-label text-label font-medium text-text">Stage Governance & Sequence Locking</span>
+<p class="font-caption text-caption text-text-muted leading-relaxed">
+              If prior stage dependencies were unmet, entry access would remain disabled with status "Waiting for previous stage entry". Once recorded, stage operator direct edits and deletions are permanently locked. Post-submission adjustments require a formal correction entry logged to the immutable audit trail.
+            </p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div></main></div></body></html>

@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>Admin Dashboard - Waste Journey Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#F8FAFC",
+            "surface": "#FFFFFF",
+            "border": "#E2E8F0",
+            "primary": "#15803D",
+            "primary-hover": "#166534",
+            "primary-soft": "#DCFCE7",
+            "text": "#0F172A",
+            "text-muted": "#475569",
+            "text-disabled": "#94A3B8",
+            "badge-created-bg": "#F1F5F9",
+            "badge-created-text": "#475569",
+            "badge-collected-bg": "#DBEAFE",
+            "badge-collected-text": "#1D4ED8",
+            "badge-transit-bg": "#FEF3C7",
+            "badge-transit-text": "#B45309",
+            "badge-rts-bg": "#EDE9FE",
+            "badge-rts-text": "#6D28D9",
+            "badge-completed-bg": "#DCFCE7",
+            "badge-completed-text": "#15803D",
+            "badge-deleted-bg": "#FEE2E2",
+            "badge-deleted-text": "#B91C1C",
+            "warning": "#D97706",
+            "warning-soft": "#FEF3C7",
+            "error": "#DC2626",
+            "error-soft": "#FEE2E2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            "batch-id": ["Inter", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-body text-text antialiased min-h-screen">
+<!-- Top Bar (56px) -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50 flex items-center justify-between px-6">
+<!-- Left Logo -->
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">recycling</span>
+</div>
+<span class="font-semibold text-[17px] text-text tracking-tight">Waste Journey Tracker</span>
+</div>
+<!-- Right Side: Anil Mehta, Admin, Profile, Logout -->
+<div class="flex items-center gap-5">
+<div class="flex items-center gap-2.5">
+<span class="text-sm font-medium text-text">Anil Mehta</span>
+<span class="text-xs font-semibold bg-primary-soft text-primary px-2.5 py-0.5 rounded-full">Admin</span>
+</div>
+<div class="h-4 w-[1px] bg-border"></div>
+<a class="text-sm font-medium text-text-muted hover:text-text transition-colors" data-path="profile" href="#">Profile</a>
+<a class="text-sm font-medium text-text-muted hover:text-error transition-colors flex items-center gap-1.5" data-path="login" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</header>
+<!-- Left Sidebar (240px) -->
+<aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 overflow-y-auto">
+<div class="p-3">
+<nav class="flex flex-col gap-1">
+<!-- 1. Dashboard (Active) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="dashboard" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- 2. Batches -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="batches" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span>Batches</span>
+</a>
+<!-- 3. Create Batch -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="create-batch" href="#">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>Create Batch</span>
+</a>
+<!-- 4. Master Data -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="master-data" href="#">
+<span class="material-symbols-outlined text-[20px]">database</span>
+<span>Master Data</span>
+</a>
+<!-- 5. Users -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="users" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span>Users</span>
+</a>
+<!-- 6. Export -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="export" href="#">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Export</span>
+</a>
+<!-- 7. Audit Log -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="audit-log" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span>Audit Log</span>
+</a>
+<!-- 8. Settings -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="settings" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Area (max-width 1280px, padding 24px) -->
+<div class="pl-[240px]">
+<main class="pt-14 min-h-screen bg-background"><div class="flex flex-col w-full">
+<!-- Interactive script for dynamic updates & sidebar state synchronization -->
+<script>
+    (function initExportPage() {
+      // Highlight "Export" navigation in App Shell sidebar
+      try {
+        const sidebarLinks = document.querySelectorAll('aside nav a');
+        sidebarLinks.forEach(link => {
+          if (link.getAttribute('data-path') === 'export') {
+            link.classList.remove('text-text-muted', 'hover:bg-slate-100');
+            link.classList.add('bg-primary-soft', 'text-primary', 'font-semibold');
+          } else {
+            link.classList.remove('bg-primary-soft', 'text-primary', 'font-semibold');
+            link.classList.add('text-text-muted');
+          }
+        });
+      } catch (e) {
+        /* Ignore if shell DOM not immediately accessible */
+      }
+    })();
+
+    function selectDataset(id) {
+      document.querySelectorAll('.dataset-card').forEach(el => {
+        el.classList.remove('bg-primary-soft', 'text-primary');
+        el.classList.add('bg-surface');
+        const iconSpan = el.querySelector('.dataset-radio-icon');
+        if (iconSpan) iconSpan.textContent = 'radio_button_unchecked';
+      });
+      const selected = document.getElementById(id);
+      if (selected) {
+        selected.classList.remove('bg-surface');
+        selected.classList.add('bg-primary-soft');
+        const iconSpan = selected.querySelector('.dataset-radio-icon');
+        if (iconSpan) iconSpan.textContent = 'radio_button_checked';
+      }
+      updateEstimates();
+    }
+
+    function selectFormat(fmt) {
+      const csvBtn = document.getElementById('fmt-csv');
+      const xlsxBtn = document.getElementById('fmt-xlsx');
+      if (fmt === 'csv') {
+        csvBtn.classList.remove('bg-surface-container', 'text-text');
+        csvBtn.classList.add('bg-primary', 'text-on-primary');
+        xlsxBtn.classList.remove('bg-primary', 'text-on-primary');
+        xlsxBtn.classList.add('bg-surface-container', 'text-text');
+      } else {
+        xlsxBtn.classList.remove('bg-surface-container', 'text-text');
+        xlsxBtn.classList.add('bg-primary', 'text-on-primary');
+        csvBtn.classList.remove('bg-primary', 'text-on-primary');
+        csvBtn.classList.add('bg-surface-container', 'text-text');
+      }
+      updateEstimates();
+    }
+
+    function handleDateRangeChange(val) {
+      const customDates = document.getElementById('custom-date-inputs');
+      if (val === 'Custom Range') {
+        customDates.classList.remove('hidden');
+        customDates.classList.add('flex');
+      } else {
+        customDates.classList.add('hidden');
+        customDates.classList.remove('flex');
+      }
+      updateEstimates();
+    }
+
+    function resetFilters() {
+      document.getElementById('filter-date-range').value = 'Last 30 Days';
+      document.getElementById('filter-status').value = 'All Statuses';
+      document.getElementById('filter-route').value = 'All Routes';
+      document.getElementById('filter-vehicle').value = 'All Vehicles';
+      document.getElementById('filter-waste-type').value = 'All Types';
+      document.getElementById('custom-date-inputs').classList.add('hidden');
+      updateEstimates();
+    }
+
+    function updateEstimates() {
+      const range = document.getElementById('filter-date-range').value;
+      const countEl = document.getElementById('records-count');
+      const sizeEl = document.getElementById('size-estimate');
+      if (!countEl || !sizeEl) return;
+
+      if (range === 'Last 7 Days') {
+        countEl.textContent = '47 batches';
+        sizeEl.textContent = '~38 KB';
+      } else if (range === 'This Month') {
+        countEl.textContent = '112 batches';
+        sizeEl.textContent = '~94 KB';
+      } else {
+        countEl.textContent = '184 batches';
+        sizeEl.textContent = '~142 KB';
+      }
+    }
+
+    function togglePreviewModal() {
+      const modal = document.getElementById('preview-modal');
+      if (modal) {
+        modal.classList.toggle('hidden');
+      }
+    }
+
+    function triggerDownload() {
+      const toast = document.getElementById('download-toast');
+      if (toast) {
+        toast.classList.remove('opacity-0', 'pointer-events-none');
+        toast.classList.add('opacity-100');
+        setTimeout(() => {
+          toast.classList.remove('opacity-100');
+          toast.classList.add('opacity-0', 'pointer-events-none');
+        }, 3800);
+      }
+    }
+  </script>
+<!-- Toast Notification (Top Right) -->
+<div class="fixed top-16 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-lg shadow-md bg-primary text-on-primary transition-opacity duration-300 opacity-0 pointer-events-none" id="download-toast">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span class="font-body text-body">Export archive generated successfully. Download started.</span>
+</div>
+<!-- Main Container -->
+<div class="max-w-[1280px] w-full mx-auto p-6 flex flex-col gap-6">
+<!-- Header Section -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-caption font-caption text-text-muted uppercase tracking-wider">Administration</span>
+<span class="text-caption font-caption text-text-disabled">/</span>
+<span class="text-caption font-caption text-primary font-semibold">Reports &amp; Data</span>
+</div>
+<h1 class="font-page-title text-page-title text-text">Export Data</h1>
+<p class="font-body text-body text-text-muted mt-1">Export filtered system records, stage logs, and audit histories to CSV or Excel.</p>
+</div>
+<!-- Quick KPI Chips -->
+<div class="flex items-center gap-3">
+<div class="bg-surface px-4 py-2.5 rounded-xl shadow-sm flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">storage</span>
+</div>
+<div>
+<span class="font-caption text-caption text-text-muted block">Indexed Batches</span>
+<span class="font-kpi-number text-[16px] text-text">12,480</span>
+</div>
+</div>
+<div class="bg-surface px-4 py-2.5 rounded-xl shadow-sm flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">cloud_done</span>
+</div>
+<div>
+<span class="font-caption text-caption text-text-muted block">System State</span>
+<span class="font-badge text-badge text-primary">All Nodes Synced</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 1. Dataset Selection Card -->
+<section class="bg-surface rounded-xl p-5 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 rounded-full bg-primary-soft text-primary font-semibold text-caption flex items-center justify-center">1</span>
+<h2 class="font-section-title text-section-title text-text">Select Dataset</h2>
+</div>
+<span class="font-caption text-caption text-text-muted">Choose 1 target schema</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
+<!-- Dataset 1: Batches (Default Selected) -->
+<div class="dataset-card cursor-pointer p-4 rounded-lg bg-primary-soft shadow-sm transition-all duration-150 flex flex-col justify-between group" id="dataset-batches" onclick="selectDataset('dataset-batches')">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-body-medium text-body-medium text-text font-semibold group-hover:text-primary">Batches</span>
+<span class="material-symbols-outlined text-primary text-[20px] dataset-radio-icon">radio_button_checked</span>
+</div>
+<p class="font-caption text-caption text-text-muted leading-relaxed">
+              Batch master records, origin wards, assigned supervisors, vehicle tags, route IDs, and current live status.
+            </p>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-caption font-caption text-text-muted">
+<span class="bg-surface px-2 py-0.5 rounded text-[11px]">8 Schema Columns</span>
+<span>Batch Master</span>
+</div>
+</div>
+<!-- Dataset 2: Stage-wise records -->
+<div class="dataset-card cursor-pointer p-4 rounded-lg bg-surface shadow-sm transition-all duration-150 flex flex-col justify-between group hover:bg-slate-50" id="dataset-stages" onclick="selectDataset('dataset-stages')">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-body-medium text-body-medium text-text font-semibold group-hover:text-primary">Stage-wise records</span>
+<span class="material-symbols-outlined text-text-disabled text-[20px] dataset-radio-icon">radio_button_unchecked</span>
+</div>
+<p class="font-caption text-caption text-text-muted leading-relaxed">
+              Detailed weighbridge logs, arrival &amp; departure timestamps, seal integrity tokens, moisture %, and stage notes.
+            </p>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-caption font-caption text-text-muted">
+<span class="bg-surface-container px-2 py-0.5 rounded text-[11px]">16 Schema Columns</span>
+<span>Telemetry &amp; Audit</span>
+</div>
+</div>
+<!-- Dataset 3: Full history incl. corrections -->
+<div class="dataset-card cursor-pointer p-4 rounded-lg bg-surface shadow-sm transition-all duration-150 flex flex-col justify-between group hover:bg-slate-50" id="dataset-history" onclick="selectDataset('dataset-history')">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-body-medium text-body-medium text-text font-semibold group-hover:text-primary">Full history incl. corrections</span>
+<span class="material-symbols-outlined text-text-disabled text-[20px] dataset-radio-icon">radio_button_unchecked</span>
+</div>
+<p class="font-caption text-caption text-text-muted leading-relaxed">
+              Complete immutable ledger including superseded rows, correction logs, editor user tags, and rationale statements.
+            </p>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-caption font-caption text-text-muted">
+<span class="bg-surface-container px-2 py-0.5 rounded text-[11px]">22 Schema Columns</span>
+<span>Immutable Trail</span>
+</div>
+</div>
+<!-- Dataset 4: Current status -->
+<div class="dataset-card cursor-pointer p-4 rounded-lg bg-surface shadow-sm transition-all duration-150 flex flex-col justify-between group hover:bg-slate-50" id="dataset-status" onclick="selectDataset('dataset-status')">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-body-medium text-body-medium text-text font-semibold group-hover:text-primary">Current status</span>
+<span class="material-symbols-outlined text-text-disabled text-[20px] dataset-radio-icon">radio_button_unchecked</span>
+</div>
+<p class="font-caption text-caption text-text-muted leading-relaxed">
+              Real-time snapshot of active operational batches with pending milestone queues, variance indicators, and SLA timers.
+            </p>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-caption font-caption text-text-muted">
+<span class="bg-surface-container px-2 py-0.5 rounded text-[11px]">10 Schema Columns</span>
+<span>Live Snapshot</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Filter Criteria Section Card -->
+<section class="bg-surface rounded-xl p-5 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 rounded-full bg-primary-soft text-primary font-semibold text-caption flex items-center justify-center">2</span>
+<h2 class="font-section-title text-section-title text-text">Filter Parameters</h2>
+</div>
+<button class="text-caption font-caption text-primary hover:text-primary-hover font-semibold flex items-center gap-1.5 transition-colors" onclick="resetFilters()" type="button">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span>Reset Filters</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+<!-- Date Range Selection -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="filter-date-range">Date Range</label>
+<div class="relative">
+<select class="w-full h-10 px-3 bg-surface-container text-text font-body text-body rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary" id="filter-date-range" onchange="handleDateRangeChange(this.value)">
+<option value="Last 7 Days">Last 7 Days</option>
+<option selected="" value="Last 30 Days">Last 30 Days</option>
+<option value="This Month">This Month</option>
+<option value="Custom Range">Custom Range</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Status Filter -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="filter-status">Batch Status</label>
+<div class="relative">
+<select class="w-full h-10 px-3 bg-surface-container text-text font-body text-body rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary" id="filter-status" onchange="updateEstimates()">
+<option selected="" value="All Statuses">All Statuses</option>
+<option value="Created">Created</option>
+<option value="Collected">Collected</option>
+<option value="In Transit">In Transit</option>
+<option value="At RTS">At RTS</option>
+<option value="Completed">Completed</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Route Filter -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="filter-route">Route Code</label>
+<div class="relative">
+<select class="w-full h-10 px-3 bg-surface-container text-text font-body text-body rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary" id="filter-route" onchange="updateEstimates()">
+<option selected="" value="All Routes">All Routes</option>
+<option value="RT-NORTH-01">RT-NORTH-01 (Kalyani Nagar)</option>
+<option value="RT-EAST-02">RT-EAST-02 (Viman Nagar)</option>
+<option value="RT-SOUTH-03">RT-SOUTH-03 (Kothrud)</option>
+<option value="RT-WEST-04">RT-WEST-04 (Aundh Central)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Vehicle Filter -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="filter-vehicle">Assigned Vehicle</label>
+<div class="relative">
+<select class="w-full h-10 px-3 bg-surface-container text-text font-body text-body rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary" id="filter-vehicle" onchange="updateEstimates()">
+<option selected="" value="All Vehicles">All Vehicles</option>
+<option value="MH-02-AB-1234">MH-02-AB-1234 (Compactor)</option>
+<option value="MH-02-CD-5678">MH-02-CD-5678 (Tipper)</option>
+<option value="MH-02-EF-9012">MH-02-EF-9012 (Hauler)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Waste Type Filter -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="filter-waste-type">Waste Classification</label>
+<div class="relative">
+<select class="w-full h-10 px-3 bg-surface-container text-text font-body text-body rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary" id="filter-waste-type" onchange="updateEstimates()">
+<option selected="" value="All Types">All Types</option>
+<option value="Wet Waste">Wet Waste (Organic)</option>
+<option value="Dry Waste">Dry Waste (Recyclable)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Hidden Custom Date Range Row -->
+<div class="hidden mt-4 pt-4 flex flex-wrap items-center gap-4 bg-surface-container-low p-3.5 rounded-lg" id="custom-date-inputs">
+<div class="flex items-center gap-2">
+<label class="font-label text-label text-text-muted" for="custom-start-date">Start Date (IST):</label>
+<input class="h-9 px-3 bg-surface text-text font-body text-body rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="custom-start-date" type="date" value="2026-09-01"/>
+</div>
+<div class="flex items-center gap-2">
+<label class="font-label text-label text-text-muted" for="custom-end-date">End Date (IST):</label>
+<input class="h-9 px-3 bg-surface text-text font-body text-body rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" id="custom-end-date" type="date" value="2026-10-06"/>
+</div>
+<span class="font-caption text-caption text-text-muted">Timestamps formatted with IST +05:30 offset</span>
+</div>
+</section>
+<!-- 3. Export Format & Execution Section Card -->
+<section class="bg-surface rounded-xl p-5 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 rounded-full bg-primary-soft text-primary font-semibold text-caption flex items-center justify-center">3</span>
+<h2 class="font-section-title text-section-title text-text">File Format &amp; Download</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-text-muted">verified</span>
+<span class="font-caption text-caption text-text-muted">Verified checksum SHA-256 enabled</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+<!-- Format Pills -->
+<div class="lg:col-span-5 flex flex-col gap-2">
+<span class="font-label text-label text-text-muted">Output Specification</span>
+<div class="flex items-center gap-3">
+<button class="flex-1 flex items-center justify-center gap-2.5 h-12 px-4 rounded-lg bg-primary text-on-primary font-body-medium text-body-medium shadow-sm transition-colors" id="fmt-csv" onclick="selectFormat('csv')" type="button">
+<span class="material-symbols-outlined text-[20px]">csv</span>
+<div class="text-left">
+<span class="block leading-none font-semibold">CSV (.csv)</span>
+<span class="text-[11px] opacity-80 block mt-0.5">UTF-8 Comma-delimited</span>
+</div>
+</button>
+<button class="flex-1 flex items-center justify-center gap-2.5 h-12 px-4 rounded-lg bg-surface-container text-text font-body-medium text-body-medium shadow-sm transition-colors hover:bg-slate-200" id="fmt-xlsx" onclick="selectFormat('xlsx')" type="button">
+<span class="material-symbols-outlined text-[20px]">table_view</span>
+<div class="text-left">
+<span class="block leading-none font-semibold">Excel (.xlsx)</span>
+<span class="text-[11px] text-text-muted block mt-0.5">Formatted Workbook</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Metric Summary Chips -->
+<div class="lg:col-span-4 bg-surface-container-low p-3.5 rounded-lg flex flex-col justify-center gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">Estimated Records:</span>
+<span class="font-batch-id text-batch-id text-text font-semibold" id="records-count">184 batches</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">Est. Compressed Size:</span>
+<span class="font-caption text-caption text-text-muted" id="size-estimate">~142 KB</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">Encoding:</span>
+<span class="font-caption text-caption text-text-muted">UTF-8 / CRLF compliant</span>
+</div>
+</div>
+<!-- Action CTAs -->
+<div class="lg:col-span-3 flex flex-col gap-2.5 justify-end">
+<button class="w-full h-10 px-4 rounded-lg bg-primary hover:bg-primary-hover text-on-primary font-body-medium text-body-medium flex items-center justify-center gap-2 shadow-sm transition-colors" onclick="triggerDownload()" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Download Export</span>
+</button>
+<button class="w-full h-10 px-4 rounded-lg bg-surface hover:bg-slate-50 text-text font-body-medium text-body-medium flex items-center justify-center gap-2 shadow-sm transition-colors" onclick="togglePreviewModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span>Preview Sample Data</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 4. Recent Exports / Export History Card -->
+<section class="bg-surface rounded-xl p-5 shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+<div>
+<h2 class="font-section-title text-section-title text-text">Recent Export Activity</h2>
+<p class="font-caption text-caption text-text-muted">Audit trail of previously compiled extraction jobs by administrator accounts.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-caption text-caption text-text-muted">Storage retention: 30 days</span>
+</div>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto rounded-lg">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container font-label text-label text-text-muted">
+<th class="py-3 px-4">File Name</th>
+<th class="py-3 px-4">Dataset</th>
+<th class="py-3 px-4">Filters Applied</th>
+<th class="py-3 px-4">Generated (IST)</th>
+<th class="py-3 px-4">Exported By</th>
+<th class="py-3 px-4">Size</th>
+<th class="py-3 px-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="font-body text-body divide-y divide-border">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-text-muted">description</span>
+<span class="font-batch-id text-batch-id text-text">batches_export_20261006.csv</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="bg-surface-container px-2 py-0.5 rounded font-caption text-caption text-text">Batches</span>
+</td>
+<td class="py-3 px-4 text-text-muted font-caption text-caption">
+                Last 30 Days • All Routes • All Statuses
+              </td>
+<td class="py-3 px-4 text-text font-caption text-caption">
+                06 Oct 2026, 08:15
+              </td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-primary-soft text-primary font-caption text-[10px] flex items-center justify-center font-bold">AM</span>
+<span class="text-text font-caption text-caption">Anil Mehta</span>
+</div>
+</td>
+<td class="py-3 px-4 text-text-muted font-caption text-caption">142 KB</td>
+<td class="py-3 px-4 text-right">
+<button class="inline-flex items-center gap-1 text-primary hover:text-primary-hover font-body-medium text-caption transition-colors" onclick="triggerDownload()" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Download Again</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">table_view</span>
+<span class="font-batch-id text-batch-id text-text">stagewise_records_20261005.xlsx</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="bg-badge-collected-bg text-badge-collected-text px-2 py-0.5 rounded font-caption text-caption">Stage-wise records</span>
+</td>
+<td class="py-3 px-4 text-text-muted font-caption text-caption">
+                Last 7 Days • RT-NORTH-01
+              </td>
+<td class="py-3 px-4 text-text font-caption text-caption">
+                05 Oct 2026, 17:42
+              </td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-primary-soft text-primary font-caption text-[10px] flex items-center justify-center font-bold">AM</span>
+<span class="text-text font-caption text-caption">Anil Mehta</span>
+</div>
+</td>
+<td class="py-3 px-4 text-text-muted font-caption text-caption">318 KB</td>
+<td class="py-3 px-4 text-right">
+<button class="inline-flex items-center gap-1 text-primary hover:text-primary-hover font-body-medium text-caption transition-colors" onclick="triggerDownload()" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Download Again</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-text-muted">description</span>
+<span class="font-batch-id text-batch-id text-text">full_audit_corrections_20261001.csv</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="bg-badge-rts-bg text-badge-rts-text px-2 py-0.5 rounded font-caption text-caption">Full History</span>
+</td>
+<td class="py-3 px-4 text-text-muted font-caption text-caption">
+                September 2026 • Superseded &amp; Deletions
+              </td>
+<td class="py-3 px-4 text-text font-caption text-caption">
+                01 Oct 2026, 11:20
+              </td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-surface-container text-text font-caption text-[10px] flex items-center justify-center font-bold">SK</span>
+<span class="text-text font-caption text-caption">S. Kulkarni</span>
+</div>
+</td>
+<td class="py-3 px-4 text-text-muted font-caption text-caption">892 KB</td>
+<td class="py-3 px-4 text-right">
+<button class="inline-flex items-center gap-1 text-primary hover:text-primary-hover font-body-medium text-caption transition-colors" onclick="triggerDownload()" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Download Again</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-text-muted">description</span>
+<span class="font-batch-id text-batch-id text-text">active_status_snapshot_20260928.csv</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="bg-badge-transit-bg text-badge-transit-text px-2 py-0.5 rounded font-caption text-caption">Current Status</span>
+</td>
+<td class="py-3 px-4 text-text-muted font-caption text-caption">
+                Real-time In Transit • All Routes
+              </td>
+<td class="py-3 px-4 text-text font-caption text-caption">
+                28 Sep 2026, 14:05
+              </td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-primary-soft text-primary font-caption text-[10px] flex items-center justify-center font-bold">AM</span>
+<span class="text-text font-caption text-caption">Anil Mehta</span>
+</div>
+</td>
+<td class="py-3 px-4 text-text-muted font-caption text-caption">64 KB</td>
+<td class="py-3 px-4 text-right">
+<button class="inline-flex items-center gap-1 text-primary hover:text-primary-hover font-body-medium text-caption transition-colors" onclick="triggerDownload()" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Download Again</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Metadata -->
+<div class="flex items-center justify-between mt-3 text-caption font-caption text-text-muted pt-2">
+<span>Showing last 4 generated packages</span>
+<span>Secure download links expire in 48 hours</span>
+</div>
+</section>
+</div>
+<!-- Modal: Sample Data Preview (First 10 rows) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden" id="preview-modal">
+<div class="bg-surface rounded-xl shadow-xl w-full max-w-5xl overflow-hidden flex flex-col max-h-[921px]">
+<!-- Modal Header -->
+<div class="px-6 py-4 bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-[22px]">table_rows</span>
+<h3 class="font-section-title text-section-title text-text">Data Preview: First 10 Batches</h3>
+</div>
+<button class="text-text-muted hover:text-text p-1 rounded-lg" onclick="togglePreviewModal()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Modal Body (Table preview) -->
+<div class="p-6 overflow-x-auto flex-1">
+<div class="mb-3 flex items-center justify-between text-caption font-caption text-text-muted">
+<span>Displaying first 10 rows for verification prior to execution.</span>
+<span class="bg-badge-completed-bg text-badge-completed-text font-semibold px-2 py-0.5 rounded">All Fields Validated</span>
+</div>
+<table class="w-full text-left border-collapse text-body font-body text-[13px]">
+<thead>
+<tr class="bg-surface-container font-label text-label text-text-muted">
+<th class="py-2.5 px-3">Batch ID</th>
+<th class="py-2.5 px-3">Created IST</th>
+<th class="py-2.5 px-3">Route</th>
+<th class="py-2.5 px-3">Vehicle</th>
+<th class="py-2.5 px-3">Type</th>
+<th class="py-2.5 px-3">Weight (KG)</th>
+<th class="py-2.5 px-3">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border">
+<tr>
+<td class="py-2 px-3 font-batch-id text-batch-id text-primary">BAT-202610-0941</td>
+<td class="py-2 px-3 text-text-muted">06-10-2026 07:15</td>
+<td class="py-2 px-3 text-text">RT-NORTH-01</td>
+<td class="py-2 px-3 text-text">MH-02-AB-1234</td>
+<td class="py-2 px-3 text-text">Wet Waste</td>
+<td class="py-2 px-3 text-text">1,240</td>
+<td class="py-2 px-3"><span class="bg-badge-transit-bg text-badge-transit-text text-badge font-badge px-2 py-0.5 rounded-full">In Transit</span></td>
+</tr>
+<tr>
+<td class="py-2 px-3 font-batch-id text-batch-id text-primary">BAT-202610-0940</td>
+<td class="py-2 px-3 text-text-muted">06-10-2026 06:40</td>
+<td class="py-2 px-3 text-text">RT-EAST-02</td>
+<td class="py-2 px-3 text-text">MH-02-CD-5678</td>
+<td class="py-2 px-3 text-text">Dry Waste</td>
+<td class="py-2 px-3 text-text">860</td>
+<td class="py-2 px-3"><span class="bg-badge-collected-bg text-badge-collected-text text-badge font-badge px-2 py-0.5 rounded-full">Collected</span></td>
+</tr>
+<tr>
+<td class="py-2 px-3 font-batch-id text-batch-id text-primary">BAT-202610-0939</td>
+<td class="py-2 px-3 text-text-muted">06-10-2026 06:10</td>
+<td class="py-2 px-3 text-text">RT-SOUTH-03</td>
+<td class="py-2 px-3 text-text">MH-02-EF-9012</td>
+<td class="py-2 px-3 text-text">Wet Waste</td>
+<td class="py-2 px-3 text-text">1,410</td>
+<td class="py-2 px-3"><span class="bg-badge-rts-bg text-badge-rts-text text-badge font-badge px-2 py-0.5 rounded-full">At RTS</span></td>
+</tr>
+<tr>
+<td class="py-2 px-3 font-batch-id text-batch-id text-primary">BAT-202610-0938</td>
+<td class="py-2 px-3 text-text-muted">05-10-2026 19:30</td>
+<td class="py-2 px-3 text-text">RT-WEST-04</td>
+<td class="py-2 px-3 text-text">MH-02-AB-1234</td>
+<td class="py-2 px-3 text-text">Dry Waste</td>
+<td class="py-2 px-3 text-text">920</td>
+<td class="py-2 px-3"><span class="bg-badge-completed-bg text-badge-completed-text text-badge font-badge px-2 py-0.5 rounded-full">Completed</span></td>
+</tr>
+<tr>
+<td class="py-2 px-3 font-batch-id text-batch-id text-primary">BAT-202610-0937</td>
+<td class="py-2 px-3 text-text-muted">05-10-2026 18:45</td>
+<td class="py-2 px-3 text-text">RT-NORTH-01</td>
+<td class="py-2 px-3 text-text">MH-02-CD-5678</td>
+<td class="py-2 px-3 text-text">Wet Waste</td>
+<td class="py-2 px-3 text-text">1,550</td>
+<td class="py-2 px-3"><span class="bg-badge-completed-bg text-badge-completed-text text-badge font-badge px-2 py-0.5 rounded-full">Completed</span></td>
+</tr>
+<tr>
+<td class="py-2 px-3 font-batch-id text-batch-id text-primary">BAT-202610-0936</td>
+<td class="py-2 px-3 text-text-muted">05-10-2026 16:15</td>
+<td class="py-2 px-3 text-text">RT-EAST-02</td>
+<td class="py-2 px-3 text-text">MH-02-EF-9012</td>
+<td class="py-2 px-3 text-text">Wet Waste</td>
+<td class="py-2 px-3 text-text">1,180</td>
+<td class="py-2 px-3"><span class="bg-badge-completed-bg text-badge-completed-text text-badge font-badge px-2 py-0.5 rounded-full">Completed</span></td>
+</tr>
+<tr>
+<td class="py-2 px-3 font-batch-id text-batch-id text-primary">BAT-202610-0935</td>
+<td class="py-2 px-3 text-text-muted">05-10-2026 14:00</td>
+<td class="py-2 px-3 text-text">RT-SOUTH-03</td>
+<td class="py-2 px-3 text-text">MH-02-AB-1234</td>
+<td class="py-2 px-3 text-text">Dry Waste</td>
+<td class="py-2 px-3 text-text">790</td>
+<td class="py-2 px-3"><span class="bg-badge-completed-bg text-badge-completed-text text-badge font-badge px-2 py-0.5 rounded-full">Completed</span></td>
+</tr>
+<tr>
+<td class="py-2 px-3 font-batch-id text-batch-id text-primary">BAT-202610-0934</td>
+<td class="py-2 px-3 text-text-muted">05-10-2026 12:20</td>
+<td class="py-2 px-3 text-text">RT-WEST-04</td>
+<td class="py-2 px-3 text-text">MH-02-CD-5678</td>
+<td class="py-2 px-3 text-text">Wet Waste</td>
+<td class="py-2 px-3 text-text">1,330</td>
+<td class="py-2 px-3"><span class="bg-badge-completed-bg text-badge-completed-text text-badge font-badge px-2 py-0.5 rounded-full">Completed</span></td>
+</tr>
+<tr>
+<td class="py-2 px-3 font-batch-id text-batch-id text-primary">BAT-202610-0933</td>
+<td class="py-2 px-3 text-text-muted">05-10-2026 10:05</td>
+<td class="py-2 px-3 text-text">RT-NORTH-01</td>
+<td class="py-2 px-3 text-text">MH-02-EF-9012</td>
+<td class="py-2 px-3 text-text">Dry Waste</td>
+<td class="py-2 px-3 text-text">640</td>
+<td class="py-2 px-3"><span class="bg-badge-completed-bg text-badge-completed-text text-badge font-badge px-2 py-0.5 rounded-full">Completed</span></td>
+</tr>
+<tr>
+<td class="py-2 px-3 font-batch-id text-batch-id text-primary">BAT-202610-0932</td>
+<td class="py-2 px-3 text-text-muted">05-10-2026 08:30</td>
+<td class="py-2 px-3 text-text">RT-EAST-02</td>
+<td class="py-2 px-3 text-text">MH-02-AB-1234</td>
+<td class="py-2 px-3 text-text">Wet Waste</td>
+<td class="py-2 px-3 text-text">1,490</td>
+<td class="py-2 px-3"><span class="bg-badge-completed-bg text-badge-completed-text text-badge font-badge px-2 py-0.5 rounded-full">Completed</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Modal Footer -->
+<div class="px-6 py-3.5 bg-surface-container flex items-center justify-between">
+<span class="font-caption text-caption text-text-muted">Sample generated based on: Batches • Last 30 Days</span>
+<div class="flex items-center gap-3">
+<button class="h-9 px-4 rounded-lg bg-surface text-text hover:bg-slate-100 font-body-medium text-body-medium shadow-sm transition-colors" onclick="togglePreviewModal()" type="button">
+            Close Preview
+          </button>
+<button class="h-9 px-4 rounded-lg bg-primary hover:bg-primary-hover text-on-primary font-body-medium text-body-medium flex items-center gap-1.5 shadow-sm transition-colors" onclick="togglePreviewModal(); triggerDownload();" type="button">
+<span class="material-symbols-outlined text-[16px]">download</span>
+<span>Download All (184 Rows)</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div></main>
+</div>
+</body></html>

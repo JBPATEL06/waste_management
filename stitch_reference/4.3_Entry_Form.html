@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary": "#97344a", "surface-container": "#eaedff", "border": "#E2E8F0", "surface-bright": "#faf8ff", "badge-created-text": "#475569", "on-error-container": "#93000a", "on-surface-variant": "#3f493f", "primary-fixed": "#95f8a7", "text-disabled": "#94A3B8", "outline-variant": "#becabc", "on-background": "#131b2e", "outline": "#6f7a6e", "badge-superseded-bg": "#F1F5F9", "on-tertiary": "#ffffff", "inverse-surface": "#283044", "on-tertiary-container": "#fff1f1", "badge-deleted-bg": "#FEE2E2", "secondary-fixed-dim": "#b9c7df", "badge-completed-bg": "#DCFCE7", "surface": "#FFFFFF", "on-primary-fixed": "#00210a", "badge-completed-text": "#15803D", "surface-container-highest": "#dae2fd", "background": "#F8FAFC", "inverse-on-surface": "#eef0ff", "on-primary-fixed-variant": "#005323", "surface-dim": "#d2d9f4", "on-tertiary-fixed-variant": "#81233b", "tertiary-fixed-dim": "#ffb2bd", "on-primary": "#ffffff", "error": "#DC2626", "on-secondary": "#ffffff", "badge-rts-text": "#6D28D9", "secondary": "#515f74", "badge-deleted-text": "#B91C1C", "tertiary-container": "#b64c62", "surface-container-high": "#e2e7ff", "error-container": "#ffdad6", "badge-transit-text": "#B45309", "on-secondary-fixed-variant": "#3a485b", "warning-soft": "#FEF3C7", "surface-variant": "#dae2fd", "badge-superseded-text": "#64748B", "error-soft": "#FEE2E2", "inverse-primary": "#79db8d", "primary-soft": "#DCFCE7", "text": "#0F172A", "on-tertiary-fixed": "#400013", "badge-rts-bg": "#EDE9FE", "on-surface": "#131b2e", "secondary-fixed": "#d5e3fc", "on-secondary-fixed": "#0d1c2e", "on-error": "#ffffff", "secondary-container": "#d5e3fc", "badge-created-bg": "#F1F5F9", "tertiary-fixed": "#ffd9dd", "badge-collected-text": "#1D4ED8", "primary-container": "#15803d", "text-muted": "#475569", "primary-fixed-dim": "#79db8d", "primary": "#00652c", "badge-transit-bg": "#FEF3C7", "surface-container-lowest": "#ffffff", "on-secondary-container": "#57657a", "on-primary-container": "#d3ffd5", "warning": "#D97706", "surface-tint": "#006d30", "primary-hover": "#166534", "badge-collected-bg": "#DBEAFE", "surface-container-low": "#f2f3ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "1.5rem", "space-xl": "1.5rem", "space-md": "0.75rem", "gutter-mobile": "0.75rem", "space-2xl": "2rem", "space-lg": "1rem", "space-xs": "0.25rem", "gutter": "1rem", "space-sm": "0.5rem", "margin-mobile": "1rem" }, "fontFamily": { "label": ["Inter"], "body-medium": ["Inter"], "body": ["Inter"], "kpi-number": ["Inter"], "badge": ["Inter"], "section-title": ["Inter"], "caption": ["Inter"], "page-title": ["Inter"], "batch-id": ["Inter"] }, "fontSize": { "label": ["13px", { "lineHeight": "18px", "fontWeight": "500" }], "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "body": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "kpi-number": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "badge": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "section-title": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "page-title": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "batch-id": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }] } } } };</script></head><body class="bg-background font-body text-text min-h-screen"><header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-lg bg-primary-soft flex items-center justify-center text-primary-container"><span class="material-symbols-outlined text-[20px]">recycling</span></div><span class="font-section-title text-section-title text-text">Waste Journey Tracker</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col text-left"><span class="font-label text-label text-text">Rajesh Sharma</span></div></div><span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-collected-bg text-badge-collected-text">Collection</span></div></header><aside class="fixed left-0 top-14 bottom-0 w-60 bg-surface border-r border-border z-40 flex flex-col justify-between p-space-md"><nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-soft text-primary-container font-body-medium"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body text-body text-text-muted hover:bg-background hover:text-text transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body text-body text-text-muted hover:bg-background hover:text-text transition-colors" data-path="history" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span>History</span></a><div class="my-space-xs border-t border-border"></div><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body text-body text-text-muted hover:bg-background hover:text-text transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[20px]">account_circle</span><span>Profile</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body text-body text-text-muted hover:bg-error-soft hover:text-error transition-colors" data-path="logout" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span>Logout</span></a></nav><div class="px-space-md py-space-xs text-text-disabled font-caption text-caption">Operator ID: OP-8492</div></aside><div class="pl-60"><main class="relative pt-14 min-h-screen bg-background p-margin"><div class="flex flex-col w-full max-w-5xl mx-auto space-y-6">
+<!-- Top Navigation & Breadcrumbs -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
+<div class="flex flex-col gap-1">
+<nav class="flex items-center gap-2 text-caption font-caption text-text-muted">
+<a class="hover:text-text transition-colors" href="#">Dashboard</a>
+<span>/</span>
+<a class="hover:text-text transition-colors" href="#">Batches</a>
+<span>/</span>
+<span class="font-body-medium text-text">WB-2026-0124</span>
+<span>/</span>
+<span class="text-text-disabled">Collection Entry</span>
+</nav>
+<div class="flex items-center gap-3 mt-1">
+<h1 class="font-page-title text-page-title text-text">Log Collection Manifest</h1>
+<span class="font-batch-id text-batch-id bg-surface border border-border px-2.5 py-0.5 rounded text-text">WB-2026-0124</span>
+<span class="font-badge text-badge px-2.5 py-0.5 rounded-full bg-badge-collected-bg text-badge-collected-text" id="modeBadge">Mode: New Entry</span>
+</div>
+</div>
+<a class="inline-flex items-center gap-1.5 px-3 py-2 h-10 rounded-lg bg-surface border border-border font-body-medium text-body-medium text-text hover:bg-background transition-colors self-start sm:self-auto" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span>Back to Batch View</span>
+</a>
+</div>
+<!-- Read-Only Batch Reference Specification Card -->
+<div class="bg-surface border border-border rounded-xl p-5 shadow-sm">
+<div class="flex items-center justify-between pb-3 mb-4 border-b border-border">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">assignment</span>
+<span class="font-section-title text-section-title text-text">Scheduled Batch Baseline</span>
+</div>
+<span class="font-caption text-caption text-text-muted">Assigned Hub: Ward 12 Collection Node</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-left">
+<div>
+<span class="block font-label text-label text-text-muted">Pickup Location</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 block truncate" title="Sector 14 Residential, Ward 4">Sector 14 Residential, Ward 4</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Assigned Route</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 block truncate" title="RT-NORTH-01 (North Corridor)">RT-NORTH-01 (North Corridor)</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Vehicle Details</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 block truncate" title="DL-01-EA-4821 (5T Compactor)">DL-01-EA-4821 (5T Compactor)</span>
+</div>
+<div>
+<span class="block font-label text-label text-text-muted">Waste Type &amp; Est. Qty</span>
+<span class="font-body-medium text-body-medium text-text mt-0.5 block">Wet Waste • 2,400 kg</span>
+</div>
+</div>
+</div>
+<!-- Mode Switcher Strip -->
+<div class="flex items-center justify-between px-4 py-2.5 bg-surface border border-border rounded-lg text-body text-text">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-text-muted text-[18px]">rule</span>
+<span class="font-body-medium text-body-medium">Entry Operation Mode</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 rounded font-label text-label bg-primary-soft text-primary-container font-medium border border-primary-container/20" id="btnModeNew" type="button">Initial Entry</button>
+<button class="px-3 py-1 rounded font-label text-label text-text-muted hover:text-text hover:bg-background border border-transparent" id="btnModeCorrection" type="button">Correction / Amendment</button>
+</div>
+</div>
+<!-- Form Container -->
+<form class="bg-surface border border-border rounded-xl p-6 shadow-sm space-y-6" id="collectionEntryForm">
+<!-- Grid for Standard Collection Details -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- 1. Collection Area / Pickup Location -->
+<div class="flex flex-col gap-1.5 md:col-span-2">
+<label class="font-label text-label text-text-muted flex items-center justify-between" for="pickupLocation">
+<span>Collection Area / Pickup Location <span class="text-error">*</span></span>
+<span class="font-caption text-caption text-text-disabled">Mandatory field</span>
+</label>
+<input class="h-10 px-3 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" id="pickupLocation" name="pickupLocation" required="" type="text" value="Sector 14 Residential, Ward 4"/>
+</div>
+<!-- 2. Route (Locked) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted flex items-center justify-between" for="routeSelect">
+<span>Assigned Route <span class="text-text-disabled">(Immutable)</span></span>
+<span class="material-symbols-outlined text-[16px] text-text-disabled">lock</span>
+</label>
+<div class="relative">
+<input class="w-full h-10 px-3 rounded-lg border border-border bg-background text-body text-text-muted cursor-not-allowed focus:outline-none" id="routeSelect" name="route" readonly="" type="text" value="RT-NORTH-01 - North Corridor"/>
+</div>
+</div>
+<!-- 3. Vehicle Assigned -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="vehicleSelect">
+          Assigned Vehicle <span class="text-error">*</span>
+</label>
+<select class="h-10 px-3 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" id="vehicleSelect" name="vehicle" required="">
+<option selected="" value="DL-01-EA-4821">DL-01-EA-4821 (5T Compactor Truck)</option>
+<option value="DL-01-EA-3312">DL-01-EA-3312 (3.5T Tipper Truck)</option>
+<option value="DL-02-CB-9081">DL-02-CB-9081 (5T Compactor Truck)</option>
+</select>
+</div>
+<!-- 4. Waste Type -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="wasteTypeSelect">
+          Waste Category <span class="text-error">*</span>
+</label>
+<select class="h-10 px-3 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" id="wasteTypeSelect" name="wasteType" required="">
+<option selected="" value="Wet Waste">Wet Waste (Biodegradable / Organic)</option>
+<option value="Dry Waste">Dry Waste (Recyclable Non-Organic)</option>
+<option value="Domestic Hazardous">Domestic Hazardous Waste</option>
+<option value="Sanitary Waste">Sanitary Waste</option>
+</select>
+</div>
+<!-- 5. Net Gross Collected Quantity -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted flex items-center justify-between" for="netWeight">
+<span>Net Collected Weight (kg) <span class="text-error">*</span></span>
+<span class="font-caption text-caption text-text-muted">Scale measurement</span>
+</label>
+<div class="relative flex items-center">
+<input class="w-full h-10 pl-3 pr-12 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" id="netWeight" min="1" name="netWeight" required="" step="0.5" type="number" value="2400"/>
+<span class="absolute right-3 font-caption text-caption text-text-disabled">KG</span>
+</div>
+<p class="font-caption text-caption text-text-muted">Enter actual weighed quantity registered at collection terminal scale.</p>
+</div>
+<!-- 6. Date & Time Picker Split -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="collectionDate">
+          Collection Date <span class="text-error">*</span>
+</label>
+<input class="h-10 px-3 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" id="collectionDate" name="collectionDate" required="" type="date" value="2026-10-06"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="collectionTime">
+          Exact Timestamp (IST) <span class="text-error">*</span>
+</label>
+<input class="h-10 px-3 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" id="collectionTime" name="collectionTime" required="" type="time" value="08:15"/>
+</div>
+<!-- 7. Supervisor / Driver In-Charge -->
+<div class="flex flex-col gap-1.5 md:col-span-2">
+<label class="font-label text-label text-text-muted" for="supervisor">
+          Field Officer / Driver In-Charge <span class="text-error">*</span>
+</label>
+<input class="h-10 px-3 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" id="supervisor" name="supervisor" required="" type="text" value="Ramesh Kumar (EMP-4102)"/>
+</div>
+</div>
+<!-- 8. Visual Segregation Grade -->
+<div class="flex flex-col gap-2 pt-2 border-t border-border">
+<label class="font-label text-label text-text-muted">
+        Visual Segregation Grade / Quality Rating <span class="text-error">*</span>
+</label>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+<label class="relative flex items-center p-3 rounded-lg border border-primary-container bg-primary-soft/30 cursor-pointer">
+<input checked="" class="h-4 w-4 text-primary focus:ring-primary border-border" name="segregationGrade" type="radio" value="Grade A"/>
+<div class="ml-3 flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Grade A</span>
+<span class="font-caption text-caption text-text-muted">High Segregation (&gt;90%)</span>
+</div>
+</label>
+<label class="relative flex items-center p-3 rounded-lg border border-border bg-surface cursor-pointer hover:bg-background transition">
+<input class="h-4 w-4 text-primary focus:ring-primary border-border" name="segregationGrade" type="radio" value="Grade B"/>
+<div class="ml-3 flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Grade B</span>
+<span class="font-caption text-caption text-text-muted">Moderate (70% - 90%)</span>
+</div>
+</label>
+<label class="relative flex items-center p-3 rounded-lg border border-border bg-surface cursor-pointer hover:bg-background transition">
+<input class="h-4 w-4 text-primary focus:ring-primary border-border" name="segregationGrade" type="radio" value="Grade C"/>
+<div class="ml-3 flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Grade C</span>
+<span class="font-caption text-caption text-text-muted">Contaminated (&lt;70%)</span>
+</div>
+</label>
+</div>
+</div>
+<!-- 9. Optional Remarks -->
+<div class="flex flex-col gap-1.5 pt-2 border-t border-border">
+<label class="font-label text-label text-text-muted flex items-center justify-between" for="manifestRemarks">
+<span>Operational Remarks</span>
+<span class="font-caption text-caption text-text-disabled">Optional</span>
+</label>
+<textarea class="p-3 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" id="manifestRemarks" name="remarks" placeholder="Optional notes regarding route delays, container conditions, or segregation quality..." rows="3"></textarea>
+</div>
+<!-- 10. Correction Section (Collapsible & Audit Enforced) -->
+<div class="hidden flex-col gap-3 p-4 rounded-lg bg-warning-soft/20 border border-warning/30" id="correctionContainer">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-warning text-[20px] mt-0.5">warning</span>
+<div class="flex flex-col">
+<span class="font-body-medium text-body-medium text-text">Correction Mode Activated</span>
+<span class="font-caption text-caption text-text-muted">This update will supersede previous entry #WB-2026-0124-C1. Reason is permanently committed to the immutable blockchain ledger.</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5 mt-1">
+<label class="font-label text-label text-text" for="correctionReason">
+          Reason for Modification / Correction <span class="text-error">*</span>
+</label>
+<textarea class="p-2.5 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary transition" id="correctionReason" name="correctionReason" placeholder="Specify verified error reason (e.g. Weighbridge recalibration correction, corrected route designation)..." rows="2"></textarea>
+</div>
+</div>
+<!-- Actions Bar -->
+<div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-4 border-t border-border">
+<button class="w-full sm:w-auto h-10 px-5 rounded-lg border border-border bg-surface font-body-medium text-body-medium text-text hover:bg-background transition-colors text-center" type="button">
+        Discard Changes
+      </button>
+<button class="w-full sm:w-auto h-10 px-5 rounded-lg bg-primary-container hover:bg-primary-hover text-on-primary font-body-medium text-body-medium flex items-center justify-center gap-2 transition-colors" type="submit">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span id="submitButtonText">Submit Collection Entry</span>
+</button>
+</div>
+</form>
+<!-- Stage Audit Footer -->
+<div class="flex items-center justify-between text-caption font-caption text-text-disabled px-2 pb-6">
+<span>Stage: Collection Manifest Intake (Stage 1 of 4)</span>
+<span>Node Terminal: OP-8492 • Ward 12 Hub</span>
+</div>
+</div>
+<script>
+  (function initEntryForm() {
+    const btnNew = document.getElementById('btnModeNew');
+    const btnCorr = document.getElementById('btnModeCorrection');
+    const badge = document.getElementById('modeBadge');
+    const correctionBox = document.getElementById('correctionContainer');
+    const correctionReason = document.getElementById('correctionReason');
+    const submitText = document.getElementById('submitButtonText');
+    const form = document.getElementById('collectionEntryForm');
+
+    function setMode(isCorrection) {
+      if (isCorrection) {
+        btnCorr.className = 'px-3 py-1 rounded font-label text-label bg-warning-soft text-warning font-medium border border-warning/30';
+        btnNew.className = 'px-3 py-1 rounded font-label text-label text-text-muted hover:text-text hover:bg-background border border-transparent';
+        badge.textContent = 'Mode: Correction';
+        badge.className = 'font-badge text-badge px-2.5 py-0.5 rounded-full bg-badge-transit-bg text-badge-transit-text';
+        correctionBox.classList.remove('hidden');
+        correctionBox.classList.add('flex');
+        correctionReason.setAttribute('required', 'required');
+        submitText.textContent = 'Submit Corrected Manifest';
+      } else {
+        btnNew.className = 'px-3 py-1 rounded font-label text-label bg-primary-soft text-primary-container font-medium border border-primary-container/20';
+        btnCorr.className = 'px-3 py-1 rounded font-label text-label text-text-muted hover:text-text hover:bg-background border border-transparent';
+        badge.textContent = 'Mode: New Entry';
+        badge.className = 'font-badge text-badge px-2.5 py-0.5 rounded-full bg-badge-collected-bg text-badge-collected-text';
+        correctionBox.classList.add('hidden');
+        correctionBox.classList.remove('flex');
+        correctionReason.removeAttribute('required');
+        submitText.textContent = 'Submit Collection Entry';
+      }
+    }
+
+    btnNew.addEventListener('click', () => setMode(false));
+    btnCorr.addEventListener('click', () => setMode(true));
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const isCorr = !correctionBox.classList.contains('hidden');
+      if (isCorr && !correctionReason.value.trim()) {
+        correctionReason.focus();
+        return;
+      }
+      alert('Manifest entry successfully committed for batch WB-2026-0124.');
+    });
+  })();
+</script></main></div></body></html>

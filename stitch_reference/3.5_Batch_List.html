@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>Admin Dashboard - Waste Journey Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#F8FAFC",
+            "surface": "#FFFFFF",
+            "border": "#E2E8F0",
+            "primary": "#15803D",
+            "primary-hover": "#166534",
+            "primary-soft": "#DCFCE7",
+            "text": "#0F172A",
+            "text-muted": "#475569",
+            "text-disabled": "#94A3B8",
+            "badge-created-bg": "#F1F5F9",
+            "badge-created-text": "#475569",
+            "badge-collected-bg": "#DBEAFE",
+            "badge-collected-text": "#1D4ED8",
+            "badge-transit-bg": "#FEF3C7",
+            "badge-transit-text": "#B45309",
+            "badge-rts-bg": "#EDE9FE",
+            "badge-rts-text": "#6D28D9",
+            "badge-completed-bg": "#DCFCE7",
+            "badge-completed-text": "#15803D",
+            "badge-deleted-bg": "#FEE2E2",
+            "badge-deleted-text": "#B91C1C",
+            "warning": "#D97706",
+            "warning-soft": "#FEF3C7",
+            "error": "#DC2626",
+            "error-soft": "#FEE2E2"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            "batch-id": ["Inter", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-body text-text antialiased min-h-screen">
+<!-- Top Bar (56px) -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50 flex items-center justify-between px-6">
+<!-- Left Logo -->
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">recycling</span>
+</div>
+<span class="font-semibold text-[17px] text-text tracking-tight">Waste Journey Tracker</span>
+</div>
+<!-- Right Side: Anil Mehta, Admin, Profile, Logout -->
+<div class="flex items-center gap-5">
+<div class="flex items-center gap-2.5">
+<span class="text-sm font-medium text-text">Anil Mehta</span>
+<span class="text-xs font-semibold bg-primary-soft text-primary px-2.5 py-0.5 rounded-full">Admin</span>
+</div>
+<div class="h-4 w-[1px] bg-border"></div>
+<a class="text-sm font-medium text-text-muted hover:text-text transition-colors" data-path="profile" href="#">Profile</a>
+<a class="text-sm font-medium text-text-muted hover:text-error transition-colors flex items-center gap-1.5" data-path="login" href="#">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</header>
+<!-- Left Sidebar (240px) -->
+<aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 overflow-y-auto">
+<div class="p-3">
+<nav class="flex flex-col gap-1">
+<!-- 1. Dashboard (Active) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="dashboard" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- 2. Batches -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="batches" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span>Batches</span>
+</a>
+<!-- 3. Create Batch -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="create-batch" href="#">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>Create Batch</span>
+</a>
+<!-- 4. Master Data -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="master-data" href="#">
+<span class="material-symbols-outlined text-[20px]">database</span>
+<span>Master Data</span>
+</a>
+<!-- 5. Users -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="users" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span>Users</span>
+</a>
+<!-- 6. Export -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="export" href="#">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Export</span>
+</a>
+<!-- 7. Audit Log -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="audit-log" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span>Audit Log</span>
+</a>
+<!-- 8. Settings -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="settings" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Area (max-width 1280px, padding 24px) -->
+<div class="pl-[240px]">
+<main class="pt-14 min-h-screen bg-background"><div class="flex flex-col w-full">
+<!-- Interactive Toast Notification (dismissible / animated) -->
+<div class="fixed top-16 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg bg-surface text-text border border-border transition-all duration-300 transform translate-y-0 opacity-100 hidden" id="toastNotification">
+<span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+<span class="font-body text-body text-text" id="toastMessage">QR asset downloaded for WB-2026-0118.</span>
+<button class="ml-2 text-text-muted hover:text-text" onclick="dismissToast()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="max-w-[1280px] w-full mx-auto px-6 py-6 flex flex-col gap-6">
+<!-- Top Action / Title Bar -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+<div>
+<h1 class="font-page-title text-page-title text-text tracking-tight">Batches</h1>
+<p class="font-body text-body text-text-muted mt-0.5">Monitor real-time transit status, custodial handovers, and chain-of-custody manifests.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="h-10 px-4 bg-surface hover:bg-slate-50 text-text font-label text-label border border-border rounded-lg inline-flex items-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-text-muted">upload_file</span>
+<span>Import Manifest</span>
+</button>
+<a class="h-10 px-4 bg-primary hover:bg-primary-hover text-white font-label text-label rounded-lg inline-flex items-center gap-2 transition-colors" href="#/admin/batches/new">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Create Batch</span>
+</a>
+</div>
+</div>
+<!-- Quick Lifecycle KPI Status Tabs -->
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+<!-- All Batches -->
+<button class="status-kpi-card flex flex-col p-3.5 bg-surface border border-primary/40 rounded-xl text-left transition-all hover:border-primary" onclick="setStatusFilter('all')">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">All Batches</span>
+<span class="w-2 h-2 rounded-full bg-text-disabled"></span>
+</div>
+<span class="font-kpi-number text-kpi-number text-text mt-1">184</span>
+</button>
+<!-- Created -->
+<button class="status-kpi-card flex flex-col p-3.5 bg-surface border border-border rounded-xl text-left transition-all hover:border-slate-400" onclick="setStatusFilter('Created')">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">Created</span>
+<span class="w-2 h-2 rounded-full bg-badge-created-text"></span>
+</div>
+<span class="font-kpi-number text-kpi-number text-text mt-1">18</span>
+</button>
+<!-- Collected -->
+<button class="status-kpi-card flex flex-col p-3.5 bg-surface border border-border rounded-xl text-left transition-all hover:border-blue-400" onclick="setStatusFilter('Collected')">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">Collected</span>
+<span class="w-2 h-2 rounded-full bg-badge-collected-text"></span>
+</div>
+<span class="font-kpi-number text-kpi-number text-text mt-1">42</span>
+</button>
+<!-- In Transit -->
+<button class="status-kpi-card flex flex-col p-3.5 bg-surface border border-border rounded-xl text-left transition-all hover:border-amber-400" onclick="setStatusFilter('In Transit')">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">In Transit</span>
+<span class="w-2 h-2 rounded-full bg-badge-transit-text"></span>
+</div>
+<span class="font-kpi-number text-kpi-number text-text mt-1">35</span>
+</button>
+<!-- At RTS -->
+<button class="status-kpi-card flex flex-col p-3.5 bg-surface border border-border rounded-xl text-left transition-all hover:border-purple-400" onclick="setStatusFilter('At RTS')">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">At RTS</span>
+<span class="w-2 h-2 rounded-full bg-badge-rts-text"></span>
+</div>
+<span class="font-kpi-number text-kpi-number text-text mt-1">29</span>
+</button>
+<!-- Completed -->
+<button class="status-kpi-card flex flex-col p-3.5 bg-surface border border-border rounded-xl text-left transition-all hover:border-primary" onclick="setStatusFilter('Completed')">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted">Completed</span>
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+</div>
+<span class="font-kpi-number text-kpi-number text-text mt-1">60</span>
+</button>
+</div>
+<!-- Filter Bar Card -->
+<div class="bg-surface border border-border rounded-xl p-5 shadow-sm">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-3.5 items-end">
+<!-- Search Batch ID -->
+<div class="lg:col-span-4 flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="batchSearch">Search Batch ID</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-text-disabled text-[18px]">search</span>
+<input class="w-full h-10 pl-9 pr-3 text-body font-body bg-surface border border-border rounded-lg text-text placeholder-text-disabled focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="batchSearch" placeholder="Search by Batch ID, e.g. WB-2026..." type="text"/>
+</div>
+</div>
+<!-- Status Filter -->
+<div class="lg:col-span-2 flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="statusSelect">Status</label>
+<select class="w-full h-10 px-3 text-body font-body bg-surface border border-border rounded-lg text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="statusSelect">
+<option value="all">All Statuses</option>
+<option value="Created">Created</option>
+<option value="Collected">Collected</option>
+<option value="In Transit">In Transit</option>
+<option value="At RTS">At RTS</option>
+<option value="Completed">Completed</option>
+</select>
+</div>
+<!-- Date Range -->
+<div class="lg:col-span-2 flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="dateRangeSelect">Date Range</label>
+<select class="w-full h-10 px-3 text-body font-body bg-surface border border-border rounded-lg text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="dateRangeSelect">
+<option value="30">Last 30 Days</option>
+<option value="today">Today</option>
+<option value="7">Last 7 Days</option>
+<option value="custom">Custom Date</option>
+</select>
+</div>
+<!-- Route -->
+<div class="lg:col-span-2 flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="routeSelect">Route</label>
+<select class="w-full h-10 px-3 text-body font-body bg-surface border border-border rounded-lg text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="routeSelect">
+<option value="all">All Routes</option>
+<option value="RT-NORTH-01">RT-NORTH-01</option>
+<option value="RT-EAST-02">RT-EAST-02</option>
+<option value="RT-SOUTH-03">RT-SOUTH-03</option>
+<option value="RT-WEST-04">RT-WEST-04</option>
+<option value="RT-CENTRAL-05">RT-CENTRAL-05</option>
+</select>
+</div>
+<!-- Waste Type -->
+<div class="lg:col-span-1 flex flex-col gap-1.5">
+<label class="font-label text-label text-text-muted" for="wasteTypeSelect">Waste Type</label>
+<select class="w-full h-10 px-3 text-body font-body bg-surface border border-border rounded-lg text-text focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="wasteTypeSelect">
+<option value="all">All</option>
+<option value="Wet">Wet</option>
+<option value="Dry">Dry</option>
+</select>
+</div>
+<!-- Action / Reset -->
+<div class="lg:col-span-1 flex items-center justify-end">
+<button class="w-full h-10 px-3 bg-surface hover:bg-slate-50 border border-border text-text font-label text-label rounded-lg transition-colors inline-flex items-center justify-center gap-1" onclick="resetFilters()" type="button">
+<span class="material-symbols-outlined text-[18px] text-text-muted">restart_alt</span>
+<span>Reset</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-surface border border-border rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse" id="batchesTable">
+<thead>
+<tr class="bg-slate-50 border-b border-border">
+<th class="py-3 px-4 font-label text-label text-text-muted tracking-tight" scope="col">Batch ID</th>
+<th class="py-3 px-4 font-label text-label text-text-muted" scope="col">Date (IST)</th>
+<th class="py-3 px-4 font-label text-label text-text-muted" scope="col">Type</th>
+<th class="py-3 px-4 font-label text-label text-text-muted text-right" scope="col">Qty (kg)</th>
+<th class="py-3 px-4 font-label text-label text-text-muted" scope="col">Source / Area</th>
+<th class="py-3 px-4 font-label text-label text-text-muted" scope="col">Route</th>
+<th class="py-3 px-4 font-label text-label text-text-muted" scope="col">Vehicle</th>
+<th class="py-3 px-4 font-label text-label text-text-muted" scope="col">Current Stage</th>
+<th class="py-3 px-4 font-label text-label text-text-muted" scope="col">Status</th>
+<th class="py-3 px-4 font-label text-label text-text-muted" scope="col">Last Updated</th>
+<th class="py-3 px-4 font-label text-label text-text-muted text-right" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border" id="batchRows">
+<!-- Row 1: WB-2026-0118 (Created) -->
+<tr class="hover:bg-slate-50/70 transition-colors h-12" data-batch="WB-2026-0118" data-route="RT-NORTH-01" data-status="Created" data-type="Wet">
+<td class="py-3 px-4">
+<a class="font-batch-id text-batch-id text-primary hover:text-primary-hover hover:underline" href="#/admin/batches/WB-2026-0118">WB-2026-0118</a>
+</td>
+<td class="py-3 px-4 font-body text-body text-text whitespace-nowrap">06 Oct 2026, 10:30</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-caption text-caption text-text">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                  Wet Waste
+                </span>
+</td>
+<td class="py-3 px-4 font-body-medium text-body-medium text-text text-right tabular-nums">2,450 kg</td>
+<td class="py-3 px-4 font-body text-body text-text truncate max-w-[180px]" title="Sector 14 Residential, Ward 4">Sector 14 Residential, Ward 4</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono">RT-NORTH-01</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono whitespace-nowrap">MH-02-AB-1234</td>
+<td class="py-3 px-4 font-body text-body text-text">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-text-disabled"></span>
+<span>Collection</span>
+</div>
+</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-created-bg text-badge-created-text">
+                  Created
+                </span>
+</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted whitespace-nowrap">06 Oct 2026, 10:30</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<a class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" href="#/admin/batches/WB-2026-0118" title="Open Batch Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+<button class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" onclick="downloadQR('WB-2026-0118')" title="Download QR Manifest">
+<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: WB-2026-0115 (Collected) -->
+<tr class="hover:bg-slate-50/70 transition-colors h-12" data-batch="WB-2026-0115" data-route="RT-EAST-02" data-status="Collected" data-type="Wet">
+<td class="py-3 px-4">
+<a class="font-batch-id text-batch-id text-primary hover:text-primary-hover hover:underline" href="#/admin/batches/WB-2026-0115">WB-2026-0115</a>
+</td>
+<td class="py-3 px-4 font-body text-body text-text whitespace-nowrap">06 Oct 2026, 09:25</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-caption text-caption text-text">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                  Wet Waste
+                </span>
+</td>
+<td class="py-3 px-4 font-body-medium text-body-medium text-text text-right tabular-nums">3,100 kg</td>
+<td class="py-3 px-4 font-body text-body text-text truncate max-w-[180px]" title="Central Market Hub, Ward 7">Central Market Hub, Ward 7</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono">RT-EAST-02</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono whitespace-nowrap">MH-02-CD-5678</td>
+<td class="py-3 px-4 font-body text-body text-text">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+<span>Transportation</span>
+</div>
+</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-collected-bg text-badge-collected-text">
+                  Collected
+                </span>
+</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted whitespace-nowrap">06 Oct 2026, 10:15</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<a class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" href="#/admin/batches/WB-2026-0115" title="Open Batch Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+<button class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" onclick="downloadQR('WB-2026-0115')" title="Download QR Manifest">
+<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: WB-2026-0112 (In Transit) -->
+<tr class="hover:bg-slate-50/70 transition-colors h-12" data-batch="WB-2026-0112" data-route="RT-WEST-04" data-status="In Transit" data-type="Dry">
+<td class="py-3 px-4">
+<a class="font-batch-id text-batch-id text-primary hover:text-primary-hover hover:underline" href="#/admin/batches/WB-2026-0112">WB-2026-0112</a>
+</td>
+<td class="py-3 px-4 font-body text-body text-text whitespace-nowrap">06 Oct 2026, 08:50</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-caption text-caption text-text">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                  Dry Waste
+                </span>
+</td>
+<td class="py-3 px-4 font-body-medium text-body-medium text-text text-right tabular-nums">1,850 kg</td>
+<td class="py-3 px-4 font-body text-body text-text truncate max-w-[180px]" title="Industrial Sector 9">Industrial Sector 9</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono">RT-WEST-04</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono whitespace-nowrap">MH-02-GH-3456</td>
+<td class="py-3 px-4 font-body text-body text-text">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+<span>RTS / Transfer</span>
+</div>
+</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-transit-bg text-badge-transit-text">
+                  In Transit
+                </span>
+</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted whitespace-nowrap">06 Oct 2026, 09:40</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<a class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" href="#/admin/batches/WB-2026-0112" title="Open Batch Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+<button class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" onclick="downloadQR('WB-2026-0112')" title="Download QR Manifest">
+<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: WB-2026-0094 (At RTS) -->
+<tr class="hover:bg-slate-50/70 transition-colors h-12" data-batch="WB-2026-0094" data-route="RT-SOUTH-03" data-status="At RTS" data-type="Wet">
+<td class="py-3 px-4">
+<a class="font-batch-id text-batch-id text-primary hover:text-primary-hover hover:underline" href="#/admin/batches/WB-2026-0094">WB-2026-0094</a>
+</td>
+<td class="py-3 px-4 font-body text-body text-text whitespace-nowrap">06 Oct 2026, 07:45</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-caption text-caption text-text">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                  Wet Waste
+                </span>
+</td>
+<td class="py-3 px-4 font-body-medium text-body-medium text-text text-right tabular-nums">4,200 kg</td>
+<td class="py-3 px-4 font-body text-body text-text truncate max-w-[180px]" title="South Extension Cluster">South Extension Cluster</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono">RT-SOUTH-03</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono whitespace-nowrap">MH-02-EF-9012</td>
+<td class="py-3 px-4 font-body text-body text-text">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+<span>RTS / Transfer</span>
+</div>
+</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-rts-bg text-badge-rts-text">
+                  At RTS
+                </span>
+</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted whitespace-nowrap">06 Oct 2026, 09:15</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<a class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" href="#/admin/batches/WB-2026-0094" title="Open Batch Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+<button class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" onclick="downloadQR('WB-2026-0094')" title="Download QR Manifest">
+<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: WB-2026-0089 (Completed) -->
+<tr class="hover:bg-slate-50/70 transition-colors h-12" data-batch="WB-2026-0089" data-route="RT-CENTRAL-05" data-status="Completed" data-type="Wet">
+<td class="py-3 px-4">
+<a class="font-batch-id text-batch-id text-primary hover:text-primary-hover hover:underline" href="#/admin/batches/WB-2026-0089">WB-2026-0089</a>
+</td>
+<td class="py-3 px-4 font-body text-body text-text whitespace-nowrap">06 Oct 2026, 06:30</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-caption text-caption text-text">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                  Wet Waste
+                </span>
+</td>
+<td class="py-3 px-4 font-body-medium text-body-medium text-text text-right tabular-nums">2,900 kg</td>
+<td class="py-3 px-4 font-body text-body text-text truncate max-w-[180px]" title="Old Town Market Zone">Old Town Market Zone</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono">RT-CENTRAL-05</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono whitespace-nowrap">MH-02-JK-7890</td>
+<td class="py-3 px-4 font-body text-body text-text">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Processing Plant</span>
+</div>
+</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-completed-bg text-badge-completed-text">
+                  Completed
+                </span>
+</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted whitespace-nowrap">06 Oct 2026, 09:30</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<a class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" href="#/admin/batches/WB-2026-0089" title="Open Batch Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+<button class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" onclick="downloadQR('WB-2026-0089')" title="Download QR Manifest">
+<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: WB-2026-0081 (Completed with variance) -->
+<tr class="hover:bg-slate-50/70 transition-colors h-12" data-batch="WB-2026-0081" data-route="RT-EAST-02" data-status="Completed" data-type="Dry">
+<td class="py-3 px-4">
+<a class="font-batch-id text-batch-id text-primary hover:text-primary-hover hover:underline" href="#/admin/batches/WB-2026-0081">WB-2026-0081</a>
+</td>
+<td class="py-3 px-4 font-body text-body text-text whitespace-nowrap">05 Oct 2026, 16:15</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-caption text-caption text-text">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                  Dry Waste
+                </span>
+</td>
+<td class="py-3 px-4 font-body-medium text-body-medium text-text text-right tabular-nums">2,200 kg</td>
+<td class="py-3 px-4 font-body text-body text-text truncate max-w-[180px]" title="Commercial Zone A">Commercial Zone A</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono">RT-EAST-02</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono whitespace-nowrap">MH-02-CD-5678</td>
+<td class="py-3 px-4 font-body text-body text-text">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Processing Plant</span>
+</div>
+</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-completed-bg text-badge-completed-text">
+                    Completed
+                  </span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded font-caption text-[11px] bg-warning-soft text-warning font-medium" title="Variance Alert: Expected higher weight">
+                    -13.1%
+                  </span>
+</div>
+</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted whitespace-nowrap">05 Oct 2026, 19:20</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<a class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" href="#/admin/batches/WB-2026-0081" title="Open Batch Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+<button class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" onclick="downloadQR('WB-2026-0081')" title="Download QR Manifest">
+<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 7: WB-2026-0077 (Completed with variance) -->
+<tr class="hover:bg-slate-50/70 transition-colors h-12" data-batch="WB-2026-0077" data-route="RT-NORTH-01" data-status="Completed" data-type="Wet">
+<td class="py-3 px-4">
+<a class="font-batch-id text-batch-id text-primary hover:text-primary-hover hover:underline" href="#/admin/batches/WB-2026-0077">WB-2026-0077</a>
+</td>
+<td class="py-3 px-4 font-body text-body text-text whitespace-nowrap">05 Oct 2026, 14:00</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-caption text-caption text-text">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                  Wet Waste
+                </span>
+</td>
+<td class="py-3 px-4 font-body-medium text-body-medium text-text text-right tabular-nums">1,800 kg</td>
+<td class="py-3 px-4 font-body text-body text-text truncate max-w-[180px]" title="Ward 12 Residential">Ward 12 Residential</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono">RT-NORTH-01</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted font-mono whitespace-nowrap">MH-02-AB-1234</td>
+<td class="py-3 px-4 font-body text-body text-text">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Processing Plant</span>
+</div>
+</td>
+<td class="py-3 px-4 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-badge text-badge bg-badge-completed-bg text-badge-completed-text">
+                    Completed
+                  </span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded font-caption text-[11px] bg-warning-soft text-warning font-medium" title="Variance Alert: Net weight drop exceeds limit">
+                    -13.3%
+                  </span>
+</div>
+</td>
+<td class="py-3 px-4 font-caption text-caption text-text-muted whitespace-nowrap">05 Oct 2026, 18:05</td>
+<td class="py-3 px-4 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<a class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" href="#/admin/batches/WB-2026-0077" title="Open Batch Detail">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</a>
+<button class="p-1 text-text-muted hover:text-primary rounded hover:bg-slate-100" onclick="downloadQR('WB-2026-0077')" title="Download QR Manifest">
+<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="px-5 py-3.5 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-surface">
+<div class="flex items-center gap-4">
+<span class="font-body text-body text-text-muted">
+            Showing <span class="font-medium text-text" id="visibleCount">1 to 7</span> of <span class="font-medium text-text">184</span> batches
+          </span>
+<div class="h-4 w-[1px] bg-border hidden sm:block"></div>
+<div class="flex items-center gap-2">
+<span class="font-label text-label text-text-muted">Rows:</span>
+<select class="h-8 px-2 text-caption font-caption bg-surface border border-border rounded text-text focus:outline-none focus:border-primary">
+<option value="10">10 per page</option>
+<option value="25">25 per page</option>
+<option value="50">50 per page</option>
+</select>
+</div>
+</div>
+<!-- Pagination Pager Buttons -->
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded border border-border bg-surface text-text-disabled hover:bg-slate-50 flex items-center justify-center transition-colors" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary text-white font-label text-label flex items-center justify-center transition-colors" type="button">
+            1
+          </button>
+<button class="w-8 h-8 rounded border border-border bg-surface text-text font-label text-label hover:bg-slate-50 flex items-center justify-center transition-colors" type="button">
+            2
+          </button>
+<button class="w-8 h-8 rounded border border-border bg-surface text-text font-label text-label hover:bg-slate-50 flex items-center justify-center transition-colors" type="button">
+            3
+          </button>
+<span class="px-1 text-text-disabled font-caption">...</span>
+<button class="w-8 h-8 rounded border border-border bg-surface text-text font-label text-label hover:bg-slate-50 flex items-center justify-center transition-colors" type="button">
+            27
+          </button>
+<button class="w-8 h-8 rounded border border-border bg-surface text-text hover:bg-slate-50 flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+    // Live filter interaction
+    const batchSearch = document.getElementById('batchSearch');
+    const statusSelect = document.getElementById('statusSelect');
+    const routeSelect = document.getElementById('routeSelect');
+    const wasteTypeSelect = document.getElementById('wasteTypeSelect');
+    const batchRows = document.querySelectorAll('#batchRows tr');
+    const visibleCount = document.getElementById('visibleCount');
+
+    function filterTable() {
+      const query = (batchSearch.value || '').trim().toLowerCase();
+      const statusVal = statusSelect.value;
+      const routeVal = routeSelect.value;
+      const typeVal = wasteTypeSelect.value;
+
+      let matched = 0;
+
+      batchRows.forEach(row => {
+        const batchId = (row.getAttribute('data-batch') || '').toLowerCase();
+        const rowStatus = row.getAttribute('data-status') || '';
+        const rowRoute = row.getAttribute('data-route') || '';
+        const rowType = row.getAttribute('data-type') || '';
+
+        const matchesQuery = !query || batchId.includes(query);
+        const matchesStatus = statusVal === 'all' || rowStatus === statusVal;
+        const matchesRoute = routeVal === 'all' || rowRoute === routeVal;
+        const matchesType = typeVal === 'all' || rowType === typeVal;
+
+        if (matchesQuery && matchesStatus && matchesRoute && matchesType) {
+          row.style.display = '';
+          matched++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      visibleCount.textContent = matched === 0 ? '0' : `1 to ${matched}`;
+    }
+
+    batchSearch.addEventListener('input', filterTable);
+    statusSelect.addEventListener('change', filterTable);
+    routeSelect.addEventListener('change', filterTable);
+    wasteTypeSelect.addEventListener('change', filterTable);
+
+    function setStatusFilter(status) {
+      statusSelect.value = status;
+      filterTable();
+      
+      // Update quick tab border highlight
+      document.querySelectorAll('.status-kpi-card').forEach(card => {
+        card.classList.remove('border-primary');
+        card.classList.add('border-border');
+      });
+      event.currentTarget.classList.remove('border-border');
+      event.currentTarget.classList.add('border-primary');
+    }
+
+    function resetFilters() {
+      batchSearch.value = '';
+      statusSelect.value = 'all';
+      routeSelect.value = 'all';
+      wasteTypeSelect.value = 'all';
+      document.getElementById('dateRangeSelect').value = '30';
+      filterTable();
+    }
+
+    function downloadQR(batchId) {
+      const toast = document.getElementById('toastNotification');
+      const msg = document.getElementById('toastMessage');
+      msg.textContent = 'QR Manifest for ' + batchId + ' generated and downloaded.';
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4000);
+    }
+
+    function dismissToast() {
+      document.getElementById('toastNotification').classList.add('hidden');
+    }
+  </script>
+</div></main>
+</div>
+</body></html>

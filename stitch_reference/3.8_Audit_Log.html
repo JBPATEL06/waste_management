@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_dashboard" name="shell-type"/>
+<title>Waste Journey Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-bright": "#faf8ff",
+            "on-secondary-fixed": "#0d1c2e",
+            "on-secondary-fixed-variant": "#3a485b",
+            "on-primary-fixed": "#00210a",
+            "surface-container": "#eaedff",
+            "on-tertiary-container": "#fff1f1",
+            "on-primary-fixed-variant": "#005323",
+            "primary-fixed-dim": "#79db8d",
+            "on-tertiary-fixed": "#400013",
+            "on-primary-container": "#d3ffd5",
+            "inverse-primary": "#79db8d",
+            "primary-hover": "#166534",
+            "on-tertiary-fixed-variant": "#81233b",
+            "badge-superseded-bg": "#F1F5F9",
+            "error-container": "#ffdad6",
+            "tertiary-container": "#b64c62",
+            "inverse-on-surface": "#eef0ff",
+            "on-secondary": "#ffffff",
+            "badge-created-bg": "#F1F5F9",
+            "on-background": "#131b2e",
+            "badge-completed-text": "#15803D",
+            "on-tertiary": "#ffffff",
+            "surface-dim": "#d2d9f4",
+            "on-surface-variant": "#3f493f",
+            "secondary-fixed": "#d5e3fc",
+            "on-surface": "#131b2e",
+            "badge-transit-text": "#B45309",
+            "badge-deleted-bg": "#FEE2E2",
+            "outline-variant": "#becabc",
+            "error-soft": "#FEE2E2",
+            "on-secondary-container": "#57657a",
+            "warning-soft": "#FEF3C7",
+            "border": "#E2E8F0",
+            "badge-completed-bg": "#DCFCE7",
+            "on-error-container": "#93000a",
+            "surface": "#FFFFFF",
+            "on-primary": "#ffffff",
+            "background": "#F8FAFC",
+            "badge-rts-text": "#6D28D9",
+            "surface-container-low": "#f2f3ff",
+            "badge-superseded-text": "#64748B",
+            "secondary-container": "#d5e3fc",
+            "primary": "#00652c",
+            "badge-deleted-text": "#B91C1C",
+            "tertiary-fixed-dim": "#ffb2bd",
+            "badge-collected-text": "#1D4ED8",
+            "secondary-fixed-dim": "#b9c7df",
+            "tertiary-fixed": "#ffd9dd",
+            "text-muted": "#475569",
+            "surface-container-highest": "#dae2fd",
+            "primary-soft": "#DCFCE7",
+            "badge-collected-bg": "#DBEAFE",
+            "on-error": "#ffffff",
+            "surface-variant": "#dae2fd",
+            "outline": "#6f7a6e",
+            "warning": "#D97706",
+            "inverse-surface": "#283044",
+            "badge-created-text": "#475569",
+            "badge-rts-bg": "#EDE9FE",
+            "badge-transit-bg": "#FEF3C7",
+            "secondary": "#515f74",
+            "primary-container": "#15803d",
+            "surface-tint": "#006d30",
+            "text": "#0F172A",
+            "error": "#DC2626",
+            "surface-container-high": "#e2e7ff",
+            "primary-fixed": "#95f8a7",
+            "surface-container-lowest": "#ffffff",
+            "tertiary": "#97344a",
+            "text-disabled": "#94A3B8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "1.5rem",
+            "space-sm": "0.5rem",
+            "margin-mobile": "1rem",
+            "space-md": "0.75rem",
+            "space-2xl": "2rem",
+            "space-lg": "1rem",
+            "margin": "1.5rem",
+            "gutter-mobile": "0.75rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "body-medium": ["Inter"],
+            "caption": ["Inter"],
+            "kpi-number": ["Inter"],
+            "label": ["Inter"],
+            "page-title": ["Inter"],
+            "batch-id": ["Inter"],
+            "badge": ["Inter"],
+            "body": ["Inter"],
+            "section-title": ["Inter"]
+          },
+          "fontSize": {
+            "body-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "kpi-number": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+            "label": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+            "page-title": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+            "batch-id": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "badge": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "body": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "section-title": ["18px", { "lineHeight": "24px", "fontWeight": "600" }]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background font-body text-text antialiased min-h-screen">
+<!-- Top Bar (56px) -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-surface border-b border-border z-50 flex items-center justify-between px-margin">
+<!-- Left Logo -->
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]">recycling</span>
+</div>
+<span class="font-section-title text-section-title text-text tracking-tight">Waste Journey Tracker</span>
+</div>
+<!-- Right Side: Anil Mehta, Admin pill, Profile, Logout -->
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-sm">
+<span class="font-body-medium text-body-medium text-text">Anil Mehta</span>
+<span class="font-badge text-badge bg-primary-soft text-badge-completed-text px-space-sm py-0.5 rounded-full">Admin</span>
+</div>
+<div class="h-4 w-[1px] bg-border"></div>
+<nav class="flex items-center gap-space-md" data-active-classes="text-primary-container font-semibold">
+<a class="font-body-medium text-body-medium text-text-muted hover:text-text transition-colors" data-path="profile" href="#">Profile</a>
+<a class="font-body-medium text-body-medium text-text-muted hover:text-error transition-colors" data-path="login" href="#">Logout</a>
+</nav>
+</div>
+</header>
+<!-- Left Sidebar (240px) -->
+<aside class="fixed left-0 top-14 bottom-0 w-[240px] bg-surface border-r border-border z-40 overflow-y-auto">
+<div class="p-space-md">
+<nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-soft text-badge-completed-text font-semibold">
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="dashboard" href="#">Dashboard</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="batches" href="#">Batches</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="create-batch" href="#">Create Batch</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="master-data" href="#">Master Data</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="users" href="#">Users</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="export" href="#">Export</a>
+<a aria-current="page" class="flex items-center px-space-md py-space-sm rounded-lg transition-colors bg-primary-soft text-badge-completed-text font-semibold" data-path="audit-log" href="#">Audit Log</a>
+<a class="flex items-center px-space-md py-space-sm rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-slate-100 hover:text-text transition-colors" data-path="settings" href="#">Settings</a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="pl-[240px]">
+<main class="pt-14 min-h-screen bg-background"><div class="flex flex-col w-full">
+<div class="p-space-xl flex flex-col gap-space-xl max-w-[1280px] w-full mx-auto">
+<!-- Header row with page title & export action -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-sm">
+<h1 class="font-page-title text-page-title text-text tracking-tight">Audit Log</h1>
+<span class="font-badge text-badge px-space-sm py-0.5 rounded-full bg-slate-100 text-text-muted">432 Total Events</span>
+</div>
+<p class="font-body text-body text-text-muted mt-space-xs">Immutable system ledger recording data operations, state mutations, and operator rationales.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start sm:self-auto">
+<button class="h-10 px-space-lg rounded-lg bg-surface border border-border text-text font-body-medium text-body-medium hover:bg-slate-50 transition-colors flex items-center gap-space-sm" id="exportCsvBtn" type="button">
+<span class="material-symbols-outlined text-[18px] text-text-muted">download</span>
+          Export Audit (CSV)
+        </button>
+</div>
+</div>
+<!-- Filter Bar Card -->
+<div class="bg-surface rounded-xl border border-border p-space-lg flex flex-col gap-space-md">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Action Type Filter -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-text-muted" for="filterAction">Action Type</label>
+<div class="relative">
+<select class="w-full h-10 bg-surface border border-border rounded-lg px-space-md text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary-container pr-8 appearance-none" id="filterAction">
+<option value="ALL">All Actions</option>
+<option value="CREATED">Batch Created</option>
+<option value="ENTRY_ADDED">Entry Added</option>
+<option value="CORRECTED">Entry Corrected</option>
+<option value="DELETED">Entry Deleted</option>
+<option value="REASSIGNED">User Reassigned</option>
+<option value="MASTER_UPDATE">Master Data Updated</option>
+<option value="SETTINGS">Settings Changed</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-text-disabled text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- User Filter -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-text-muted" for="filterUser">User</label>
+<div class="relative">
+<select class="w-full h-10 bg-surface border border-border rounded-lg px-space-md text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary-container pr-8 appearance-none" id="filterUser">
+<option value="ALL">All Users</option>
+<option value="ME">Anil Mehta (me)</option>
+<option value="RAJESH">Rajesh Sharma</option>
+<option value="SURESH">Suresh Patil</option>
+<option value="VIKRAM">Vikram Desai</option>
+<option value="ANITA">Anita Roy</option>
+<option value="MANOJ">Manoj Kumar</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-text-disabled text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Batch ID Search Input -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-text-muted" for="searchBatch">Batch ID Search</label>
+<div class="relative">
+<input class="w-full h-10 bg-surface border border-border rounded-lg pl-space-md pr-8 text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary-container placeholder:text-text-disabled uppercase" id="searchBatch" placeholder="e.g. WB-2026-0094" type="text"/>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-text-disabled text-[18px]">search</span>
+</div>
+</div>
+<!-- Date Range Filter -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label text-label text-text-muted" for="filterDateRange">Date Range</label>
+<div class="relative">
+<select class="w-full h-10 bg-surface border border-border rounded-lg px-space-md text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary-container pr-8 appearance-none" id="filterDateRange">
+<option value="30D">Last 30 Days</option>
+<option value="7D">Last 7 Days</option>
+<option value="TODAY">Today</option>
+<option value="CUSTOM">Custom Range...</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-text-disabled text-[20px]">calendar_today</span>
+</div>
+</div>
+</div>
+<!-- Quick filters & resets -->
+<div class="flex flex-wrap items-center justify-between gap-space-md pt-space-xs border-t border-border">
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="h-8 px-space-md rounded-full border border-border bg-slate-50 text-text-muted font-badge text-badge hover:bg-slate-100 flex items-center gap-space-xs transition-colors" data-active="false" id="toggleMyActions" type="button">
+<span class="material-symbols-outlined text-[16px] text-text-muted">person</span>
+            Only My Actions
+          </button>
+<span class="text-text-disabled text-caption">|</span>
+<button class="filter-tag h-8 px-space-md rounded-full border border-border bg-surface text-text-muted font-badge text-badge hover:bg-slate-50 transition-colors" data-action="CORRECTED" type="button">Entry Corrected</button>
+<button class="filter-tag h-8 px-space-md rounded-full border border-border bg-surface text-text-muted font-badge text-badge hover:bg-slate-50 transition-colors" data-action="DELETED" type="button">Deletions</button>
+<button class="filter-tag h-8 px-space-md rounded-full border border-border bg-surface text-text-muted font-badge text-badge hover:bg-slate-50 transition-colors" data-action="REASSIGNED" type="button">Reassignments</button>
+</div>
+<button class="font-body-medium text-body-medium text-primary-container hover:text-primary-hover transition-colors flex items-center gap-1" id="resetFilters" type="button">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+          Reset Filters
+        </button>
+</div>
+</div>
+<!-- Audit Events Table Card -->
+<div class="bg-surface rounded-xl border border-border overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 border-b border-border h-12 text-text-muted font-label text-label">
+<th class="px-space-md w-10"></th>
+<th class="px-space-md font-medium whitespace-nowrap">Time (IST)</th>
+<th class="px-space-md font-medium whitespace-nowrap">Action</th>
+<th class="px-space-md font-medium whitespace-nowrap">User</th>
+<th class="px-space-md font-medium whitespace-nowrap">Batch ID</th>
+<th class="px-space-md font-medium whitespace-nowrap">Entity</th>
+<th class="px-space-md font-medium min-w-[240px]">Reason / Rationale</th>
+<th class="px-space-md font-medium text-right whitespace-nowrap">Values / Diff</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border font-body text-body text-text">
+<!-- Row 1: Corrected Weight (Default Expanded) -->
+<tr class="h-12 hover:bg-slate-50/70 transition-colors bg-slate-50/30">
+<td class="px-space-md text-center">
+<button aria-expanded="true" class="row-expand-btn p-1 text-text-muted hover:text-text focus:outline-none" data-target="diff-row-1" type="button">
+<span class="material-symbols-outlined text-[18px] transition-transform rotate-90">chevron_right</span>
+</button>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-caption text-caption">06 Oct 2026, 09:35 IST</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-transit-bg text-badge-transit-text">Corrected</span>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-text font-caption text-caption flex items-center justify-center font-medium">AM</div>
+<span class="font-body-medium text-body-medium text-text">Anil Mehta</span>
+<span class="font-badge text-badge px-1.5 py-0.2 rounded bg-primary-soft text-badge-completed-text">Admin</span>
+</div>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text">WB-2026-0094</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-body-medium text-body-medium">Batch Entry (RTS)</td>
+<td class="px-space-md text-text">Tare weight discrepancy adjusted after re-weighing at Gate 2 scale</td>
+<td class="px-space-md text-right whitespace-nowrap">
+<button class="row-expand-btn font-body-medium text-body-medium text-primary-container hover:underline inline-flex items-center gap-1" data-target="diff-row-1" type="button">
+<span>1 Field Changed</span>
+</button>
+</td>
+</tr>
+<!-- Expanded Diff Container for Row 1 -->
+<tr class="bg-slate-50 border-y border-border" id="diff-row-1">
+<td class="p-space-lg" colspan="8">
+<div class="bg-surface rounded-lg border border-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted uppercase tracking-wider">Field Level Mutation Ledger</span>
+<span class="font-caption text-caption text-text-muted">Recorded by system agent: <strong class="font-semibold text-text">AM-SYS-01</strong></span>
+</div>
+<!-- Diff Grid Card -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md p-space-md bg-slate-50 rounded border border-border items-center">
+<div>
+<span class="block font-caption text-caption text-text-muted">Field Key</span>
+<span class="font-batch-id text-batch-id text-text">gross_weight_kg</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Prior Value (Old)</span>
+<span class="font-batch-id text-batch-id text-badge-deleted-text bg-badge-deleted-bg px-2 py-0.5 rounded">4,200 kg</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Updated Value (New)</span>
+<span class="font-batch-id text-batch-id text-badge-completed-text bg-badge-completed-bg px-2 py-0.5 rounded">4,050 kg</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Variance (Δ)</span>
+<div class="flex items-center gap-1 font-body-medium text-body-medium text-badge-transit-text font-semibold">
+<span>-150 kg</span>
+<span class="font-caption text-caption">(-3.57%)</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-md text-caption text-text-muted pt-1">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-primary-container">verified</span> Cryptographic Hash: <code class="font-mono text-[11px] text-text">sha256:d81f...e89a</code></span>
+<span>•</span>
+<span>Client IP: 103.21.58.12</span>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2: Reassigned Officer -->
+<tr class="h-12 hover:bg-slate-50/70 transition-colors">
+<td class="px-space-md text-center">
+<button aria-expanded="false" class="row-expand-btn p-1 text-text-muted hover:text-text focus:outline-none" data-target="diff-row-2" type="button">
+<span class="material-symbols-outlined text-[18px] transition-transform">chevron_right</span>
+</button>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-caption text-caption">06 Oct 2026, 08:14 IST</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-rts-bg text-badge-rts-text">Reassigned</span>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-text font-caption text-caption flex items-center justify-center font-medium">AM</div>
+<span class="font-body-medium text-body-medium text-text">Anil Mehta</span>
+<span class="font-badge text-badge px-1.5 py-0.2 rounded bg-primary-soft text-badge-completed-text">Admin</span>
+</div>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text">WB-2026-0092</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-body-medium text-body-medium">Batch Assignment</td>
+<td class="px-space-md text-text">Driver shift change reassignment due to medical absence</td>
+<td class="px-space-md text-right whitespace-nowrap">
+<button class="row-expand-btn font-body-medium text-body-medium text-primary-container hover:underline inline-flex items-center gap-1" data-target="diff-row-2" type="button">
+<span>1 Field Changed</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 Diff (Initially collapsed) -->
+<tr class="hidden bg-slate-50 border-y border-border" id="diff-row-2">
+<td class="p-space-lg" colspan="8">
+<div class="bg-surface rounded-lg border border-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted uppercase tracking-wider">Field Level Mutation Ledger</span>
+<span class="font-caption text-caption text-text-muted">Recorded by system agent: <strong class="font-semibold text-text">AM-SYS-01</strong></span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md p-space-md bg-slate-50 rounded border border-border items-center">
+<div>
+<span class="block font-caption text-caption text-text-muted">Field Key</span>
+<span class="font-batch-id text-batch-id text-text">assigned_officer</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Prior Value (Old)</span>
+<span class="font-batch-id text-batch-id text-badge-deleted-text bg-badge-deleted-bg px-2 py-0.5 rounded">Suresh Patil (ID: SP-102)</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Updated Value (New)</span>
+<span class="font-batch-id text-batch-id text-badge-completed-text bg-badge-completed-bg px-2 py-0.5 rounded">Rajesh Sharma (ID: RS-088)</span>
+</div>
+</div>
+<div class="text-caption text-text-muted">Hash: <code class="font-mono text-[11px] text-text">sha256:4a02...bb31</code> • Client IP: 103.21.58.12</div>
+</div>
+</td>
+</tr>
+<!-- Row 3: Batch Created -->
+<tr class="h-12 hover:bg-slate-50/70 transition-colors">
+<td class="px-space-md text-center">
+<span class="material-symbols-outlined text-[18px] text-text-disabled">remove</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-caption text-caption">06 Oct 2026, 07:45 IST</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-created-bg text-badge-created-text">Created</span>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-text font-caption text-caption flex items-center justify-center font-medium">RS</div>
+<span class="font-body-medium text-body-medium text-text">Rajesh Sharma</span>
+<span class="font-badge text-badge px-1.5 py-0.2 rounded bg-badge-collected-bg text-badge-collected-text">Collection</span>
+</div>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text">WB-2026-0095</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-body-medium text-body-medium">Batch Manifest</td>
+<td class="px-space-md text-text">Initial electronic manifest generation at Zone 4 depot</td>
+<td class="px-space-md text-right whitespace-nowrap text-text-muted font-caption text-caption">Initial Record</td>
+</tr>
+<!-- Row 4: Entry Deleted -->
+<tr class="h-12 hover:bg-slate-50/70 transition-colors">
+<td class="px-space-md text-center">
+<button aria-expanded="false" class="row-expand-btn p-1 text-text-muted hover:text-text focus:outline-none" data-target="diff-row-4" type="button">
+<span class="material-symbols-outlined text-[18px] transition-transform">chevron_right</span>
+</button>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-caption text-caption">05 Oct 2026, 17:20 IST</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-deleted-bg text-badge-deleted-text">Deleted</span>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-text font-caption text-caption flex items-center justify-center font-medium">AM</div>
+<span class="font-body-medium text-body-medium text-text">Anil Mehta</span>
+<span class="font-badge text-badge px-1.5 py-0.2 rounded bg-primary-soft text-badge-completed-text">Admin</span>
+</div>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text">WB-2026-0089</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-body-medium text-body-medium">Draft Entry Stage</td>
+<td class="px-space-md text-text">Accidental duplicate checkpoint ping triggered during connectivity reset</td>
+<td class="px-space-md text-right whitespace-nowrap">
+<button class="row-expand-btn font-body-medium text-body-medium text-primary-container hover:underline inline-flex items-center gap-1" data-target="diff-row-4" type="button">
+<span>Record Purged</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 Diff (Initially collapsed) -->
+<tr class="hidden bg-slate-50 border-y border-border" id="diff-row-4">
+<td class="p-space-lg" colspan="8">
+<div class="bg-surface rounded-lg border border-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted uppercase tracking-wider">Purge Audit Metadata</span>
+<span class="font-caption text-caption text-text-muted">Status: <span class="text-badge-deleted-text font-semibold">Tombstone Preserved</span></span>
+</div>
+<div class="p-space-md bg-slate-50 rounded border border-border">
+<p class="font-caption text-caption text-text-muted">Purged Payload:</p>
+<code class="block font-mono text-[12px] text-text bg-white p-2 rounded border border-border mt-1">{ "checkpoint_id": "CHK-9912", "timestamp": "2026-10-05T17:19:42Z", "duplicate_origin": "NET_RESYNC" }</code>
+</div>
+<div class="text-caption text-text-muted">Hash: <code class="font-mono text-[11px] text-text">sha256:cc98...121f</code> • Authorized by Admin Superuser</div>
+</div>
+</td>
+</tr>
+<!-- Row 5: Master Data Updated -->
+<tr class="h-12 hover:bg-slate-50/70 transition-colors">
+<td class="px-space-md text-center">
+<button aria-expanded="false" class="row-expand-btn p-1 text-text-muted hover:text-text focus:outline-none" data-target="diff-row-5" type="button">
+<span class="material-symbols-outlined text-[18px] transition-transform">chevron_right</span>
+</button>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-caption text-caption">05 Oct 2026, 15:02 IST</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-transit-bg text-badge-transit-text">Updated</span>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-text font-caption text-caption flex items-center justify-center font-medium">AM</div>
+<span class="font-body-medium text-body-medium text-text">Anil Mehta</span>
+<span class="font-badge text-badge px-1.5 py-0.2 rounded bg-primary-soft text-badge-completed-text">Admin</span>
+</div>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="text-text-muted font-body-medium text-body-medium">—</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-body-medium text-body-medium">Master Vehicle</td>
+<td class="px-space-md text-text">Vehicle MH-12-RN-4821 tare weight updated post annual calibration</td>
+<td class="px-space-md text-right whitespace-nowrap">
+<button class="row-expand-btn font-body-medium text-body-medium text-primary-container hover:underline inline-flex items-center gap-1" data-target="diff-row-5" type="button">
+<span>1 Field Changed</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 Diff (Initially collapsed) -->
+<tr class="hidden bg-slate-50 border-y border-border" id="diff-row-5">
+<td class="p-space-lg" colspan="8">
+<div class="bg-surface rounded-lg border border-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted uppercase tracking-wider">Field Level Mutation Ledger</span>
+<span class="font-caption text-caption text-text-muted">Target Entity: <strong class="font-semibold text-text">Vehicle #MH-12-RN-4821</strong></span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md p-space-md bg-slate-50 rounded border border-border items-center">
+<div>
+<span class="block font-caption text-caption text-text-muted">Field Key</span>
+<span class="font-batch-id text-batch-id text-text">vehicle_tare_weight</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Prior Value (Old)</span>
+<span class="font-batch-id text-batch-id text-badge-deleted-text bg-badge-deleted-bg px-2 py-0.5 rounded">3,120 kg</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Updated Value (New)</span>
+<span class="font-batch-id text-batch-id text-badge-completed-text bg-badge-completed-bg px-2 py-0.5 rounded">3,180 kg</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Variance (Δ)</span>
+<span class="font-body-medium text-body-medium text-badge-completed-text font-semibold">+60 kg</span>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 6: User Status Updated -->
+<tr class="h-12 hover:bg-slate-50/70 transition-colors">
+<td class="px-space-md text-center">
+<span class="material-symbols-outlined text-[18px] text-text-disabled">remove</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-caption text-caption">05 Oct 2026, 11:30 IST</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-transit-bg text-badge-transit-text">Updated</span>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-text font-caption text-caption flex items-center justify-center font-medium">AM</div>
+<span class="font-body-medium text-body-medium text-text">Anil Mehta</span>
+<span class="font-badge text-badge px-1.5 py-0.2 rounded bg-primary-soft text-badge-completed-text">Admin</span>
+</div>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="text-text-muted font-body-medium text-body-medium">—</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-body-medium text-body-medium">User Account</td>
+<td class="px-space-md text-text">Unlocked account and issued temporary authentication credential</td>
+<td class="px-space-md text-right whitespace-nowrap text-text-muted font-caption text-caption">Security Audit</td>
+</tr>
+<!-- Row 7: Entry Added (Processing) -->
+<tr class="h-12 hover:bg-slate-50/70 transition-colors">
+<td class="px-space-md text-center">
+<span class="material-symbols-outlined text-[18px] text-text-disabled">remove</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-caption text-caption">05 Oct 2026, 09:10 IST</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-completed-bg text-badge-completed-text">Entry Added</span>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-text font-caption text-caption flex items-center justify-center font-medium">VD</div>
+<span class="font-body-medium text-body-medium text-text">Vikram Desai</span>
+<span class="font-badge text-badge px-1.5 py-0.2 rounded bg-badge-rts-bg text-badge-rts-text">Processing</span>
+</div>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text">WB-2026-0091</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-body-medium text-body-medium">Processing Facility Stage</td>
+<td class="px-space-md text-text">Waste segregation and recycling recovery cycle completed</td>
+<td class="px-space-md text-right whitespace-nowrap text-text-muted font-caption text-caption">Initial Record</td>
+</tr>
+<!-- Row 8: Batch Created -->
+<tr class="h-12 hover:bg-slate-50/70 transition-colors">
+<td class="px-space-md text-center">
+<span class="material-symbols-outlined text-[18px] text-text-disabled">remove</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-caption text-caption">04 Oct 2026, 16:40 IST</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-created-bg text-badge-created-text">Created</span>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-text font-caption text-caption flex items-center justify-center font-medium">AR</div>
+<span class="font-body-medium text-body-medium text-text">Anita Roy</span>
+<span class="font-badge text-badge px-1.5 py-0.2 rounded bg-badge-collected-bg text-badge-collected-text">Collection</span>
+</div>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text">WB-2026-0094</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-body-medium text-body-medium">Batch Manifest</td>
+<td class="px-space-md text-text">Commercial organic waste pickup scheduled and dispatched</td>
+<td class="px-space-md text-right whitespace-nowrap text-text-muted font-caption text-caption">Initial Record</td>
+</tr>
+<!-- Row 9: Settings Changed -->
+<tr class="h-12 hover:bg-slate-50/70 transition-colors">
+<td class="px-space-md text-center">
+<span class="material-symbols-outlined text-[18px] text-text-disabled">remove</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-caption text-caption">04 Oct 2026, 14:15 IST</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-transit-bg text-badge-transit-text">Updated</span>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-text font-caption text-caption flex items-center justify-center font-medium">AM</div>
+<span class="font-body-medium text-body-medium text-text">Anil Mehta</span>
+<span class="font-badge text-badge px-1.5 py-0.2 rounded bg-primary-soft text-badge-completed-text">Admin</span>
+</div>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="text-text-muted font-body-medium text-body-medium">—</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-body-medium text-body-medium">System Settings</td>
+<td class="px-space-md text-text">Updated variance tolerance threshold from 5.0% to 4.5%</td>
+<td class="px-space-md text-right whitespace-nowrap text-text-muted font-caption text-caption">Configuration</td>
+</tr>
+<!-- Row 10: Entry Corrected -->
+<tr class="h-12 hover:bg-slate-50/70 transition-colors">
+<td class="px-space-md text-center">
+<button aria-expanded="false" class="row-expand-btn p-1 text-text-muted hover:text-text focus:outline-none" data-target="diff-row-10" type="button">
+<span class="material-symbols-outlined text-[18px] transition-transform">chevron_right</span>
+</button>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-caption text-caption">04 Oct 2026, 10:05 IST</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-badge text-badge px-2 py-0.5 rounded-full bg-badge-transit-bg text-badge-transit-text">Corrected</span>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-text font-caption text-caption flex items-center justify-center font-medium">SP</div>
+<span class="font-body-medium text-body-medium text-text">Suresh Patil</span>
+<span class="font-badge text-badge px-1.5 py-0.2 rounded bg-badge-transit-bg text-badge-transit-text">Transit</span>
+</div>
+</td>
+<td class="px-space-md whitespace-nowrap">
+<span class="font-batch-id text-batch-id text-text">WB-2026-0087</span>
+</td>
+<td class="px-space-md whitespace-nowrap text-text-muted font-body-medium text-body-medium">Transit Checkpoint</td>
+<td class="px-space-md text-text">GPS odometer meter reading corrected after manual verification</td>
+<td class="px-space-md text-right whitespace-nowrap">
+<button class="row-expand-btn font-body-medium text-body-medium text-primary-container hover:underline inline-flex items-center gap-1" data-target="diff-row-10" type="button">
+<span>1 Field Changed</span>
+</button>
+</td>
+</tr>
+<!-- Row 10 Diff (Initially collapsed) -->
+<tr class="hidden bg-slate-50 border-y border-border" id="diff-row-10">
+<td class="p-space-lg" colspan="8">
+<div class="bg-surface rounded-lg border border-border p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label text-label text-text-muted uppercase tracking-wider">Field Level Mutation Ledger</span>
+<span class="font-caption text-caption text-text-muted">Target Entity: <strong class="font-semibold text-text">Checkpoint #CP-402</strong></span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md p-space-md bg-slate-50 rounded border border-border items-center">
+<div>
+<span class="block font-caption text-caption text-text-muted">Field Key</span>
+<span class="font-batch-id text-batch-id text-text">odometer_reading_km</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Prior Value (Old)</span>
+<span class="font-batch-id text-batch-id text-badge-deleted-text bg-badge-deleted-bg px-2 py-0.5 rounded">48,290 km</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Updated Value (New)</span>
+<span class="font-batch-id text-batch-id text-badge-completed-text bg-badge-completed-bg px-2 py-0.5 rounded">48,390 km</span>
+</div>
+<div>
+<span class="block font-caption text-caption text-text-muted">Variance (Δ)</span>
+<span class="font-body-medium text-body-medium text-text font-semibold">+100 km</span>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="h-14 border-t border-border px-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-sm bg-surface">
+<div class="flex items-center gap-space-md">
+<span class="font-caption text-caption text-text-muted">Showing <strong>1 to 10</strong> of <strong>432</strong> audit events</span>
+<div class="flex items-center gap-space-xs text-caption text-text-muted">
+<label class="font-caption text-caption" for="rowsPerPage">Rows:</label>
+<select class="h-8 border border-border rounded bg-surface text-text font-caption text-caption px-space-xs focus:ring-1 focus:ring-primary-container" id="rowsPerPage">
+<option selected="" value="10">10</option>
+<option value="25">25</option>
+<option value="50">50</option>
+</select>
+</div>
+</div>
+<nav aria-label="Pagination" class="flex items-center gap-1">
+<button class="w-8 h-8 rounded border border-border bg-surface text-text-disabled flex items-center justify-center cursor-not-allowed" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded border border-primary-container bg-primary-soft text-badge-completed-text font-body-medium text-body-medium flex items-center justify-center font-semibold" type="button">1</button>
+<button class="w-8 h-8 rounded border border-border bg-surface text-text font-body-medium text-body-medium hover:bg-slate-50 flex items-center justify-center" type="button">2</button>
+<button class="w-8 h-8 rounded border border-border bg-surface text-text font-body-medium text-body-medium hover:bg-slate-50 flex items-center justify-center" type="button">3</button>
+<span class="px-1 text-text-disabled text-caption">...</span>
+<button class="w-8 h-8 rounded border border-border bg-surface text-text font-body-medium text-body-medium hover:bg-slate-50 flex items-center justify-center" type="button">44</button>
+<button class="w-8 h-8 rounded border border-border bg-surface text-text hover:bg-slate-50 flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</nav>
+</div>
+</div>
+</div>
+<!-- Inline Toast Container for Micro-interactions -->
+<div class="fixed top-20 right-6 z-50 flex flex-col gap-2 pointer-events-none" id="toastContainer"></div>
+<script>
+    (function initAuditLog() {
+      // Toggle expandable diff rows
+      const expandButtons = document.querySelectorAll('.row-expand-btn');
+      expandButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          if (!targetId) return;
+          const diffRow = document.getElementById(targetId);
+          if (!diffRow) return;
+
+          const isHidden = diffRow.classList.contains('hidden');
+          if (isHidden) {
+            diffRow.classList.remove('hidden');
+          } else {
+            diffRow.classList.add('hidden');
+          }
+
+          // Update icons for all triggers referencing this target
+          const relatedBtns = document.querySelectorAll(`[data-target="${targetId}"]`);
+          relatedBtns.forEach(rBtn => {
+            const icon = rBtn.querySelector('.material-symbols-outlined');
+            if (icon) {
+              if (isHidden) {
+                icon.classList.add('rotate-90');
+                rBtn.setAttribute('aria-expanded', 'true');
+              } else {
+                icon.classList.remove('rotate-90');
+                rBtn.setAttribute('aria-expanded', 'false');
+              }
+            }
+          });
+        });
+      });
+
+      // Quick filter toggle: "Only My Actions"
+      const toggleMyActionsBtn = document.getElementById('toggleMyActions');
+      const userSelect = document.getElementById('filterUser');
+
+      toggleMyActionsBtn?.addEventListener('click', () => {
+        const isActive = toggleMyActionsBtn.getAttribute('data-active') === 'true';
+        if (isActive) {
+          toggleMyActionsBtn.setAttribute('data-active', 'false');
+          toggleMyActionsBtn.classList.remove('bg-primary-soft', 'text-badge-completed-text', 'border-primary-container');
+          toggleMyActionsBtn.classList.add('bg-slate-50', 'text-text-muted', 'border-border');
+          if (userSelect) userSelect.value = 'ALL';
+        } else {
+          toggleMyActionsBtn.setAttribute('data-active', 'true');
+          toggleMyActionsBtn.classList.add('bg-primary-soft', 'text-badge-completed-text', 'border-primary-container');
+          toggleMyActionsBtn.classList.remove('bg-slate-50', 'text-text-muted', 'border-border');
+          if (userSelect) userSelect.value = 'ME';
+        }
+      });
+
+      userSelect?.addEventListener('change', () => {
+        if (userSelect.value === 'ME') {
+          toggleMyActionsBtn?.setAttribute('data-active', 'true');
+          toggleMyActionsBtn?.classList.add('bg-primary-soft', 'text-badge-completed-text', 'border-primary-container');
+          toggleMyActionsBtn?.classList.remove('bg-slate-50', 'text-text-muted', 'border-border');
+        } else {
+          toggleMyActionsBtn?.setAttribute('data-active', 'false');
+          toggleMyActionsBtn?.classList.remove('bg-primary-soft', 'text-badge-completed-text', 'border-primary-container');
+          toggleMyActionsBtn?.classList.add('bg-slate-50', 'text-text-muted', 'border-border');
+        }
+      });
+
+      // Reset filters button
+      const resetBtn = document.getElementById('resetFilters');
+      resetBtn?.addEventListener('click', () => {
+        const actionSelect = document.getElementById('filterAction');
+        const batchInput = document.getElementById('searchBatch');
+        const dateSelect = document.getElementById('filterDateRange');
+
+        if (actionSelect) actionSelect.value = 'ALL';
+        if (userSelect) userSelect.value = 'ALL';
+        if (batchInput) batchInput.value = '';
+        if (dateSelect) dateSelect.value = '30D';
+
+        if (toggleMyActionsBtn) {
+          toggleMyActionsBtn.setAttribute('data-active', 'false');
+          toggleMyActionsBtn.classList.remove('bg-primary-soft', 'text-badge-completed-text', 'border-primary-container');
+          toggleMyActionsBtn.classList.add('bg-slate-50', 'text-text-muted', 'border-border');
+        }
+      });
+
+      // Filter chips
+      const filterTags = document.querySelectorAll('.filter-tag');
+      const actionSelect = document.getElementById('filterAction');
+      filterTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+          const actionVal = tag.getAttribute('data-action');
+          if (actionSelect && actionVal) {
+            actionSelect.value = actionVal;
+          }
+        });
+      });
+
+      // Toast feedback helper
+      function showToast(message) {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = 'bg-primary-container text-on-primary font-body-medium text-body-medium px-4 py-2.5 rounded-lg shadow-md flex items-center gap-2 pointer-events-auto transition-opacity duration-300';
+        toast.innerHTML = `<span class="material-symbols-outlined text-[18px]">check_circle</span> <span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.classList.add('opacity-0');
+          setTimeout(() => toast.remove(), 300);
+        }, 3500);
+      }
+
+      // Export CSV simulation
+      const exportBtn = document.getElementById('exportCsvBtn');
+      exportBtn?.addEventListener('click', () => {
+        showToast('Export generated: audit_ledger_20261006.csv');
+      });
+    })();
+  </script>
+</div></main>
+</div>
+</body></html>
