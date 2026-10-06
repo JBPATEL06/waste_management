@@ -49,6 +49,8 @@ export async function createUser(req, res, next) {
       message: 'User created successfully',
       user: result.user,
       temporaryPassword: result.temporaryPassword,
+      tempPassword: result.temporaryPassword,
+      temporary_password: result.temporaryPassword,
     });
   } catch (err) {
     next(err);
@@ -73,6 +75,8 @@ export async function resetPassword(req, res, next) {
     return res.status(200).json({
       message: 'Temporary password generated successfully',
       temporaryPassword: result.temporaryPassword,
+      tempPassword: result.temporaryPassword,
+      temporary_password: result.temporaryPassword,
     });
   } catch (err) {
     next(err);

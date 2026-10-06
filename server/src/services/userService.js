@@ -84,7 +84,7 @@ export async function updateMe(userId, { name }) {
   return result.rows[0];
 }
 
-export async function listUsers({ role, status, search, limit = 50, offset = 0 }) {
+export async function listUsers({ role, status, is_active, search, limit = 50, offset = 0 }) {
   let whereClauses = [];
   let params = [];
 
@@ -93,7 +93,10 @@ export async function listUsers({ role, status, search, limit = 50, offset = 0 }
     whereClauses.push(`role = $${params.length}`);
   }
 
-  if (status === 'active') {
+  if (is_active !== undefined) {
+    const activeBool = is_active === true || is_active === 'true' || is_active === 1 || is_active === '1';
+    whereClauses.push(`is_active = ${activeBool ? 'true' : 'false'}`);
+  } else if (status === 'active') {
     whereClauses.push(`is_active = true`);
   } else if (status === 'inactive') {
     whereClauses.push(`is_active = false`);

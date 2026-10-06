@@ -51,7 +51,7 @@ export default function CreateBatch() {
 
   const routes = routesData?.items || [];
   const vehicles = vehiclesData?.items || [];
-  const users = usersData?.users || [];
+  const users = (usersData?.users || []).filter((u) => u.is_active !== false);
 
   const collectionUsers = users.filter((u) => u.role === 'COLLECTION');
   const transportUsers = users.filter((u) => u.role === 'TRANSPORTATION');

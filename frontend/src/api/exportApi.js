@@ -9,7 +9,18 @@ export const exportApi = {
       }
     }
     const endpoint = `/export/${dataset}?${searchParams.toString()}`;
-    const blob = await api.get(endpoint);
+    const resData = await api.get(endpoint);
+
+    // Ensure we have a Blob (api.get returns string for text/csv responses)
+    const blob =
+      resData instanceof Blob
+        ? resData
+        : new Blob([resData], {
+            type:
+              format === 'xlsx'
+                ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                : 'text/csv;charset=utf-8;',
+          });
 
     // Create trigger for browser download
     const blobUrl = window.URL.createObjectURL(blob);

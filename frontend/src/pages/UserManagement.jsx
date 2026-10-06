@@ -13,6 +13,7 @@ export default function UserManagement() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [tempPasswordModal, setTempPasswordModal] = useState({ open: false, password: '', userName: '' });
+  const [pwdCopied, setPwdCopied] = useState(false);
   const [formError, setFormError] = useState('');
 
   // New user form state
@@ -45,12 +46,14 @@ export default function UserManagement() {
       setShowAddModal(false);
       setNewUser({ name: '', email: '', role: 'COLLECTION' });
       setFormError('');
-      if (res.tempPassword || res.temporary_password) {
+      const pwd = res?.temporaryPassword || res?.tempPassword || res?.temporary_password;
+      if (pwd) {
         setTempPasswordModal({
           open: true,
-          password: res.tempPassword || res.temporary_password,
+          password: pwd,
           userName: res.user?.name || 'New User',
         });
+        setPwdCopied(false);
       }
     },
     onError: (err) => {
@@ -75,11 +78,13 @@ export default function UserManagement() {
     mutationFn: (id) => usersApi.resetPassword(id),
     onSuccess: (res, id) => {
       const targetUser = users.find((u) => u.id === id);
+      const pwd = res?.temporaryPassword || res?.tempPassword || res?.temporary_password;
       setTempPasswordModal({
         open: true,
-        password: res.tempPassword || res.temporary_password,
+        password: pwd || '',
         userName: targetUser?.name || 'User',
       });
+      setPwdCopied(false);
     },
     onError: (err) => {
       alert(err.message || 'Failed to reset password');
@@ -490,10 +495,16 @@ export default function UserManagement() {
                 <span>{tempPasswordModal.password}</span>
                 <button
                   type="button"
-                  onClick={() => navigator.clipboard?.writeText(tempPasswordModal.password)}
+                  onClick={() => {
+                    if (tempPasswordModal.password) {
+                      navigator.clipboard?.writeText(tempPasswordModal.password);
+                      setPwdCopied(true);
+                      setTimeout(() => setPwdCopied(false), 2000);
+                    }
+                  }}
                   className="text-xs text-primary hover:underline font-sans font-medium cursor-pointer"
                 >
-                  Copy
+                  {pwdCopied ? 'Copied! ✓' : 'Copy'}
                 </button>
               </div>
               <p className="font-caption text-caption text-text-muted mt-1">
@@ -503,7 +514,10 @@ export default function UserManagement() {
 
             <button
               type="button"
-              onClick={() => setTempPasswordModal({ open: false, password: '', userName: '' })}
+              onClick={() => {
+                setTempPasswordModal({ open: false, password: '', userName: '' });
+                setPwdCopied(false);
+              }}
               className="w-full h-10 bg-primary text-white rounded-lg font-body-medium text-body-medium hover:bg-primary-hover transition-colors cursor-pointer"
             >
               Done
@@ -534,9 +548,42 @@ export default function UserManagement() {
             )}
 
             <form onSubmit={handleEditUser} className="flex flex-col gap-4">
+              {/* Email (Read-only) */}
+              <div className="flex flex-col gap-1.5">
+                <label className="font-label text-label text-text-muted flex items-center justify-between">
+                  <span>Email Address</span>
+                  <span className="font-caption text-caption text-text-disabled">Read-only</span>
+                </label>
+                <div className="relative flex items-center">
+                  <input
+                    type="email"
+                    readOnly
+                    tabIndex={-1}
+                    value={currentUser.email || ''}
+                    className="w-full h-10 px-3 pr-9 bg-background border border-border rounded-lg text-text-muted font-body text-body cursor-not-allowed select-none"
+                  />
+                  <span className="material-symbols-outlined absolute right-3 text-[18px] text-text-disabled pointer-events-none">
+                    lock
+                  </span>
+                </div>
+              </div>
+
+              {/* Role (Read-only badge) */}
+              <div className="flex flex-col gap-1.5">
+                <label className="font-label text-label text-text-muted flex items-center justify-between">
+                  <span>Assigned Role</span>
+                  <span className="font-caption text-caption text-text-disabled">System Managed</span>
+                </label>
+                <div className="w-full h-10 px-3 bg-background border border-border rounded-lg flex items-center justify-between select-none">
+                  {getRoleBadge(currentUser.role)}
+                  <span className="material-symbols-outlined text-[18px] text-text-disabled">badge</span>
+                </div>
+              </div>
+
+              {/* Full Name */}
               <div className="flex flex-col gap-1.5">
                 <label className="font-label text-label text-text-muted" htmlFor="editName">
-                  Full Name
+                  Full Name <span className="text-error">*</span>
                 </label>
                 <input
                   id="editName"
@@ -548,16 +595,17 @@ export default function UserManagement() {
                 />
               </div>
 
-              <div className="flex items-center gap-2">
+              {/* Status Checkbox */}
+              <div className="flex items-center gap-2 p-3 bg-background border border-border rounded-lg">
                 <input
                   id="editActive"
                   type="checkbox"
                   checked={currentUser.is_active}
                   onChange={(e) => setCurrentUser({ ...currentUser, is_active: e.target.checked })}
-                  className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                  className="h-4 w-4 rounded border-border text-primary focus:ring-primary cursor-pointer"
                 />
-                <label htmlFor="editActive" className="text-sm text-text font-medium">
-                  Active Account
+                <label htmlFor="editActive" className="text-sm text-text font-medium cursor-pointer">
+                  Account Active {currentUser.is_active ? '(Enabled)' : '(Deactivated - user cannot log in)'}
                 </label>
               </div>
 

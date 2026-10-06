@@ -7,7 +7,7 @@ import { STAGE_CONFIG } from '../constants/stages';
 import { dashboardApi } from '../api/dashboardApi';
 
 export default function Profile() {
-  const { user, updateProfileName, logoutAll, changePassword } = useAuth();
+  const { user, updateProfileName, changePassword } = useAuth();
   const navigate = useNavigate();
 
   // Role detection
@@ -26,9 +26,6 @@ export default function Profile() {
   const [newPwd, setNewPwd] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
   const [pwdError, setPwdError] = useState('');
-
-  // Revoke Modal
-  const [showRevokeModal, setShowRevokeModal] = useState(false);
 
   // Fetch operator's real queue metrics if stage operator
   const { data: queueData } = useQuery({
@@ -85,15 +82,6 @@ export default function Profile() {
       alert('Password updated successfully.');
     } catch (err) {
       setPwdError(err.message || 'Failed to update password');
-    }
-  };
-
-  const handleRevokeAllSessions = async () => {
-    setShowRevokeModal(false);
-    try {
-      await logoutAll();
-    } finally {
-      navigate('/login');
     }
   };
 
@@ -268,41 +256,19 @@ export default function Profile() {
                   </div>
 
                   {/* System Role (Read-only Badge Display) */}
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1.5 md:col-span-2">
                     <label className="font-label text-label text-text-muted flex items-center justify-between">
                       <span>Assigned Role</span>
                       <span className="font-caption text-caption text-text-disabled">Read-only</span>
                     </label>
                     <div className="w-full h-10 px-3 bg-background border border-border rounded-lg flex items-center justify-between select-none">
-                      <div className="flex items-center gap-2">
-                        <span className="font-body-medium text-body-medium text-text">
-                          {user?.role}
-                        </span>
-                        <span className={`font-badge text-badge px-2 py-0.5 rounded-full ${cfg.badgeClass}`}>
-                          {user?.role}
-                        </span>
-                      </div>
+                      <span className={`font-badge text-badge px-2.5 py-0.5 rounded-full ${cfg.badgeClass}`}>
+                        {user?.role}
+                      </span>
                       <span className="material-symbols-outlined text-[18px] text-text-disabled">badge</span>
                     </div>
                     <p className="font-caption text-caption text-text-muted">
                       Determines operational access permissions
-                    </p>
-                  </div>
-
-                  {/* Account Status */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-label text-label text-text-muted flex items-center justify-between">
-                      <span>Account Status</span>
-                      <span className="font-caption text-caption text-text-disabled">Managed</span>
-                    </label>
-                    <div className="w-full h-10 px-3 bg-background border border-border rounded-lg flex items-center justify-between select-none">
-                      <span className="font-body-medium text-body-medium text-text">
-                        {user?.is_active ? 'Active' : 'Inactive'}
-                      </span>
-                      <span className="material-symbols-outlined text-[18px] text-badge-completed-text">check_circle</span>
-                    </div>
-                    <p className="font-caption text-caption text-text-muted">
-                      Account status and system authorizations
                     </p>
                   </div>
                 </div>
@@ -379,31 +345,6 @@ export default function Profile() {
                     >
                       <span className="material-symbols-outlined text-[18px] text-text-muted">key</span>
                       <span>Change Password</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Row 2: Active Sessions / Global Logout */}
-                <div className="pt-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="max-w-xl">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-body-medium text-body-medium text-error">Revoke All Sessions</h3>
-                      <span className="font-caption text-caption text-badge-deleted-text bg-badge-deleted-bg px-2 py-0.5 rounded font-body-medium">
-                        High Impact
-                      </span>
-                    </div>
-                    <p className="font-caption text-caption text-text-muted mt-1 leading-normal">
-                      Logout from all devices, handheld terminals, and active browser sessions.
-                    </p>
-                  </div>
-                  <div className="flex-shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => setShowRevokeModal(true)}
-                      className="h-10 px-4 bg-error-soft hover:bg-red-200/70 border border-error/30 text-error font-body-medium text-body-medium rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">logout</span>
-                      <span>Logout from All Devices</span>
                     </button>
                   </div>
                 </div>
@@ -490,37 +431,6 @@ export default function Profile() {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* Revoke Sessions Modal */}
-      {showRevokeModal && (
-        <div className="fixed inset-0 z-50 bg-text/40 flex items-center justify-center p-4 backdrop-blur-[1px]">
-          <div className="bg-surface rounded-xl border border-border max-w-md w-full p-[20px] shadow-lg animate-fade-in">
-            <div className="flex items-center gap-2 pb-3 border-b border-border text-error">
-              <span className="material-symbols-outlined text-[22px]">warning</span>
-              <h3 className="font-section-title text-section-title">Confirm Global Session Revocation</h3>
-            </div>
-            <p className="font-body text-body text-text-muted mt-3">
-              Are you certain you want to revoke all active sessions across all devices? You will immediately be redirected to the login screen.
-            </p>
-            <div className="mt-6 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setShowRevokeModal(false)}
-                className="h-10 px-4 border border-border rounded-lg text-body-medium text-text bg-surface hover:bg-background cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleRevokeAllSessions}
-                className="h-10 px-4 bg-error hover:bg-red-700 text-on-primary rounded-lg text-body-medium cursor-pointer"
-              >
-                Yes, Terminate All
-              </button>
-            </div>
           </div>
         </div>
       )}
