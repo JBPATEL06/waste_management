@@ -35,7 +35,7 @@ export async function getPublicTracking(batchCode) {
 
   // 3. Construct strictly whitelisted response per PRD §4.6
   // Never returns: driver/user names, vehicle numbers, notes, handover details, history, assignments
-  return {
+  const trackingData = {
     batch_code: batch.batch_code,
     waste_type: batch.waste_type,
     quantity: Number(batch.quantity),
@@ -47,6 +47,11 @@ export async function getPublicTracking(batchCode) {
       display_location: r.display_location,
       status: r.status,
     })),
+  };
+
+  return {
+    ...trackingData,
+    batch: trackingData,
   };
 }
 

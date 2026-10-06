@@ -23,7 +23,7 @@ export default function PublicTracking() {
     retry: 1,
   });
 
-  const batch = data?.batch;
+  const batch = data?.batch || (data?.batch_code ? data : null);
 
   const downloadQrPng = () => {
     const canvas = qrRef.current?.querySelector('canvas');
@@ -128,7 +128,7 @@ export default function PublicTracking() {
             <div className="flex gap-3">
               <button
                 onClick={() => refetch()}
-                className="px-4 py-2 bg-surface border border-border hover:bg-slate-50 text-text text-sm rounded-lg flex items-center gap-2"
+                className="px-4 py-2 bg-surface border border-border hover:bg-slate-50 text-text text-sm rounded-lg flex items-center gap-2 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[18px]">refresh</span>
                 <span>Retry</span>
@@ -140,6 +140,26 @@ export default function PublicTracking() {
                 Search Another Batch
               </Link>
             </div>
+          </div>
+        )}
+
+        {!isLoading && !isError && !batch && (
+          <div className="bg-surface rounded-xl border border-border p-8 text-center flex flex-col items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-error-soft text-error flex items-center justify-center">
+              <span className="material-symbols-outlined text-[28px]">search_off</span>
+            </div>
+            <div>
+              <h2 className="text-section-title font-semibold text-text">Batch Not Found</h2>
+              <p className="text-sm text-text-muted mt-1">
+                No tracking information is available for batch code "{batchCode}".
+              </p>
+            </div>
+            <Link
+              to="/track"
+              className="px-4 py-2 bg-primary text-on-primary hover:bg-primary-hover text-sm rounded-lg"
+            >
+              Search Another Batch
+            </Link>
           </div>
         )}
 
