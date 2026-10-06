@@ -1,16 +1,36 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export default function TopBar({ onToggleSidebar }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
       await logout();
     } finally {
       navigate('/login');
+    }
+  };
+
+  const getDashboardPath = (role) => {
+    switch (role) {
+      case 'ADMIN':
+        return '/admin/dashboard';
+      case 'HEAD_OFFICER':
+        return '/ho/dashboard';
+      case 'COLLECTION':
+        return '/collection/dashboard';
+      case 'TRANSPORTATION':
+        return '/transportation/dashboard';
+      case 'RTS':
+        return '/rts/dashboard';
+      case 'PROCESSING':
+        return '/processing/dashboard';
+      default:
+        return '/';
     }
   };
 
@@ -65,12 +85,23 @@ export default function TopBar({ onToggleSidebar }) {
             {getRoleBadge(user.role)}
           </div>
           <div className="h-4 w-[1px] bg-border hidden sm:block"></div>
-          <Link
-            to="/profile"
-            className="text-sm font-medium text-text-muted hover:text-text transition-colors hidden sm:inline"
-          >
-            Profile
-          </Link>
+          {location.pathname === '/profile' ? (
+            <Link
+              to={getDashboardPath(user.role)}
+              className="text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover transition-colors flex items-center gap-1 bg-primary-soft px-2.5 py-1 rounded-lg border border-primary/20 shrink-0"
+            >
+              <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Back</span>
+            </Link>
+          ) : (
+            <Link
+              to="/profile"
+              className="text-sm font-medium text-text-muted hover:text-text transition-colors hidden sm:inline"
+            >
+              Profile
+            </Link>
+          )}
           <button
             onClick={handleLogout}
             className="text-sm font-medium text-text-muted hover:text-error transition-colors flex items-center gap-1 p-1 sm:p-0 cursor-pointer"

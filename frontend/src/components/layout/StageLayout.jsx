@@ -148,7 +148,7 @@ export default function StageLayout({ currentRole }) {
 
       {/* Main Outlet Area */}
       <div className="pl-0 lg:pl-60 transition-[padding] duration-200">
-        <main className="relative pt-14 min-h-screen bg-background p-4 sm:p-6 lg:p-space-xl">
+        <main className="relative pt-20 pb-12 px-4 sm:px-6 lg:px-8 min-h-screen bg-background">
           <div className="flex flex-col w-full max-w-[1440px] mx-auto">
             <Outlet />
           </div>

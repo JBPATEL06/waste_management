@@ -397,3 +397,4 @@ export function printBatchManifest({
 </html>`);
   printWindow.document.close();
 }
+

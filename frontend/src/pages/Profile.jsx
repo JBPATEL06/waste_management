@@ -15,6 +15,13 @@ export default function Profile() {
   const cfg = STAGE_CONFIG[roleLower] || STAGE_CONFIG.collection;
   const isStageOperator = ['collection', 'transportation', 'rts', 'processing'].includes(roleLower);
 
+  const getDashboardPath = () => {
+    if (isStageOperator) return `${cfg.prefix}/dashboard`;
+    if (user?.role === 'HEAD_OFFICER') return '/ho/dashboard';
+    if (user?.role === 'ADMIN') return '/admin/dashboard';
+    return '/';
+  };
+
   const [fullName, setFullName] = useState(user?.name || '');
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -89,21 +96,32 @@ export default function Profile() {
     <div className="bg-background font-body text-text min-h-screen">
       <TopBar />
 
-      <main className="relative pt-14 min-h-screen bg-background p-4 sm:p-6 lg:p-margin">
+      <main className="relative pt-20 pb-16 min-h-screen bg-background px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col w-full">
           <div className="max-w-[1080px] w-full mx-auto space-y-space-xl">
             {/* Top Header Breadcrumb & Titles */}
-            <header className="flex flex-col gap-1">
-              <nav aria-label="Breadcrumb" className="flex items-center gap-2">
-                <Link
-                  to={isStageOperator ? `${cfg.prefix}/dashboard` : user?.role === 'HEAD_OFFICER' ? '/ho/dashboard' : '/admin/dashboard'}
-                  className="font-caption text-caption text-text-muted hover:text-text transition-colors"
+            <header className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => navigate(getDashboardPath())}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-text bg-surface hover:bg-slate-100 active:bg-slate-200 border border-border rounded-lg shadow-2xs transition-colors cursor-pointer group"
                 >
-                  Dashboard
-                </Link>
-                <span className="font-caption text-caption text-text-disabled">/</span>
-                <span className="font-caption text-caption text-text font-body-medium">Profile</span>
-              </nav>
+                  <span className="material-symbols-outlined text-[18px] text-text-muted group-hover:text-primary transition-colors">arrow_back</span>
+                  <span>Back to Dashboard</span>
+                </button>
+
+                <nav aria-label="Breadcrumb" className="flex items-center gap-2">
+                  <Link
+                    to={getDashboardPath()}
+                    className="font-caption text-caption text-text-muted hover:text-text transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                  <span className="font-caption text-caption text-text-disabled">/</span>
+                  <span className="font-caption text-caption text-text font-body-medium">Profile</span>
+                </nav>
+              </div>
 
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-1">
                 <div>

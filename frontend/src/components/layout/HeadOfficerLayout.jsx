@@ -132,7 +132,7 @@ export default function HeadOfficerLayout() {
 
       {/* Main Content View */}
       <div className="pl-0 lg:pl-[240px] transition-[padding] duration-200">
-        <main className="w-full pt-14 px-4 sm:px-6 lg:px-margin bg-background min-h-screen">
+        <main className="w-full pt-20 pb-12 px-4 sm:px-6 lg:px-margin bg-background min-h-screen">
           <div className="flex flex-col w-full max-w-[1440px] mx-auto pb-space-2xl">
             <Outlet />
           </div>
