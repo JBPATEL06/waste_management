@@ -6,6 +6,7 @@ import { batchesApi } from '../api/batchesApi';
 import { masterApi } from '../api/masterApi';
 import { usersApi } from '../api/usersApi';
 import { getPublicBaseUrl } from '../utils/url';
+import { printBatchManifest } from '../utils/printManifest';
 
 export default function CreateBatch() {
   const navigate = useNavigate();
@@ -127,33 +128,10 @@ export default function CreateBatch() {
 
   const handlePrint = () => {
     const canvas = qrRef.current?.querySelector('canvas');
-    if (!canvas) return;
-    const pngUrl = canvas.toDataURL('image/png');
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Manifest QR - ${createdBatch?.batch_code}</title>
-          <style>
-            body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-            h2 { margin-bottom: 8px; }
-            p { margin-top: 4px; color: #555; }
-            img { width: 220px; height: 220px; }
-          </style>
-        </head>
-        <body>
-          <h2>Waste Journey Tracker Manifest</h2>
-          <img src="${pngUrl}" />
-          <p><strong>Batch: ${createdBatch?.batch_code}</strong></p>
-          <p>Area: ${createdBatch?.source_area} • Qty: ${createdBatch?.quantity} kg</p>
-          <script>
-            window.onload = function() { window.print(); window.close(); }
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+    printBatchManifest({
+      batch: createdBatch,
+      qrCanvas: canvas,
+    });
   };
 
   return (

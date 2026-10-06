@@ -5,6 +5,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { batchesApi } from '../../api/batchesApi';
 import StatusBadge from '../../components/common/StatusBadge';
 import { getPublicBaseUrl } from '../../utils/url';
+import { printBatchManifest } from '../../utils/printManifest';
 
 function formatDateTime(dateStr) {
   if (!dateStr) return '—';
@@ -82,41 +83,12 @@ export default function HeadOfficerBatchDetail() {
 
   const handlePrint = () => {
     const canvas = qrRef.current?.querySelector('canvas');
-    if (!canvas) {
-      window.print();
-      return;
-    }
-    const pngUrl = canvas.toDataURL('image/png');
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-      window.print();
-      return;
-    }
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Batch Sheet - ${batch?.batch_code}</title>
-          <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; color: #1e293b; }
-            h2 { margin-bottom: 4px; }
-            p { margin: 4px 0; color: #475569; }
-            img { width: 220px; height: 220px; margin: 16px 0; }
-          </style>
-        </head>
-        <body>
-          <h2>Waste Journey Manifest Passport</h2>
-          <p><strong>Batch: ${batch?.batch_code}</strong></p>
-          <img src="${pngUrl}" alt="Batch QR Code" />
-          <p>Origin: ${batch?.source_area || '—'} | Quantity: ${Number(batch?.quantity || 0).toLocaleString()} kg</p>
-          <p>Route: ${batch?.route_name || '—'} | Vehicle: ${batch?.vehicle_number || '—'}</p>
-          <p>Status: ${batch?.current_status || '—'}</p>
-          <script>
-            window.onload = function() { window.print(); window.close(); }
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+    printBatchManifest({
+      batch,
+      qrCanvas: canvas,
+      timeline,
+      assignments,
+    });
   };
 
   if (isLoading) {

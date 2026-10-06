@@ -13,7 +13,10 @@ export const masterApi = {
   getVehicles: (params = {}) => masterApi.getItems('vehicles', params),
   getRtsLocations: (params = {}) => masterApi.getItems('rts_locations', params),
   getFacilities: (params = {}) => masterApi.getItems('processing_facilities', params),
+  getProcessingFacilities: (params = {}) => masterApi.getItems('processing_facilities', params),
   getProcessTypes: (params = {}) => masterApi.getItems('process_types', params),
+  getWasteCategories: (params = {}) => masterApi.getItems('waste_categories', params),
+  getDrivers: (params = {}) => masterApi.getItems('drivers', params),
 
   createItem: (type, data) => api.post(`/master/${type}`, data),
 

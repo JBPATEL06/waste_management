@@ -5,6 +5,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { publicApi } from '../api/publicApi';
 import StatusBadge from '../components/common/StatusBadge';
 import { getPublicBaseUrl } from '../utils/url';
+import { printBatchManifest } from '../utils/printManifest';
 
 export default function PublicTracking() {
   const { batchCode } = useParams();
@@ -39,32 +40,11 @@ export default function PublicTracking() {
 
   const printQr = () => {
     const canvas = qrRef.current?.querySelector('canvas');
-    if (!canvas) return;
-    const pngUrl = canvas.toDataURL('image/png');
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print QR - ${batch?.batch_code || batchCode}</title>
-          <style>
-            body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-            h2 { margin-bottom: 8px; }
-            p { margin-top: 4px; color: #555; }
-            img { width: 220px; height: 220px; }
-          </style>
-        </head>
-        <body>
-          <h2>Waste Journey Tracker</h2>
-          <img src="${pngUrl}" />
-          <p><strong>Batch: ${batch?.batch_code || batchCode}</strong></p>
-          <script>
-            window.onload = function() { window.print(); window.close(); }
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+    printBatchManifest({
+      batch,
+      qrCanvas: canvas,
+      timeline: batch?.timeline || [],
+    });
   };
 
   const stagesDefinition = [
