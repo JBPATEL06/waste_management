@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QRCodeCanvas } from 'qrcode.react';
 import { publicApi } from '../api/publicApi';
 import StatusBadge from '../components/common/StatusBadge';
+import { getPublicBaseUrl } from '../utils/url';
 
 export default function PublicTracking() {
   const { batchCode } = useParams();
@@ -76,7 +77,8 @@ export default function PublicTracking() {
   const stageOrder = ['COLLECTION', 'TRANSPORTATION', 'RTS', 'PROCESSING'];
   const currentStageIndex = batch?.current_status === 'COMPLETED' ? 4 : (batch?.timeline?.length ? stageOrder.indexOf(batch.timeline[batch.timeline.length - 1]?.stage) : 0);
 
-  const trackingUrl = typeof window !== 'undefined' ? `${window.location.origin}/track/${batch?.batch_code || batchCode}` : '';
+  const publicBase = getPublicBaseUrl();
+  const trackingUrl = `${publicBase}/track/${batch?.batch_code || batchCode}`;
 
   return (
     <div className="bg-background font-body text-text min-h-screen">

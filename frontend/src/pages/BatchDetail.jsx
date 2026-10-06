@@ -7,6 +7,7 @@ import { entriesApi } from '../api/entriesApi';
 import { usersApi } from '../api/usersApi';
 import StatusBadge from '../components/common/StatusBadge';
 import { useAuth } from '../context/AuthContext';
+import { getPublicBaseUrl } from '../utils/url';
 
 export default function BatchDetail() {
   const { code } = useParams();
@@ -201,7 +202,7 @@ export default function BatchDetail() {
     printWindow.document.close();
   };
 
-  const publicBase = (typeof window !== 'undefined' && (import.meta.env.VITE_PUBLIC_URL || window.location.origin)) || '';
+  const publicBase = getPublicBaseUrl();
   const trackingUrl = batch ? `${publicBase}/track/${batch.batch_code}` : '';
 
   if (isLoading) {

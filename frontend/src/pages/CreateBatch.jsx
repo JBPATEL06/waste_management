@@ -5,6 +5,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { batchesApi } from '../api/batchesApi';
 import { masterApi } from '../api/masterApi';
 import { usersApi } from '../api/usersApi';
+import { getPublicBaseUrl } from '../utils/url';
 
 export default function CreateBatch() {
   const navigate = useNavigate();
@@ -107,7 +108,7 @@ export default function CreateBatch() {
     createBatchMutation.mutate(payload);
   };
 
-  const publicBase = (typeof window !== 'undefined' && (import.meta.env.VITE_PUBLIC_URL || window.location.origin)) || '';
+  const publicBase = getPublicBaseUrl();
   const trackingUrl = createdBatch
     ? `${publicBase}/track/${createdBatch.batch_code}`
     : '';

@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QRCodeCanvas } from 'qrcode.react';
 import { batchesApi } from '../../api/batchesApi';
 import StatusBadge from '../../components/common/StatusBadge';
+import { getPublicBaseUrl } from '../../utils/url';
 
 function formatDateTime(dateStr) {
   if (!dateStr) return '—';
@@ -157,7 +158,7 @@ export default function HeadOfficerBatchDetail() {
     );
   }
 
-  const publicBase = (typeof window !== 'undefined' && (import.meta.env.VITE_PUBLIC_URL || window.location.origin)) || '';
+  const publicBase = getPublicBaseUrl();
   const publicTrackUrl = batch ? `${publicBase}/track/${batch.batch_code}` : '';
 
   return (
