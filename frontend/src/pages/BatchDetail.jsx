@@ -66,11 +66,12 @@ export default function BatchDetail() {
 
   // Reassign mutation
   const reassignMutation = useMutation({
-    mutationFn: ({ id, assignmentsPayload }) => batchesApi.reassignBatch(id, assignmentsPayload),
+    mutationFn: ({ id, payload }) => batchesApi.reassignBatch(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['batchDetail', code] });
       setShowReassignModal(false);
       setReason('');
+      setNewAssigneeId('');
       setActionError('');
       triggerToast(`Reassigned ${reassignStage} operator successfully`);
     },
@@ -115,17 +116,12 @@ export default function BatchDetail() {
     e.preventDefault();
     if (!newAssigneeId) return;
 
-    const stageFieldMap = {
-      COLLECTION: 'collection_user_id',
-      TRANSPORTATION: 'transportation_user_id',
-      RTS: 'rts_user_id',
-      PROCESSING: 'processing_user_id',
-    };
-
     reassignMutation.mutate({
       id: batch.id,
-      assignmentsPayload: {
-        [stageFieldMap[reassignStage]]: newAssigneeId,
+      payload: {
+        stage: reassignStage,
+        user_id: newAssigneeId,
+        reason: reason.trim() || `Reassigned ${reassignStage} operator by Administrator`,
       },
     });
   };
@@ -281,6 +277,8 @@ export default function BatchDetail() {
               <button
                 onClick={() => {
                   setReassignStage('COLLECTION');
+                  setNewAssigneeId('');
+                  setReason('');
                   setActionError('');
                   setShowReassignModal(true);
                 }}
@@ -571,6 +569,20 @@ export default function BatchDetail() {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="font-label text-label text-text-muted" htmlFor="reassignReason">
+                  Reassignment Reason (Optional)
+                </label>
+                <input
+                  id="reassignReason"
+                  type="text"
+                  placeholder="e.g. Shift rotation or operator absence"
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body"
+                />
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-border mt-2">

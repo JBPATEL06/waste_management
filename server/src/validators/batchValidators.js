@@ -84,11 +84,17 @@ export const reassignSchema = {
   params: z.object({
     id: z.string().min(1, 'Batch ID is required'),
   }),
-  body: z.object({
-    stage: stageEnum,
-    user_id: z.string().uuid('Invalid user ID format'),
-    reason: z.string().trim().optional(),
-  }),
+  body: z.union([
+    z.object({
+      stage: stageEnum,
+      user_id: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, 'Invalid user ID format'),
+      reason: z.string().trim().optional(),
+    }),
+    z.object({
+      assignments: z.record(z.string()),
+      reason: z.string().trim().optional(),
+    }),
+  ]),
 };
 
 export const listBatchesSchema = {

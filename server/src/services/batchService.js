@@ -390,16 +390,43 @@ export async function updateBatch(id, updates, adminId) {
   return updatedBatch;
 }
 
-export async function reassignBatch(batchId, { stage, user_id, reason }, adminId) {
+export async function reassignBatch(batchId, payload, adminId) {
+  let stage = payload.stage;
+  let user_id = payload.user_id;
+  const reason = payload.reason;
+
+  if (!stage && payload.assignments) {
+    if (payload.assignments.collection_user_id) {
+      stage = 'COLLECTION';
+      user_id = payload.assignments.collection_user_id;
+    } else if (payload.assignments.transportation_user_id) {
+      stage = 'TRANSPORTATION';
+      user_id = payload.assignments.transportation_user_id;
+    } else if (payload.assignments.rts_user_id) {
+      stage = 'RTS';
+      user_id = payload.assignments.rts_user_id;
+    } else if (payload.assignments.processing_user_id) {
+      stage = 'PROCESSING';
+      user_id = payload.assignments.processing_user_id;
+    }
+  }
+
+  if (!stage || !user_id) {
+    throw new AppError(422, ErrorCodes.VALIDATION_FAILED, 'Stage and user_id are required for reassignment');
+  }
+
   const client = await getClient();
   try {
     await client.query('BEGIN');
 
-    // Check batch exists
-    const bRes = await client.query('SELECT id, batch_code FROM batches WHERE id = $1', [batchId]);
+    // Check batch exists by UUID or batch_code
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(batchId);
+    const whereBatch = isUuid ? 'id = $1' : 'batch_code = $1';
+    const bRes = await client.query(`SELECT id, batch_code FROM batches WHERE ${whereBatch}`, [batchId]);
     if (bRes.rows.length === 0) {
       throw new AppError(404, ErrorCodes.NOT_FOUND, 'Batch not found');
     }
+    const actualBatchId = bRes.rows[0].id;
 
     // Verify new user exists, active, and matches stage
     const uRes = await client.query('SELECT id, name, role, is_active FROM users WHERE id = $1', [user_id]);
@@ -418,7 +445,7 @@ export async function reassignBatch(batchId, { stage, user_id, reason }, adminId
     const oldAssignRes = await client.query(
       `SELECT * FROM batch_assignments 
        WHERE batch_id = $1 AND stage = $2 AND is_active = true`,
-      [batchId, stage]
+      [actualBatchId, stage]
     );
     const oldAssignment = oldAssignRes.rows[0] || null;
 
@@ -427,7 +454,7 @@ export async function reassignBatch(batchId, { stage, user_id, reason }, adminId
       `UPDATE batch_assignments 
        SET is_active = false 
        WHERE batch_id = $1 AND stage = $2 AND is_active = true`,
-      [batchId, stage]
+      [actualBatchId, stage]
     );
 
     // Insert new assignment
@@ -435,14 +462,14 @@ export async function reassignBatch(batchId, { stage, user_id, reason }, adminId
       `INSERT INTO batch_assignments (batch_id, stage, user_id, assigned_by, is_active)
        VALUES ($1, $2, $3, $4, true)
        RETURNING *`,
-      [batchId, stage, user_id, adminId]
+      [actualBatchId, stage, user_id, adminId]
     );
     const newAssignment = newAssignRes.rows[0];
 
     // Log audit
     await logAudit({
       action: 'REASSIGN',
-      batchId,
+      batchId: actualBatchId,
       entityType: 'batch_assignments',
       entityId: newAssignment.id,
       oldValues: oldAssignment,
