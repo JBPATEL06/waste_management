@@ -10,3 +10,4 @@ export function getPublicBaseUrl() {
   }
   return window.location.origin;
 }
+
