@@ -4,6 +4,7 @@ import { exportApi } from '../api/exportApi';
 import { masterApi } from '../api/masterApi';
 import { batchesApi } from '../api/batchesApi';
 import StatusBadge from '../components/common/StatusBadge';
+import CustomSelect from '../components/common/CustomSelect';
 
 export default function ExportData() {
   const [selectedDataset, setSelectedDataset] = useState('batches');
@@ -35,6 +36,47 @@ export default function ExportData() {
 
   const routesList = routesData?.items || [];
   const vehiclesList = vehiclesData?.items || [];
+
+  const dateRangeOptions = [
+    { value: 'Last 7 Days', label: 'Last 7 Days' },
+    { value: 'Last 30 Days', label: 'Last 30 Days' },
+    { value: 'This Month', label: 'This Month' },
+    { value: 'All Time', label: 'All Time' },
+    { value: 'Custom Range', label: 'Custom Range' },
+  ];
+
+  const statusOptions = [
+    { value: '', label: 'All Statuses' },
+    { value: 'CREATED', label: 'Created' },
+    { value: 'COLLECTED', label: 'Collected' },
+    { value: 'IN_TRANSIT', label: 'In Transit' },
+    { value: 'AT_RTS', label: 'At RTS' },
+    { value: 'COMPLETED', label: 'Completed' },
+  ];
+
+  const routeOptions = [
+    { value: '', label: 'All Routes' },
+    ...routesList.map((r) => ({
+      value: r.id,
+      label: `${r.code} - ${r.name}`,
+    })),
+  ];
+
+  const vehicleOptions = [
+    { value: '', label: 'All Vehicles' },
+    ...vehiclesList.map((v) => ({
+      value: v.id,
+      label: `${v.vehicle_number} (${v.vehicle_type})`,
+    })),
+  ];
+
+  const wasteTypeOptions = [
+    { value: '', label: 'All Types' },
+    { value: 'WET', label: 'Wet Waste' },
+    { value: 'DRY', label: 'Dry Waste' },
+    { value: 'HAZARDOUS', label: 'Hazardous' },
+    { value: 'ELECTRONIC', label: 'E-Waste' },
+  ];
 
   const getDateFilterParams = () => {
     const now = new Date();
@@ -309,23 +351,12 @@ export default function ExportData() {
             <label className="text-[13px] font-medium text-text-muted" htmlFor="filter-date-range">
               Date Range
             </label>
-            <div className="relative">
-              <select
-                className="w-full h-10 px-3 bg-slate-100 text-text text-sm rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary border border-transparent"
-                id="filter-date-range"
-                value={dateRange}
-                onChange={(e) => setDateRange(e.target.value)}
-              >
-                <option value="Last 7 Days">Last 7 Days</option>
-                <option value="Last 30 Days">Last 30 Days</option>
-                <option value="This Month">This Month</option>
-                <option value="All Time">All Time</option>
-                <option value="Custom Range">Custom Range</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">
-                expand_more
-              </span>
-            </div>
+            <CustomSelect
+              id="filter-date-range"
+              value={dateRange}
+              onChange={(e) => setDateRange(e.target.value)}
+              options={dateRangeOptions}
+            />
           </div>
 
           {/* Status Filter */}
@@ -333,24 +364,12 @@ export default function ExportData() {
             <label className="text-[13px] font-medium text-text-muted" htmlFor="filter-status">
               Batch Status
             </label>
-            <div className="relative">
-              <select
-                className="w-full h-10 px-3 bg-slate-100 text-text text-sm rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary border border-transparent"
-                id="filter-status"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
-                <option value="">All Statuses</option>
-                <option value="CREATED">Created</option>
-                <option value="COLLECTED">Collected</option>
-                <option value="IN_TRANSIT">In Transit</option>
-                <option value="AT_RTS">At RTS</option>
-                <option value="COMPLETED">Completed</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">
-                expand_more
-              </span>
-            </div>
+            <CustomSelect
+              id="filter-status"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              options={statusOptions}
+            />
           </div>
 
           {/* Route Filter */}
@@ -358,24 +377,12 @@ export default function ExportData() {
             <label className="text-[13px] font-medium text-text-muted" htmlFor="filter-route">
               Route
             </label>
-            <div className="relative">
-              <select
-                className="w-full h-10 px-3 bg-slate-100 text-text text-sm rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary border border-transparent"
-                id="filter-route"
-                value={routeFilter}
-                onChange={(e) => setRouteFilter(e.target.value)}
-              >
-                <option value="">All Routes</option>
-                {routesList.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.code} - {r.name}
-                  </option>
-                ))}
-              </select>
-              <span className="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">
-                expand_more
-              </span>
-            </div>
+            <CustomSelect
+              id="filter-route"
+              value={routeFilter}
+              onChange={(e) => setRouteFilter(e.target.value)}
+              options={routeOptions}
+            />
           </div>
 
           {/* Vehicle Filter */}
@@ -383,24 +390,12 @@ export default function ExportData() {
             <label className="text-[13px] font-medium text-text-muted" htmlFor="filter-vehicle">
               Assigned Vehicle
             </label>
-            <div className="relative">
-              <select
-                className="w-full h-10 px-3 bg-slate-100 text-text text-sm rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary border border-transparent"
-                id="filter-vehicle"
-                value={vehicleFilter}
-                onChange={(e) => setVehicleFilter(e.target.value)}
-              >
-                <option value="">All Vehicles</option>
-                {vehiclesList.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.vehicle_number} ({v.vehicle_type})
-                  </option>
-                ))}
-              </select>
-              <span className="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">
-                expand_more
-              </span>
-            </div>
+            <CustomSelect
+              id="filter-vehicle"
+              value={vehicleFilter}
+              onChange={(e) => setVehicleFilter(e.target.value)}
+              options={vehicleOptions}
+            />
           </div>
 
           {/* Waste Type Filter */}
@@ -408,23 +403,12 @@ export default function ExportData() {
             <label className="text-[13px] font-medium text-text-muted" htmlFor="filter-waste-type">
               Waste Type
             </label>
-            <div className="relative">
-              <select
-                className="w-full h-10 px-3 bg-slate-100 text-text text-sm rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary border border-transparent"
-                id="filter-waste-type"
-                value={wasteTypeFilter}
-                onChange={(e) => setWasteTypeFilter(e.target.value)}
-              >
-                <option value="">All Types</option>
-                <option value="WET">Wet Waste</option>
-                <option value="DRY">Dry Waste</option>
-                <option value="HAZARDOUS">Hazardous</option>
-                <option value="ELECTRONIC">E-Waste</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-3 top-2.5 text-text-muted pointer-events-none text-[20px]">
-                expand_more
-              </span>
-            </div>
+            <CustomSelect
+              id="filter-waste-type"
+              value={wasteTypeFilter}
+              onChange={(e) => setWasteTypeFilter(e.target.value)}
+              options={wasteTypeOptions}
+            />
           </div>
         </div>
 
