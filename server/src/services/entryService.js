@@ -3,6 +3,7 @@ import { AppError, ErrorCodes } from '../utils/errors.js';
 import { validateStagePayload } from '../validators/entryValidators.js';
 import { logAudit } from './auditService.js';
 import { deriveBatchStatus } from './statusService.js';
+import { invalidateDashboardCache } from './dashboardService.js';
 
 const STAGE_ORDER = {
   COLLECTION: 1,
@@ -330,6 +331,7 @@ export async function createEntry(batchId, body, user) {
     });
 
     await client.query('COMMIT');
+    invalidateDashboardCache();
 
     return {
       entry: createdEntry,
@@ -531,6 +533,7 @@ export async function correctEntry(entryId, body, user) {
     });
 
     await client.query('COMMIT');
+    invalidateDashboardCache();
 
     return {
       entry: newEntry,
@@ -691,6 +694,7 @@ export async function adminEditEntry(entryId, body, adminId) {
     });
 
     await client.query('COMMIT');
+    invalidateDashboardCache();
 
     return {
       entry: updatedEntry,
@@ -775,6 +779,7 @@ export async function adminDeleteEntry(entryId, reason, adminId) {
     });
 
     await client.query('COMMIT');
+    invalidateDashboardCache();
 
     return {
       message: 'Stage entry deleted successfully',

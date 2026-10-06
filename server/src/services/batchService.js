@@ -2,6 +2,7 @@ import { config } from '../config/env.js';
 import { getClient, query } from '../db/index.js';
 import { AppError, ErrorCodes } from '../utils/errors.js';
 import { logAudit } from './auditService.js';
+import { invalidateDashboardCache } from './dashboardService.js';
 
 export async function createBatch(data, adminId) {
   const client = await getClient();
@@ -111,6 +112,7 @@ export async function createBatch(data, adminId) {
     });
 
     await client.query('COMMIT');
+    invalidateDashboardCache();
 
     return {
       batch: createdBatch,
@@ -451,6 +453,7 @@ export async function reassignBatch(batchId, { stage, user_id, reason }, adminId
     });
 
     await client.query('COMMIT');
+    invalidateDashboardCache();
 
     return newAssignment;
   } catch (err) {

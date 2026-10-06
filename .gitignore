@@ -11,6 +11,8 @@ frontend/.env.*
 docs/seed_credentials.md
 docs/prod_credentials.local.md
 docs/demo_creditional.md
+docs/user_pass
+docs/user_pass*
 demo_creditional.md
 *.local.md
 *.pem

@@ -42,6 +42,7 @@ export default function BatchList() {
   const { data: summaryData } = useQuery({
     queryKey: ['batchListKpis'],
     queryFn: () => dashboardApi.getSummary(),
+    staleTime: 30 * 1000,
   });
 
   const kpis = summaryData?.kpis || {

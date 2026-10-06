@@ -9,6 +9,12 @@ export const masterApi = {
     return api.get(`/master/${type}${query ? `?${query}` : ''}`);
   },
 
+  getRoutes: (params = {}) => masterApi.getItems('routes', params),
+  getVehicles: (params = {}) => masterApi.getItems('vehicles', params),
+  getRtsLocations: (params = {}) => masterApi.getItems('rts_locations', params),
+  getFacilities: (params = {}) => masterApi.getItems('processing_facilities', params),
+  getProcessTypes: (params = {}) => masterApi.getItems('process_types', params),
+
   createItem: (type, data) => api.post(`/master/${type}`, data),
 
   updateItem: (type, id, data) => api.patch(`/master/${type}/${id}`, data),

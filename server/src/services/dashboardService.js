@@ -38,7 +38,33 @@ function buildBatchFilterSql(filters, paramOffset = 0) {
   return { whereSql, whereClauses, params };
 }
 
+const dashboardCache = new Map();
+const CACHE_TTL_MS = 20 * 1000; // 20 seconds TTL
+
+function getCached(key) {
+  const item = dashboardCache.get(key);
+  if (!item) return null;
+  if (Date.now() > item.expiresAt) {
+    dashboardCache.delete(key);
+    return null;
+  }
+  return item.data;
+}
+
+function setCached(key, data) {
+  if (dashboardCache.size > 200) dashboardCache.clear();
+  dashboardCache.set(key, { data, expiresAt: Date.now() + CACHE_TTL_MS });
+}
+
+export function invalidateDashboardCache() {
+  dashboardCache.clear();
+}
+
 export async function getSummary(filters = {}) {
+  const cacheKey = 'summary:' + JSON.stringify(filters);
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+
   const { whereSql, params } = buildBatchFilterSql(filters);
 
   // 1. KPI Counts
@@ -54,8 +80,6 @@ export async function getSummary(filters = {}) {
     FROM batches b
     ${whereSql}
   `;
-  const kpiRes = await query(kpiQuery, params);
-  const kpi = kpiRes.rows[0];
 
   // 2. Quantity Funnel
   const funnelQuery = `
@@ -72,14 +96,6 @@ export async function getSummary(filters = {}) {
     LEFT JOIN processing_details pd ON pd.entry_id = se_p.id
     ${whereSql}
   `;
-  const funnelRes = await query(funnelQuery, params);
-  const funnel = funnelRes.rows[0];
-
-  const collectedKg = Number(funnel.collected_kg);
-  const rtsReceivedKg = Number(funnel.rts_received_kg);
-  const processedKg = Number(funnel.processed_kg);
-  const netLossKg = Number((collectedKg - processedKg).toFixed(2));
-  const retentionRatePct = collectedKg > 0 ? Number(((processedKg / collectedKg) * 100).toFixed(2)) : 0;
 
   // 3. Operational Metrics
   const durationQuery = `
@@ -89,16 +105,12 @@ export async function getSummary(filters = {}) {
     JOIN transportation_details td ON td.entry_id = se_t.id
     ${whereSql}
   `;
-  const durationRes = await query(durationQuery, params);
-  const avgDurationMinutes = Number(durationRes.rows[0]?.avg_duration_minutes || 0);
 
   const delayedQuery = `
     SELECT COUNT(*) AS delayed_count
     FROM batches b
     ${whereSql ? whereSql + ' AND' : 'WHERE'} b.current_status != 'COMPLETED' AND b.updated_at < now() - INTERVAL '24 hours'
   `;
-  const delayedRes = await query(delayedQuery, params);
-  const delayedBatchesCount = Number(delayedRes.rows[0]?.delayed_count || 0);
 
   const flaggedQuery = `
     SELECT COUNT(*) AS flagged_count
@@ -107,10 +119,29 @@ export async function getSummary(filters = {}) {
     JOIN rts_details rd ON rd.entry_id = se.id
     ${whereSql ? whereSql + ' AND' : 'WHERE'} rd.is_flagged = true
   `;
-  const flaggedRes = await query(flaggedQuery, params);
+
+  // Execute all 5 metrics queries in parallel
+  const [kpiRes, funnelRes, durationRes, delayedRes, flaggedRes] = await Promise.all([
+    query(kpiQuery, params),
+    query(funnelQuery, params),
+    query(durationQuery, params),
+    query(delayedQuery, params),
+    query(flaggedQuery, params),
+  ]);
+
+  const kpi = kpiRes.rows[0];
+  const funnel = funnelRes.rows[0];
+
+  const collectedKg = Number(funnel.collected_kg);
+  const rtsReceivedKg = Number(funnel.rts_received_kg);
+  const processedKg = Number(funnel.processed_kg);
+  const netLossKg = Number((collectedKg - processedKg).toFixed(2));
+  const retentionRatePct = collectedKg > 0 ? Number(((processedKg / collectedKg) * 100).toFixed(2)) : 0;
+  const avgDurationMinutes = Number(durationRes.rows[0]?.avg_duration_minutes || 0);
+  const delayedBatchesCount = Number(delayedRes.rows[0]?.delayed_count || 0);
   const flaggedVariancesCount = Number(flaggedRes.rows[0]?.flagged_count || 0);
 
-  return {
+  const result = {
     kpis: {
       total: Number(kpi.total),
       created: Number(kpi.created),
@@ -133,95 +164,100 @@ export async function getSummary(filters = {}) {
       flagged_variances_count: flaggedVariancesCount,
     },
   };
+
+  setCached(cacheKey, result);
+  return result;
 }
 
 export async function getBreakdowns(filters = {}) {
+  const cacheKey = 'breakdowns:' + JSON.stringify(filters);
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+
   const { whereSql, params } = buildBatchFilterSql(filters);
 
-  // By Waste Type
-  const wasteTypeRes = await query(
-    `SELECT b.waste_type AS name, COUNT(*) AS count, COALESCE(SUM(b.quantity), 0) AS quantity
-     FROM batches b
-     ${whereSql}
-     GROUP BY b.waste_type
-     ORDER BY b.waste_type ASC`,
-    params
-  );
+  // Execute all 7 breakdown queries in parallel
+  const [
+    wasteTypeRes,
+    routeRes,
+    vehicleRes,
+    rtsRes,
+    facilityRes,
+    processTypeRes,
+    finalStatusRes,
+  ] = await Promise.all([
+    query(
+      `SELECT b.waste_type AS name, COUNT(*) AS count, COALESCE(SUM(b.quantity), 0) AS quantity
+       FROM batches b
+       ${whereSql}
+       GROUP BY b.waste_type
+       ORDER BY b.waste_type ASC`,
+      params
+    ),
+    query(
+      `SELECT r.id, r.code, r.name, COUNT(b.id) AS count, COALESCE(SUM(b.quantity), 0) AS quantity
+       FROM batches b
+       JOIN routes r ON r.id = b.route_id
+       ${whereSql}
+       GROUP BY r.id, r.code, r.name
+       ORDER BY count DESC`,
+      params
+    ),
+    query(
+      `SELECT v.id, v.vehicle_number, COUNT(b.id) AS count, COALESCE(SUM(b.quantity), 0) AS quantity
+       FROM batches b
+       JOIN vehicles v ON v.id = b.vehicle_id
+       ${whereSql}
+       GROUP BY v.id, v.vehicle_number
+       ORDER BY count DESC`,
+      params
+    ),
+    query(
+      `SELECT rl.id, rl.name, COUNT(rd.entry_id) AS count, COALESCE(SUM(rd.quantity_received), 0) AS quantity
+       FROM batches b
+       JOIN stage_entries se ON se.batch_id = b.id AND se.stage = 'RTS' AND se.status = 'ACTIVE'
+       JOIN rts_details rd ON rd.entry_id = se.id
+       JOIN rts_locations rl ON rl.id = rd.rts_location_id
+       ${whereSql}
+       GROUP BY rl.id, rl.name
+       ORDER BY count DESC`,
+      params
+    ),
+    query(
+      `SELECT pf.id, pf.name, COUNT(pd.entry_id) AS count, COALESCE(SUM(pd.quantity), 0) AS quantity
+       FROM batches b
+       JOIN stage_entries se ON se.batch_id = b.id AND se.stage = 'PROCESSING' AND se.status = 'ACTIVE'
+       JOIN processing_details pd ON pd.entry_id = se.id
+       JOIN processing_facilities pf ON pf.id = pd.facility_id
+       ${whereSql}
+       GROUP BY pf.id, pf.name
+       ORDER BY count DESC`,
+      params
+    ),
+    query(
+      `SELECT pt.id, pt.name, COUNT(pd.entry_id) AS count, COALESCE(SUM(pd.quantity), 0) AS quantity
+       FROM batches b
+       JOIN stage_entries se ON se.batch_id = b.id AND se.stage = 'PROCESSING' AND se.status = 'ACTIVE'
+       JOIN processing_details pd ON pd.entry_id = se.id
+       JOIN process_types pt ON pt.id = pd.process_type_id
+       ${whereSql}
+       GROUP BY pt.id, pt.name
+       ORDER BY count DESC`,
+      params
+    ),
+    query(
+      `SELECT pd.final_status AS name, COUNT(pd.entry_id) AS count, COALESCE(SUM(pd.quantity), 0) AS quantity
+       FROM batches b
+       JOIN stage_entries se ON se.batch_id = b.id AND se.stage = 'PROCESSING' AND se.status = 'ACTIVE'
+       JOIN processing_details pd ON pd.entry_id = se.id
+       ${whereSql}
+       GROUP BY pd.final_status
+       ORDER BY count DESC`,
+      params
+    ),
+  ]);
 
-  // By Route
-  const routeRes = await query(
-    `SELECT r.id, r.code, r.name, COUNT(b.id) AS count, COALESCE(SUM(b.quantity), 0) AS quantity
-     FROM batches b
-     JOIN routes r ON r.id = b.route_id
-     ${whereSql}
-     GROUP BY r.id, r.code, r.name
-     ORDER BY count DESC`,
-    params
-  );
-
-  // By Vehicle
-  const vehicleRes = await query(
-    `SELECT v.id, v.vehicle_number, COUNT(b.id) AS count, COALESCE(SUM(b.quantity), 0) AS quantity
-     FROM batches b
-     JOIN vehicles v ON v.id = b.vehicle_id
-     ${whereSql}
-     GROUP BY v.id, v.vehicle_number
-     ORDER BY count DESC`,
-    params
-  );
-
-  // By RTS Location
-  const rtsRes = await query(
-    `SELECT rl.id, rl.name, COUNT(rd.entry_id) AS count, COALESCE(SUM(rd.quantity_received), 0) AS quantity
-     FROM batches b
-     JOIN stage_entries se ON se.batch_id = b.id AND se.stage = 'RTS' AND se.status = 'ACTIVE'
-     JOIN rts_details rd ON rd.entry_id = se.id
-     JOIN rts_locations rl ON rl.id = rd.rts_location_id
-     ${whereSql}
-     GROUP BY rl.id, rl.name
-     ORDER BY count DESC`,
-    params
-  );
-
-  // By Processing Facility
-  const facilityRes = await query(
-    `SELECT pf.id, pf.name, COUNT(pd.entry_id) AS count, COALESCE(SUM(pd.quantity), 0) AS quantity
-     FROM batches b
-     JOIN stage_entries se ON se.batch_id = b.id AND se.stage = 'PROCESSING' AND se.status = 'ACTIVE'
-     JOIN processing_details pd ON pd.entry_id = se.id
-     JOIN processing_facilities pf ON pf.id = pd.facility_id
-     ${whereSql}
-     GROUP BY pf.id, pf.name
-     ORDER BY count DESC`,
-    params
-  );
-
-  // By Process Type
-  const processTypeRes = await query(
-    `SELECT pt.id, pt.name, COUNT(pd.entry_id) AS count, COALESCE(SUM(pd.quantity), 0) AS quantity
-     FROM batches b
-     JOIN stage_entries se ON se.batch_id = b.id AND se.stage = 'PROCESSING' AND se.status = 'ACTIVE'
-     JOIN processing_details pd ON pd.entry_id = se.id
-     JOIN process_types pt ON pt.id = pd.process_type_id
-     ${whereSql}
-     GROUP BY pt.id, pt.name
-     ORDER BY count DESC`,
-    params
-  );
-
-  // By Final Status
-  const finalStatusRes = await query(
-    `SELECT pd.final_status AS name, COUNT(pd.entry_id) AS count, COALESCE(SUM(pd.quantity), 0) AS quantity
-     FROM batches b
-     JOIN stage_entries se ON se.batch_id = b.id AND se.stage = 'PROCESSING' AND se.status = 'ACTIVE'
-     JOIN processing_details pd ON pd.entry_id = se.id
-     ${whereSql}
-     GROUP BY pd.final_status
-     ORDER BY count DESC`,
-    params
-  );
-
-  return {
+  const result = {
     by_waste_type: wasteTypeRes.rows.map((r) => ({ ...r, count: Number(r.count), quantity: Number(r.quantity) })),
     by_route: routeRes.rows.map((r) => ({ ...r, count: Number(r.count), quantity: Number(r.quantity) })),
     by_vehicle: vehicleRes.rows.map((r) => ({ ...r, count: Number(r.count), quantity: Number(r.quantity) })),
@@ -230,9 +266,16 @@ export async function getBreakdowns(filters = {}) {
     by_process_type: processTypeRes.rows.map((r) => ({ ...r, count: Number(r.count), quantity: Number(r.quantity) })),
     by_final_status: finalStatusRes.rows.map((r) => ({ ...r, count: Number(r.count), quantity: Number(r.quantity) })),
   };
+
+  setCached(cacheKey, result);
+  return result;
 }
 
 export async function getPending(filters = {}) {
+  const cacheKey = 'pending:' + JSON.stringify(filters);
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+
   const { whereSql, params } = buildBatchFilterSql(filters);
 
   const pendingQuery = `
@@ -251,15 +294,22 @@ export async function getPending(filters = {}) {
   `;
 
   const res = await query(pendingQuery, params);
-  return {
+  const result = {
     pending_per_stage_per_user: res.rows.map((r) => ({
       ...r,
       pending_count: Number(r.pending_count),
     })),
   };
+
+  setCached(cacheKey, result);
+  return result;
 }
 
 export async function getRecent(filters = {}) {
+  const cacheKey = 'recent:' + JSON.stringify(filters);
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+
   const { whereSql, params } = buildBatchFilterSql(filters);
 
   // Latest updates
@@ -271,7 +321,6 @@ export async function getRecent(filters = {}) {
     ORDER BY b.updated_at DESC
     LIMIT 10
   `;
-  const updatesRes = await query(updatesQuery, params);
 
   // Latest corrections & deletions from audit_log
   const correctionsQuery = `
@@ -286,7 +335,6 @@ export async function getRecent(filters = {}) {
     ORDER BY al.performed_at DESC
     LIMIT 10
   `;
-  const correctionsRes = await query(correctionsQuery);
 
   // Flagged variances
   const flaggedQuery = `
@@ -302,9 +350,15 @@ export async function getRecent(filters = {}) {
     ORDER BY se.event_time DESC
     LIMIT 10
   `;
-  const flaggedRes = await query(flaggedQuery);
 
-  return {
+  // Execute all 3 queries in parallel
+  const [updatesRes, correctionsRes, flaggedRes] = await Promise.all([
+    query(updatesQuery, params),
+    query(correctionsQuery),
+    query(flaggedQuery),
+  ]);
+
+  const result = {
     recent_updates: updatesRes.rows,
     recent_corrections: correctionsRes.rows,
     flagged_variances: flaggedRes.rows.map((r) => ({
@@ -313,6 +367,9 @@ export async function getRecent(filters = {}) {
       quantity_received: Number(r.quantity_received),
     })),
   };
+
+  setCached(cacheKey, result);
+  return result;
 }
 
 export async function getQueue(user) {

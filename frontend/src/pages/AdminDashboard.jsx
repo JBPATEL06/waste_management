@@ -50,11 +50,13 @@ export default function AdminDashboard() {
   const { data: routesData } = useQuery({
     queryKey: ['masters', 'routes'],
     queryFn: () => masterApi.getRoutes(),
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: vehiclesData } = useQuery({
     queryKey: ['masters', 'vehicles'],
     queryFn: () => masterApi.getVehicles(),
+    staleTime: 5 * 60 * 1000,
   });
 
   const routes = routesData?.items || [];
@@ -64,24 +66,28 @@ export default function AdminDashboard() {
   const { data: summaryData, isLoading: isSummaryLoading } = useQuery({
     queryKey: ['dashboardSummary', queryFilters],
     queryFn: () => dashboardApi.getSummary(queryFilters),
+    staleTime: 30 * 1000,
   });
 
   // Breakdowns
   const { data: breakdownData } = useQuery({
     queryKey: ['dashboardBreakdowns', queryFilters],
     queryFn: () => dashboardApi.getBreakdowns(queryFilters),
+    staleTime: 30 * 1000,
   });
 
   // Pending Actions
   const { data: pendingData } = useQuery({
     queryKey: ['dashboardPending', queryFilters],
     queryFn: () => dashboardApi.getPending(queryFilters),
+    staleTime: 30 * 1000,
   });
 
   // Recent & Flagged Variances
   const { data: recentData } = useQuery({
     queryKey: ['dashboardRecent', queryFilters],
     queryFn: () => dashboardApi.getRecent(queryFilters),
+    staleTime: 30 * 1000,
   });
 
   const handleResetFilters = () => {

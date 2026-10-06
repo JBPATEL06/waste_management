@@ -11,7 +11,11 @@ export const pool = new pg.Pool({
     : {
         rejectUnauthorized: config.DB_SSL_REJECT_UNAUTHORIZED === true,
       },
-  max: config.NODE_ENV === 'production' ? 3 : 20,
+  max: process.env.DB_POOL_MAX
+    ? parseInt(process.env.DB_POOL_MAX, 10)
+    : config.NODE_ENV === 'production'
+    ? 10
+    : 20,
   idleTimeoutMillis: 10000,
   connectionTimeoutMillis: 5000,
 });

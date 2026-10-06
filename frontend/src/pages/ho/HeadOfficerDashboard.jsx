@@ -69,11 +69,13 @@ export default function HeadOfficerDashboard() {
   const { data: routesData } = useQuery({
     queryKey: ['masters', 'routes'],
     queryFn: () => masterApi.getRoutes(),
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: vehiclesData } = useQuery({
     queryKey: ['masters', 'vehicles'],
     queryFn: () => masterApi.getVehicles(),
+    staleTime: 5 * 60 * 1000,
   });
 
   const routes = routesData?.items || [];
@@ -83,18 +85,21 @@ export default function HeadOfficerDashboard() {
   const { data: summaryData, isLoading: isSummaryLoading } = useQuery({
     queryKey: ['hoDashboardSummary', queryFilters],
     queryFn: () => dashboardApi.getSummary(queryFilters),
+    staleTime: 30 * 1000,
   });
 
   // Breakdowns
   const { data: breakdownData } = useQuery({
     queryKey: ['hoDashboardBreakdowns', queryFilters],
     queryFn: () => dashboardApi.getBreakdowns(queryFilters),
+    staleTime: 30 * 1000,
   });
 
   // Recent Updates & Flagged Variances
   const { data: recentData } = useQuery({
     queryKey: ['hoDashboardRecent', queryFilters],
     queryFn: () => dashboardApi.getRecent(queryFilters),
+    staleTime: 30 * 1000,
   });
 
   const kpis = summaryData?.kpis || {
