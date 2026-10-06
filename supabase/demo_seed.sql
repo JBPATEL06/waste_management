@@ -1,0 +1,21 @@
+-- ============================================================================
+-- Phase 4 Demo Seed Data: supabase/demo_seed.sql
+-- ============================================================================
+-- IMPORTANT NOTE:
+-- Per PRD business rules, batches must be created with proper audit logs,
+-- sequenced WB-YYYY-NNNN identifiers, dynamic stage locking, and versioned corrections.
+-- The canonical, non-bypassing method to seed this demo state is via the API script:
+--   node server/seed-demo-data.js
+--
+-- The script executes authenticated REST calls against the server API and populates:
+-- 1. Batch 1 (WB-2026-0012) -> Stage: CREATED (4 stage assignees, 0 entries)
+-- 2. Batch 2 (WB-2026-0013) -> Stage: COLLECTED (Collection entry logged)
+-- 3. Batch 3 (WB-2026-0014) -> Stage: IN_TRANSIT (Transportation departure logged, arrival pending)
+-- 4. Batch 4 (WB-2026-0015) -> Stage: COMPLETED
+--    - Collection entry logged
+--    - Transportation departure entry logged (v1)
+--    - Transportation correction entry logged (v2 SUPERSEDED v1, arrival timestamp added)
+--    - RTS entry logged with -16.00% variance (Flagged, is_flagged = true)
+--    - Processing entry logged with final_status = 'COMPLETED'
+-- ============================================================================
+

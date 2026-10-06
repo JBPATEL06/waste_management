@@ -9,6 +9,7 @@ const StageLayout = lazy(() => import('./components/layout/StageLayout'));
 const HeadOfficerLayout = lazy(() => import('./components/layout/HeadOfficerLayout'));
 
 // Public Pages
+const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
 const ChangePassword = lazy(() => import('./pages/ChangePassword'));
 const PublicSearch = lazy(() => import('./pages/PublicSearch'));
@@ -68,7 +69,8 @@ function RootRedirect() {
     if (user.role === 'PROCESSING') return <Navigate to="/processing/dashboard" replace />;
     return <Navigate to="/profile" replace />;
   }
-  return <Navigate to="/login" replace />;
+
+  return <Home />;
 }
 
 export default function App() {

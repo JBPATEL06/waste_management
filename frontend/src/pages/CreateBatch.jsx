@@ -107,8 +107,9 @@ export default function CreateBatch() {
     createBatchMutation.mutate(payload);
   };
 
+  const publicBase = (typeof window !== 'undefined' && (import.meta.env.VITE_PUBLIC_URL || window.location.origin)) || '';
   const trackingUrl = createdBatch
-    ? `${window.location.origin}/track/${createdBatch.batch_code}`
+    ? `${publicBase}/track/${createdBatch.batch_code}`
     : '';
 
   const downloadQrPng = () => {

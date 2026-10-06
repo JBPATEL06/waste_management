@@ -157,7 +157,8 @@ export default function HeadOfficerBatchDetail() {
     );
   }
 
-  const publicTrackUrl = typeof window !== 'undefined' ? `${window.location.origin}/track/${batch.batch_code}` : '';
+  const publicBase = (typeof window !== 'undefined' && (import.meta.env.VITE_PUBLIC_URL || window.location.origin)) || '';
+  const publicTrackUrl = batch ? `${publicBase}/track/${batch.batch_code}` : '';
 
   return (
     <div className="flex flex-col w-full pb-space-2xl space-y-6">

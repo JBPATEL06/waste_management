@@ -24,20 +24,30 @@ function assert(condition, message) {
 }
 
 async function loginActor(email, password, fallbackPassword = null) {
-  let res = await fetch(`${BASE_URL}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-test-suite': 'true' },
-    body: JSON.stringify({ email, password }),
-  });
-  if (res.status !== 200 && fallbackPassword) {
-    res = await fetch(`${BASE_URL}/auth/login`, {
+  const envPwd = process.env.TEST_PASSWORD || process.env.DEMO_USER_PASSWORD;
+  const candidates = [
+    envPwd,
+    password,
+    fallbackPassword,
+  ].filter(Boolean);
+
+  let data = null;
+  let activePassword = password;
+  for (const pwd of candidates) {
+    const res = await fetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-test-suite': 'true' },
-      body: JSON.stringify({ email, password: fallbackPassword }),
+      body: JSON.stringify({ email, password: pwd }),
     });
+    if (res.status === 200) {
+      data = await res.json();
+      activePassword = pwd;
+      break;
+    }
   }
-  const data = await res.json();
+  if (!data) return null;
   if (data.user?.must_change_password) {
+    const permPass = process.env.TEST_PERM_PASSWORD || 'TestPermPass123!@#';
     const changeRes = await fetch(`${BASE_URL}/auth/change-password`, {
       method: 'POST',
       headers: {
@@ -45,8 +55,8 @@ async function loginActor(email, password, fallbackPassword = null) {
         Authorization: `Bearer ${data.accessToken}`,
       },
       body: JSON.stringify({
-        currentPassword: password,
-        newPassword: 'PermAuth2026#Valid',
+        currentPassword: activePassword,
+        newPassword: permPass,
       }),
     });
     return (await changeRes.json()).accessToken;
@@ -61,9 +71,11 @@ async function runPhase2CTests() {
 
   // 1. Authenticate actors
   console.log('--- Step 1: Authenticating Actors ---');
-  const adminToken = await loginActor('admin@wastejourney.local', 'AdminTemp2026!', 'PermAuth2026#Valid');
-  const hoToken = await loginActor('headofficer@wastejourney.local', 'HeadOffTemp2026!', 'PermAuth2026#Valid');
-  const collToken = await loginActor('collection@wastejourney.local', 'CollectTemp2026!', 'PermAuth2026#Valid');
+  const tempPwd = process.env.TEST_TEMP_PASSWORD || 'TestTempPass123!';
+  const permPwd = process.env.TEST_PERM_PASSWORD || 'TestPermPass123!@#';
+  const adminToken = await loginActor('admin@wastejourney.local', tempPwd, permPwd);
+  const hoToken = await loginActor('headofficer@wastejourney.local', tempPwd, permPwd);
+  const collToken = await loginActor('collection@wastejourney.local', tempPwd, permPwd);
   assert(Boolean(adminToken && hoToken && collToken), 'Actors authenticated successfully');
 
   // Seed 2 sample batches via Admin for data consistency testing

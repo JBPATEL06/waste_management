@@ -1,7 +1,20 @@
 # Environment & Secrets
 .env
+.env.*
 .env*.local
+*.env
+*.env.*
+server/.env
+server/.env.*
+frontend/.env
+frontend/.env.*
 docs/seed_credentials.md
+docs/prod_credentials.local.md
+docs/demo_creditional.md
+demo_creditional.md
+*.local.md
+*.pem
+.vercel
 
 # Dependencies
 node_modules/

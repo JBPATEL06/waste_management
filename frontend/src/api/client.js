@@ -2,7 +2,18 @@
  * Centralized API Client with In-Memory Access Token Management & Automatic 401 Token Refresh
  */
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const BASE_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+
+function buildUrl(endpoint) {
+  if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) {
+    return endpoint;
+  }
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  if (BASE_URL && cleanEndpoint.startsWith(BASE_URL)) {
+    return cleanEndpoint;
+  }
+  return `${BASE_URL}${cleanEndpoint}`;
+}
 
 let inMemoryAccessToken = null;
 let isRefreshing = false;
@@ -45,7 +56,7 @@ export class ApiError extends Error {
  * Core HTTP fetch wrapper with interceptors
  */
 export async function apiFetch(endpoint, options = {}, isRetry = false) {
-  const url = endpoint.startsWith('http') ? endpoint : `${BASE_URL}${endpoint}`;
+  const url = buildUrl(endpoint);
   const headers = new Headers(options.headers || {});
 
   if (!headers.has('Content-Type') && !(options.body instanceof FormData)) {
@@ -86,7 +97,7 @@ export async function apiFetch(endpoint, options = {}, isRetry = false) {
     isRefreshing = true;
 
     try {
-      const refreshRes = await fetch(`${BASE_URL}/auth/refresh`, {
+      const refreshRes = await fetch(buildUrl('/auth/refresh'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

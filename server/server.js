@@ -38,5 +38,9 @@ async function startServer() {
   }
 }
 
-startServer();
+// Only listen on port in non-Vercel environments (local / traditional server)
+if (!process.env.VERCEL) {
+  startServer();
+}
 
+export default app;

@@ -57,12 +57,13 @@ INSERT INTO drivers (name, phone, designation, is_active) VALUES
   ('Dinesh Yadav', '+91 98765 43212', 'Supervisor', true);
 
 -- 9. Users (6 users, 1 per role, bcrypt cost 12 hashed temp passwords, must_change_password = true)
+-- NOTE: For local development only. In production, use scripts/seed-production-users.js
 INSERT INTO users (name, email, password_hash, role, is_active, must_change_password) VALUES
-  ('Anil Mehta', 'admin@wastejourney.local', crypt('AdminTemp2026!', gen_salt('bf', 12)), 'ADMIN', true, true),
-  ('Rajesh Sharma', 'collection@wastejourney.local', crypt('CollectTemp2026!', gen_salt('bf', 12)), 'COLLECTION', true, true),
-  ('Suresh Patil', 'transport@wastejourney.local', crypt('TransTemp2026!', gen_salt('bf', 12)), 'TRANSPORTATION', true, true),
-  ('Vikram Desai', 'rts@wastejourney.local', crypt('RtsTemp2026!', gen_salt('bf', 12)), 'RTS', true, true),
-  ('Anita Roy', 'processing@wastejourney.local', crypt('ProcessTemp2026!', gen_salt('bf', 12)), 'PROCESSING', true, true),
-  ('Dr. K. S. Verma', 'headofficer@wastejourney.local', crypt('HeadOffTemp2026!', gen_salt('bf', 12)), 'HEAD_OFFICER', true, true)
+  ('Anil Mehta', 'admin@wastejourney.local', crypt(coalesce(nullif(current_setting('app.seed_password', true), ''), 'ChangeMe123!@#'), gen_salt('bf', 12)), 'ADMIN', true, true),
+  ('Rajesh Sharma', 'collection@wastejourney.local', crypt(coalesce(nullif(current_setting('app.seed_password', true), ''), 'ChangeMe123!@#'), gen_salt('bf', 12)), 'COLLECTION', true, true),
+  ('Suresh Patil', 'transport@wastejourney.local', crypt(coalesce(nullif(current_setting('app.seed_password', true), ''), 'ChangeMe123!@#'), gen_salt('bf', 12)), 'TRANSPORTATION', true, true),
+  ('Vikram Desai', 'rts@wastejourney.local', crypt(coalesce(nullif(current_setting('app.seed_password', true), ''), 'ChangeMe123!@#'), gen_salt('bf', 12)), 'RTS', true, true),
+  ('Anita Roy', 'processing@wastejourney.local', crypt(coalesce(nullif(current_setting('app.seed_password', true), ''), 'ChangeMe123!@#'), gen_salt('bf', 12)), 'PROCESSING', true, true),
+  ('Dr. K. S. Verma', 'headofficer@wastejourney.local', crypt(coalesce(nullif(current_setting('app.seed_password', true), ''), 'ChangeMe123!@#'), gen_salt('bf', 12)), 'HEAD_OFFICER', true, true)
 ON CONFLICT (email) DO NOTHING;
 

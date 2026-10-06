@@ -13,13 +13,15 @@
 
 const BASE_URL = 'http://localhost:5000';
 
+const DEFAULT_TEST_PWD = process.env.TEST_PASSWORD || 'TestTempPass123!';
+
 const SEED_USERS = [
-  { role: 'ADMIN', email: 'admin@wastejourney.local', password: 'AdminTemp2026!' },
-  { role: 'COLLECTION', email: 'collection@wastejourney.local', password: 'CollectTemp2026!' },
-  { role: 'TRANSPORTATION', email: 'transport@wastejourney.local', password: 'TransTemp2026!' },
-  { role: 'RTS', email: 'rts@wastejourney.local', password: 'RtsTemp2026!' },
-  { role: 'PROCESSING', email: 'processing@wastejourney.local', password: 'ProcessTemp2026!' },
-  { role: 'HEAD_OFFICER', email: 'headofficer@wastejourney.local', password: 'HeadOffTemp2026!' },
+  { role: 'ADMIN', email: 'admin@wastejourney.local', password: DEFAULT_TEST_PWD },
+  { role: 'COLLECTION', email: 'collection@wastejourney.local', password: DEFAULT_TEST_PWD },
+  { role: 'TRANSPORTATION', email: 'transport@wastejourney.local', password: DEFAULT_TEST_PWD },
+  { role: 'RTS', email: 'rts@wastejourney.local', password: DEFAULT_TEST_PWD },
+  { role: 'PROCESSING', email: 'processing@wastejourney.local', password: DEFAULT_TEST_PWD },
+  { role: 'HEAD_OFFICER', email: 'headofficer@wastejourney.local', password: DEFAULT_TEST_PWD },
 ];
 
 function extractCookie(res) {
@@ -87,7 +89,7 @@ async function runTests() {
   assert(blockedBody.error?.code === 'PASSWORD_CHANGE_REQUIRED', 'Error code is PASSWORD_CHANGE_REQUIRED');
 
   // Perform password change
-  const newAdminPassword = 'AdminPerm2026#New';
+  const newAdminPassword = process.env.NEW_ADMIN_PASSWORD || 'NewTestPass123!@#';
   const changeRes = await fetch(`${BASE_URL}/auth/change-password`, {
     method: 'POST',
     headers: {

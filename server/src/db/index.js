@@ -1,10 +1,18 @@
 import pg from 'pg';
 import { config } from '../config/env.js';
 
+const isLocalhost =
+  config.DATABASE_URL.includes('localhost') || config.DATABASE_URL.includes('127.0.0.1');
+
 export const pool = new pg.Pool({
   connectionString: config.DATABASE_URL,
-  max: 20,
-  idleTimeoutMillis: 30000,
+  ssl: isLocalhost
+    ? false
+    : {
+        rejectUnauthorized: config.DB_SSL_REJECT_UNAUTHORIZED === true,
+      },
+  max: config.NODE_ENV === 'production' ? 3 : 20,
+  idleTimeoutMillis: 10000,
   connectionTimeoutMillis: 5000,
 });
 

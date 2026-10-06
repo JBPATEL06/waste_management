@@ -33,25 +33,29 @@ function assert(condition, message) {
 }
 
 async function loginAndInitUser(email, tempPassword, newPassword) {
-  const loginRes = await fetch(`${BASE_URL}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-test-suite': 'true' },
-    body: JSON.stringify({ email, password: tempPassword }),
-  });
-  if (loginRes.status !== 200) {
-    // Maybe password already changed in previous run
-    const relogin = await fetch(`${BASE_URL}/auth/login`, {
+  const envPwd = process.env.TEST_PASSWORD || process.env.DEMO_USER_PASSWORD;
+  const candidatePasswords = [envPwd, tempPassword, newPassword].filter(Boolean);
+
+  let loginData = null;
+  let activePassword = tempPassword;
+
+  for (const pwd of candidatePasswords) {
+    const res = await fetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-test-suite': 'true' },
-      body: JSON.stringify({ email, password: newPassword }),
+      body: JSON.stringify({ email, password: pwd }),
     });
-    if (relogin.status === 200) {
-      return (await relogin.json()).accessToken;
+    if (res.status === 200) {
+      loginData = await res.json();
+      activePassword = pwd;
+      break;
     }
-    throw new Error(`Cannot login for ${email}: ${loginRes.status}`);
   }
 
-  const loginData = await loginRes.json();
+  if (!loginData) {
+    throw new Error(`Cannot login for ${email} with any candidate password`);
+  }
+
   if (loginData.user.must_change_password) {
     const changeRes = await fetch(`${BASE_URL}/auth/change-password`, {
       method: 'POST',
@@ -60,7 +64,7 @@ async function loginAndInitUser(email, tempPassword, newPassword) {
         Authorization: `Bearer ${loginData.accessToken}`,
       },
       body: JSON.stringify({
-        currentPassword: tempPassword,
+        currentPassword: activePassword,
         newPassword,
       }),
     });
@@ -79,12 +83,14 @@ async function runCoreTests() {
 
   // 1. Authenticate all roles
   console.log('--- Step 1: Initializing Authenticated Sessions ---');
-  const adminToken = await loginAndInitUser('admin@wastejourney.local', 'AdminTemp2026!', 'Admin2026#Perm1');
-  const collToken = await loginAndInitUser('collection@wastejourney.local', 'CollectTemp2026!', 'Collect2026#Perm1');
-  const transToken = await loginAndInitUser('transport@wastejourney.local', 'TransTemp2026!', 'Trans2026#Perm1');
-  const rtsToken = await loginAndInitUser('rts@wastejourney.local', 'RtsTemp2026!', 'Rts2026#Perm1');
-  const procToken = await loginAndInitUser('processing@wastejourney.local', 'ProcessTemp2026!', 'Process2026#Perm1');
-  const hoToken = await loginAndInitUser('headofficer@wastejourney.local', 'HeadOffTemp2026!', 'HeadOff2026#Perm1');
+  const tempPwd = process.env.TEST_TEMP_PASSWORD || 'TestTempPass123!';
+  const permPwd = process.env.TEST_PERM_PASSWORD || 'TestPermPass123!@#';
+  const adminToken = await loginAndInitUser('admin@wastejourney.local', tempPwd, permPwd);
+  const collToken = await loginAndInitUser('collection@wastejourney.local', tempPwd, permPwd);
+  const transToken = await loginAndInitUser('transport@wastejourney.local', tempPwd, permPwd);
+  const rtsToken = await loginAndInitUser('rts@wastejourney.local', tempPwd, permPwd);
+  const procToken = await loginAndInitUser('processing@wastejourney.local', tempPwd, permPwd);
+  const hoToken = await loginAndInitUser('headofficer@wastejourney.local', tempPwd, permPwd);
 
   assert(Boolean(adminToken && collToken && transToken && rtsToken && procToken && hoToken), 'All 6 actor tokens ready');
 

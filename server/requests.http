@@ -4,7 +4,7 @@
 
 @baseUrl = http://localhost:5000
 @adminEmail = admin@wastejourney.local
-@adminPassword = AdminTemp2026!
+@adminPassword = {{ADMIN_PASSWORD}}
 
 ### 1. Health Check
 GET {{baseUrl}}/health
@@ -28,7 +28,7 @@ Authorization: Bearer {{adminAccessToken}}
 
 {
   "currentPassword": "{{adminPassword}}",
-  "newPassword": "AdminPerm2026#New"
+  "newPassword": "{{NEW_ADMIN_PASSWORD}}"
 }
 
 ### 4. Get Current Profile (/me)

@@ -33,9 +33,8 @@ export function setRefreshTokenCookie(res, rawToken) {
     httpOnly: true,
     secure: config.COOKIE_SECURE,
     sameSite: config.COOKIE_SAMESITE.toLowerCase(),
-    path: '/',
+    path: config.COOKIE_PATH || '/api/auth',
     maxAge: maxAgeMs,
-    domain: config.COOKIE_DOMAIN && config.COOKIE_DOMAIN !== 'localhost' ? config.COOKIE_DOMAIN : undefined,
   });
 }
 
@@ -44,8 +43,7 @@ export function clearRefreshTokenCookie(res) {
     httpOnly: true,
     secure: config.COOKIE_SECURE,
     sameSite: config.COOKIE_SAMESITE.toLowerCase(),
-    path: '/',
-    domain: config.COOKIE_DOMAIN && config.COOKIE_DOMAIN !== 'localhost' ? config.COOKIE_DOMAIN : undefined,
+    path: config.COOKIE_PATH || '/api/auth',
   });
 }
 

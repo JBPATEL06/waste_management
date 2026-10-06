@@ -201,7 +201,8 @@ export default function BatchDetail() {
     printWindow.document.close();
   };
 
-  const trackingUrl = typeof window !== 'undefined' && batch ? `${window.location.origin}/track/${batch.batch_code}` : '';
+  const publicBase = (typeof window !== 'undefined' && (import.meta.env.VITE_PUBLIC_URL || window.location.origin)) || '';
+  const trackingUrl = batch ? `${publicBase}/track/${batch.batch_code}` : '';
 
   if (isLoading) {
     return (

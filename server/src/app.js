@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { config } from './config/env.js';
+import { pool } from './db/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import auditLogRoutes from './routes/auditLogRoutes.js';
@@ -20,13 +21,29 @@ import { AppError, ErrorCodes } from './utils/errors.js';
 
 const app = express();
 
+// Trust proxy for secure cookies and accurate client IP behind Vercel edge/load balancer
+app.set('trust proxy', 1);
+
 // Security HTTP headers
 app.use(helmet());
 
 // Strict CORS configuration
+const allowedOrigins = [
+  config.FRONTEND_URL,
+  ...(config.CORS_ORIGIN ? config.CORS_ORIGIN.split(',') : []),
+]
+  .filter(Boolean)
+  .map((s) => s.trim().replace(/\/$/, ''));
+
 app.use(
   cors({
-    origin: config.CORS_ORIGIN,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server) or matching origin
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, false);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -40,10 +57,17 @@ app.use(cookieParser());
 // General rate limiter
 app.use('/api', apiLimiter);
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+// Health check endpoint (verifies DB connectivity via SELECT 1, leaks no sensitive info)
+const healthHandler = async (req, res) => {
+  try {
+    await pool.query('SELECT 1;');
+    return res.status(200).json({ ok: true });
+  } catch (err) {
+    return res.status(503).json({ ok: false });
+  }
+};
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
 
 // Route Mounts (Support both /api/... and direct mounts for seamless flexibility)
 app.use('/auth', authRoutes);

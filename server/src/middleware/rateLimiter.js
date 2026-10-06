@@ -1,11 +1,18 @@
 import rateLimit from 'express-rate-limit';
+import { config } from '../config/env.js';
 
 export const loginLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 10, // max 10 requests per minute
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => req.headers['x-test-suite'] === 'true' || process.env.NODE_ENV === 'test',
+  skip: (req) => {
+    if (config.NODE_ENV === 'test') return true;
+    if (config.NODE_ENV !== 'production' && config.ALLOW_TEST_BYPASS === true) {
+      return req.headers['x-test-suite'] === 'true';
+    }
+    return false;
+  },
   handler: (req, res) => {
     res.status(429).json({
       error: {
