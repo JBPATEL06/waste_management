@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import BrandLogo from '../components/common/BrandLogo';
 
 export default function Home() {
   const [batchCode, setBatchCode] = useState('');
@@ -27,9 +28,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
-              <span className="material-symbols-outlined text-[24px]">recycling</span>
-            </div>
+            <BrandLogo />
             <div>
               <span className="font-heading font-bold text-text text-lg tracking-tight block leading-tight">
                 WasteFlow
@@ -243,4 +242,3 @@ export default function Home() {
     </div>
   );
 }
-

@@ -46,11 +46,20 @@ function buildFilterSql(filters) {
   return { whereSql, params };
 }
 
+function buildLimitSql(filters, params) {
+  if (filters.limit === undefined) return '';
+  const parsedLimit = Number(filters.limit);
+  const limit = Number.isFinite(parsedLimit) ? Math.min(100, Math.max(1, Math.trunc(parsedLimit))) : 10;
+  params.push(limit);
+  return `LIMIT $${params.length}`;
+}
+
 export async function fetchDatasetRows(dataset, filters = {}) {
   const normDataset = dataset.toLowerCase().replace(/_/g, '-');
   const { whereSql, params } = buildFilterSql(filters);
 
   if (normDataset === 'batches') {
+    const limitSql = buildLimitSql(filters, params);
     const sql = `
       SELECT 
         b.batch_code, b.batch_date, b.waste_type, b.quantity, b.source_area,
@@ -75,6 +84,7 @@ export async function fetchDatasetRows(dataset, filters = {}) {
       LEFT JOIN users u_p ON u_p.id = ba_p.user_id
       ${whereSql}
       ORDER BY b.created_at DESC
+      ${limitSql}
     `;
     const res = await query(sql, params);
     return {
@@ -101,6 +111,7 @@ export async function fetchDatasetRows(dataset, filters = {}) {
   }
 
   if (normDataset === 'stage-records') {
+    const limitSql = buildLimitSql(filters, params);
     const sql = `
       SELECT 
         b.batch_code, se.stage, se.version_no, se.status, se.event_time, se.display_location,
@@ -120,6 +131,7 @@ export async function fetchDatasetRows(dataset, filters = {}) {
       LEFT JOIN processing_details pd ON pd.entry_id = se.id
       ${whereSql ? whereSql + " AND se.status = 'ACTIVE'" : "WHERE se.status = 'ACTIVE'"}
       ORDER BY b.batch_code ASC, se.created_at ASC
+      ${limitSql}
     `;
     const res = await query(sql, params);
     return {
@@ -144,6 +156,7 @@ export async function fetchDatasetRows(dataset, filters = {}) {
   }
 
   if (normDataset === 'full-history') {
+    const limitSql = buildLimitSql(filters, params);
     const sql = `
       SELECT 
         b.batch_code, se.stage, se.version_no, se.status, se.event_time, se.display_location,
@@ -156,6 +169,7 @@ export async function fetchDatasetRows(dataset, filters = {}) {
       LEFT JOIN users u_del ON u_del.id = se.deleted_by
       ${whereSql}
       ORDER BY b.batch_code ASC, se.stage ASC, se.version_no DESC
+      ${limitSql}
     `;
     const res = await query(sql, params);
     return {
@@ -179,6 +193,7 @@ export async function fetchDatasetRows(dataset, filters = {}) {
   }
 
   if (normDataset === 'current-status') {
+    const limitSql = buildLimitSql(filters, params);
     const sql = `
       SELECT 
         b.batch_code, b.batch_date, b.waste_type, b.quantity, b.source_area,
@@ -190,6 +205,7 @@ export async function fetchDatasetRows(dataset, filters = {}) {
       LEFT JOIN vehicles v ON v.id = b.vehicle_id
       ${whereSql}
       ORDER BY b.updated_at DESC
+      ${limitSql}
     `;
     const res = await query(sql, params);
     return {
@@ -239,6 +255,7 @@ export async function fetchDatasetRows(dataset, filters = {}) {
       whereClauses.push(`al.performed_at <= $${params.length}`);
     }
 
+    const limitSql = buildLimitSql(filters, params);
     const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
     const sql = `
       SELECT 
@@ -248,6 +265,7 @@ export async function fetchDatasetRows(dataset, filters = {}) {
       LEFT JOIN batches b ON b.id = al.batch_id
       ${whereSql}
       ORDER BY al.performed_at DESC
+      ${limitSql}
     `;
     const res = await query(sql, params);
     return {
@@ -325,4 +343,3 @@ export async function exportXlsx(dataset, filters, res) {
   await workbook.xlsx.write(res);
   res.end();
 }
-

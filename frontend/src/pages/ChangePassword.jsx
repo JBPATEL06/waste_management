@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../components/Toast';
+import { LoadingButton } from '../components/LoadingButton';
+import BrandLogo from '../components/common/BrandLogo';
 
 export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -9,11 +12,11 @@ export default function ChangePassword() {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [feedback, setFeedback] = useState({ text: '', type: '' });
   const [submitting, setSubmitting] = useState(false);
 
   const { changePassword, user } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const getRoleRedirect = () => {
     if (!user) return '/login';
@@ -28,47 +31,38 @@ export default function ChangePassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFeedback({ text: '', type: '' });
 
     if (newPassword.length < 8 || !/[A-Za-z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
-      setFeedback({
-        text: 'New password must be at least 8 characters and include at least one letter and one number.',
-        type: 'error',
-      });
+      toast.error('New password must be at least 8 characters and include at least one letter and one number.');
       return;
     }
 
     if (newPassword === currentPassword) {
-      setFeedback({
-        text: 'New password cannot match your current password.',
-        type: 'warning',
-      });
+      toast.warning('New password cannot match your current password.');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setFeedback({
-        text: 'New password and confirmation do not match.',
-        type: 'error',
-      });
+      toast.error('New password and confirmation do not match.');
       return;
     }
 
     setSubmitting(true);
     try {
       await changePassword(currentPassword, newPassword);
-      setFeedback({
-        text: 'Password updated successfully! Redirecting...',
-        type: 'success',
-      });
+      toast.success('Password updated successfully! Redirecting...');
       setTimeout(() => {
         navigate(getRoleRedirect(), { replace: true });
       }, 1000);
     } catch (err) {
-      setFeedback({
-        text: err.message || 'Failed to update password.',
-        type: 'error',
-      });
+      let errMsg = err.message || 'Failed to update password.';
+      if ((err.status === 422 || err.code === 'VALIDATION_FAILED') && err.fieldErrors && Object.keys(err.fieldErrors).length > 0) {
+        errMsg = Object.entries(err.fieldErrors)
+          .slice(0, 3)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n');
+      }
+      toast.error(errMsg);
       setSubmitting(false);
     }
   };
@@ -80,9 +74,7 @@ export default function ChangePassword() {
           {/* Logo */}
           <div className="flex flex-col items-center mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white shrink-0">
-                <span className="material-symbols-outlined text-[20px]">recycling</span>
-              </div>
+              <BrandLogo />
               <span className="font-section-title text-section-title text-text tracking-tight font-semibold">
                 Waste Journey Tracker
               </span>
@@ -192,33 +184,15 @@ export default function ChangePassword() {
                 </div>
               </div>
 
-              {/* Feedback Alert */}
-              {feedback.text && (
-                <div
-                  className={`mt-1 p-2.5 rounded-lg text-caption font-caption flex items-start gap-2 border ${
-                    feedback.type === 'error'
-                      ? 'bg-error-soft text-error border-error/20'
-                      : feedback.type === 'warning'
-                      ? 'bg-warning-soft text-warning border-warning/20'
-                      : 'bg-primary-soft text-primary border-primary/20'
-                  }`}
-                  role="alert"
-                >
-                  <span className="material-symbols-outlined text-[16px] shrink-0 mt-0.5">
-                    {feedback.type === 'error' ? 'error' : feedback.type === 'warning' ? 'warning' : 'check_circle'}
-                  </span>
-                  <span>{feedback.text}</span>
-                </div>
-              )}
-
               <div className="pt-2 flex flex-col gap-2">
-                <button
+                <LoadingButton
                   type="submit"
-                  disabled={submitting}
+                  loading={submitting}
+                  loadingText="Updating Password..."
                   className="w-full h-10 bg-primary hover:bg-primary-hover text-on-primary font-body-medium text-body-medium rounded-lg flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 cursor-pointer disabled:opacity-75"
                 >
-                  {submitting ? 'Updating Password...' : 'Update Password'}
-                </button>
+                  Update Password
+                </LoadingButton>
                 <Link
                   to={getRoleRedirect()}
                   className="text-center text-xs text-text-muted hover:text-text py-1"
@@ -233,4 +207,3 @@ export default function ChangePassword() {
     </div>
   );
 }
-  

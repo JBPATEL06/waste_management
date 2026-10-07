@@ -389,7 +389,11 @@ export async function getQueue(user) {
        td.arrival_time AS own_arrival_time,
        -- Preceding stage entry
        se_prev.id AS prev_entry_id,
-       td_prev.arrival_time AS prev_arrival_time
+       td_prev.arrival_time AS prev_arrival_time,
+       se_collection.id AS collection_entry_id,
+       se_transportation.id AS transportation_entry_id,
+       td_transportation.arrival_time AS transportation_arrival_time,
+       se_rts.id AS rts_entry_id
      FROM batch_assignments ba
      JOIN batches b ON b.id = ba.batch_id
      LEFT JOIN routes r ON r.id = b.route_id
@@ -403,6 +407,13 @@ export async function getQueue(user) {
        ($1 = 'PROCESSING' AND se_prev.stage = 'RTS')
      )
      LEFT JOIN transportation_details td_prev ON td_prev.entry_id = se_prev.id
+     LEFT JOIN stage_entries se_collection
+       ON se_collection.batch_id = b.id AND se_collection.stage = 'COLLECTION' AND se_collection.status = 'ACTIVE'
+     LEFT JOIN stage_entries se_transportation
+       ON se_transportation.batch_id = b.id AND se_transportation.stage = 'TRANSPORTATION' AND se_transportation.status = 'ACTIVE'
+     LEFT JOIN transportation_details td_transportation ON td_transportation.entry_id = se_transportation.id
+     LEFT JOIN stage_entries se_rts
+       ON se_rts.batch_id = b.id AND se_rts.stage = 'RTS' AND se_rts.status = 'ACTIVE'
      WHERE ba.user_id = $2 AND ba.stage = $1 AND ba.is_active = true
      ORDER BY b.batch_date DESC, b.created_at DESC`,
     [stage, user.id]
@@ -458,7 +469,13 @@ export async function getQueue(user) {
         ready.push(item);
       }
     } else if (stage === 'PROCESSING') {
-      if (!row.prev_entry_id) {
+      if (!row.collection_entry_id) {
+        locked.push({ ...item, lock_reason: 'Waiting for Collection stage completion' });
+      } else if (!row.transportation_entry_id) {
+        locked.push({ ...item, lock_reason: 'Waiting for Transportation stage' });
+      } else if (!row.transportation_arrival_time) {
+        locked.push({ ...item, lock_reason: 'Waiting for Transportation vehicle arrival time' });
+      } else if (!row.rts_entry_id) {
         locked.push({ ...item, lock_reason: 'Waiting for RTS stage handover' });
       } else {
         ready.push(item);
@@ -478,4 +495,3 @@ export async function getQueue(user) {
     submitted,
   };
 }
-

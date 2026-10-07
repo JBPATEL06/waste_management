@@ -7,6 +7,8 @@ import { masterApi } from '../api/masterApi';
 import { usersApi } from '../api/usersApi';
 import { getPublicBaseUrl } from '../utils/url';
 import { printBatchManifest } from '../utils/printManifest';
+import { useToast } from '../components/Toast';
+import { LoadingButton } from '../components/LoadingButton';
 
 export default function CreateBatch() {
   const navigate = useNavigate();
@@ -36,18 +38,18 @@ export default function CreateBatch() {
   const [createdBatch, setCreatedBatch] = useState(null);
 
   // Query masters and users
-  const { data: routesData } = useQuery({
-    queryKey: ['activeRoutes'],
+  const { data: routesData, isLoading: routesLoading } = useQuery({
+    queryKey: ['masters', 'routes', { is_active: true }],
     queryFn: () => masterApi.getItems('routes', { is_active: true }),
   });
 
-  const { data: vehiclesData } = useQuery({
-    queryKey: ['activeVehicles'],
+  const { data: vehiclesData, isLoading: vehiclesLoading } = useQuery({
+    queryKey: ['masters', 'vehicles', { is_active: true }],
     queryFn: () => masterApi.getItems('vehicles', { is_active: true }),
   });
 
-  const { data: usersData } = useQuery({
-    queryKey: ['activeUsers'],
+  const { data: usersData, isLoading: usersLoading } = useQuery({
+    queryKey: ['masters', 'users', { is_active: true }],
     queryFn: () => usersApi.getUsers({ is_active: true }),
   });
 
@@ -70,25 +72,32 @@ export default function CreateBatch() {
     if (!prcUser && processUsers.length > 0) setPrcUser(processUsers[0].id);
   }, [routes, vehicles, collectionUsers, transportUsers, rtsUsers, processUsers]);
 
+  const toast = useToast();
+
   const createBatchMutation = useMutation({
     mutationFn: (data) => batchesApi.createBatch(data),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['batchesList'] });
       setCreatedBatch(res.batch);
-      setServerError('');
       setFieldErrors({});
+      toast.success('Batch created successfully.');
     },
     onError: (err) => {
-      setServerError(err.message || 'Failed to create batch');
-      if (err.details?.fieldErrors) {
-        setFieldErrors(err.details.fieldErrors);
+      const fieldErrs = err.fieldErrors || err.details?.fieldErrors || {};
+      setFieldErrors(fieldErrs);
+      let errMsg = err.message || 'Failed to create batch';
+      if ((err.status === 422 || err.code === 'VALIDATION_FAILED') && Object.keys(fieldErrs).length > 0) {
+        errMsg = Object.entries(fieldErrs)
+          .slice(0, 3)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n');
       }
+      toast.error(errMsg);
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setServerError('');
     setFieldErrors({});
 
     const payload = {
@@ -162,13 +171,6 @@ export default function CreateBatch() {
           </span>
         </div>
       </div>
-
-      {serverError && (
-        <div className="p-3 bg-error-soft text-error text-caption rounded-lg border border-error/20 flex items-center gap-2">
-          <span className="material-symbols-outlined text-[18px]">error</span>
-          <span>{serverError}</span>
-        </div>
-      )}
 
       {/* Form or Success State */}
       {!createdBatch ? (
@@ -322,6 +324,7 @@ export default function CreateBatch() {
                   onChange={(e) => setRouteId(e.target.value)}
                   className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary"
                 >
+                  {routesLoading && <option value="" disabled>Loading...</option>}
                   {routes.map((r) => (
                     <option key={r.id} value={r.id}>
                       {r.code}: {r.name}
@@ -341,6 +344,7 @@ export default function CreateBatch() {
                   onChange={(e) => setVehicleId(e.target.value)}
                   className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary font-mono text-sm"
                 >
+                  {vehiclesLoading && <option value="" disabled>Loading...</option>}
                   {vehicles.map((v) => (
                     <option key={v.id} value={v.id}>
                       {v.vehicle_number} — {v.vehicle_type} ({v.capacity_kg} kg)
@@ -389,6 +393,7 @@ export default function CreateBatch() {
                   onChange={(e) => setColUser(e.target.value)}
                   className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary"
                 >
+                  {usersLoading && <option value="" disabled>Loading...</option>}
                   {collectionUsers.map((u) => (
                     <option key={u.id} value={u.id}>
                       {u.name}
@@ -415,6 +420,7 @@ export default function CreateBatch() {
                   onChange={(e) => setTrnUser(e.target.value)}
                   className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary"
                 >
+                  {usersLoading && <option value="" disabled>Loading...</option>}
                   {transportUsers.map((u) => (
                     <option key={u.id} value={u.id}>
                       {u.name}
@@ -441,6 +447,7 @@ export default function CreateBatch() {
                   onChange={(e) => setRtsUser(e.target.value)}
                   className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary"
                 >
+                  {usersLoading && <option value="" disabled>Loading...</option>}
                   {rtsUsers.map((u) => (
                     <option key={u.id} value={u.id}>
                       {u.name}
@@ -467,6 +474,7 @@ export default function CreateBatch() {
                   onChange={(e) => setPrcUser(e.target.value)}
                   className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary"
                 >
+                  {usersLoading && <option value="" disabled>Loading...</option>}
                   {processUsers.map((u) => (
                     <option key={u.id} value={u.id}>
                       {u.name}
@@ -485,16 +493,15 @@ export default function CreateBatch() {
             >
               Cancel
             </Link>
-            <button
+            <LoadingButton
               type="submit"
-              disabled={createBatchMutation.isPending}
+              loading={createBatchMutation.isPending}
+              loadingText="Generating..."
               className="h-10 px-5 bg-primary hover:bg-primary-hover text-on-primary rounded-lg font-body-medium text-body-medium transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-75"
             >
-              <span className="material-symbols-outlined text-[18px]">
-                {createBatchMutation.isPending ? 'progress_activity' : 'qr_code'}
-              </span>
-              <span>{createBatchMutation.isPending ? 'Generating...' : 'Save & Generate QR'}</span>
-            </button>
+              <span className="material-symbols-outlined text-[18px]">qr_code</span>
+              <span>Save &amp; Generate QR</span>
+            </LoadingButton>
           </div>
         </form>
       ) : (

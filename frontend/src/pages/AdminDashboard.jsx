@@ -5,6 +5,7 @@ import { dashboardApi } from '../api/dashboardApi';
 import { masterApi } from '../api/masterApi';
 import StatusBadge from '../components/common/StatusBadge';
 import { formatDateTime } from '../utils/formatDateTime';
+import { ValueSkeleton } from '../components/Skeleton';
 
 function getFilterDates(filterKey) {
   if (filterKey === 'all') return {};
@@ -51,13 +52,11 @@ export default function AdminDashboard() {
   const { data: routesData } = useQuery({
     queryKey: ['masters', 'routes'],
     queryFn: () => masterApi.getRoutes(),
-    staleTime: 5 * 60 * 1000,
   });
 
   const { data: vehiclesData } = useQuery({
     queryKey: ['masters', 'vehicles'],
     queryFn: () => masterApi.getVehicles(),
-    staleTime: 5 * 60 * 1000,
   });
 
   const routes = routesData?.items || [];
@@ -269,7 +268,7 @@ export default function AdminDashboard() {
         >
           <p className="font-label text-label text-text-muted">Total Batches</p>
           <p className="font-kpi-number text-kpi-number text-text mt-1 group-hover:text-primary transition-colors text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.total}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.total}
           </p>
         </Link>
 
@@ -280,7 +279,7 @@ export default function AdminDashboard() {
         >
           <p className="font-label text-label text-text-muted">Created</p>
           <p className="font-kpi-number text-kpi-number text-text mt-1 text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.created}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.created}
           </p>
         </Link>
 
@@ -291,7 +290,7 @@ export default function AdminDashboard() {
         >
           <p className="font-label text-label text-text-muted">Collected</p>
           <p className="font-kpi-number text-kpi-number text-text mt-1 text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.collected}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.collected}
           </p>
         </Link>
 
@@ -302,7 +301,7 @@ export default function AdminDashboard() {
         >
           <p className="font-label text-label text-text-muted">In Transit</p>
           <p className="font-kpi-number text-kpi-number text-text mt-1 text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.in_transit}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.in_transit}
           </p>
         </Link>
 
@@ -313,7 +312,7 @@ export default function AdminDashboard() {
         >
           <p className="font-label text-label text-text-muted">At RTS</p>
           <p className="font-kpi-number text-kpi-number text-text mt-1 text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.at_rts}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.at_rts}
           </p>
         </Link>
 
@@ -324,7 +323,7 @@ export default function AdminDashboard() {
         >
           <p className="font-label text-label text-text-muted">Completed</p>
           <p className="font-kpi-number text-kpi-number text-primary mt-1 text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.completed}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.completed}
           </p>
         </Link>
       </section>

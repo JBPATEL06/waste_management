@@ -5,7 +5,9 @@ import { STAGE_CONFIG } from '../../constants/stages';
 import { batchesApi } from '../../api/batchesApi';
 import { entriesApi } from '../../api/entriesApi';
 import { masterApi } from '../../api/masterApi';
-import { settingsApi } from '../../api/settingsApi';
+import { useToast } from '../../components/Toast';
+import { LoadingButton } from '../../components/LoadingButton';
+import { DetailSkeleton } from '../../components/Skeleton';
 
 export default function StageEntryForm({ role: propRole }) {
   const { code } = useParams();
@@ -31,6 +33,7 @@ export default function StageEntryForm({ role: propRole }) {
     isLoading: isBatchLoading,
     isError: isBatchError,
     error: batchError,
+    refetch: refetchBatch,
   } = useQuery({
     queryKey: ['stageEntryBatch', code],
     queryFn: () => batchesApi.getBatch(code),
@@ -78,35 +81,30 @@ export default function StageEntryForm({ role: propRole }) {
   });
 
   const { data: rtsData } = useQuery({
-    queryKey: ['masters', 'rts_locations'],
+    queryKey: ['masters', 'rts-locations'],
     queryFn: () => masterApi.getRtsLocations(),
     enabled: cfg.stageNumber === 2 || cfg.stageNumber === 3,
   });
 
   const { data: wasteCategoriesData } = useQuery({
-    queryKey: ['masters', 'waste_categories'],
+    queryKey: ['masters', 'waste-categories'],
     queryFn: () => masterApi.getWasteCategories(),
     enabled: cfg.stageNumber === 3,
   });
 
   const { data: facilitiesData } = useQuery({
-    queryKey: ['masters', 'processing_facilities'],
+    queryKey: ['masters', 'processing-facilities'],
     queryFn: () => masterApi.getProcessingFacilities(),
     enabled: cfg.stageNumber === 3 || cfg.stageNumber === 4,
   });
 
   const { data: processTypesData } = useQuery({
-    queryKey: ['masters', 'process_types'],
+    queryKey: ['masters', 'process-types'],
     queryFn: () => masterApi.getProcessTypes(),
     enabled: cfg.stageNumber === 4,
   });
 
-  const { data: settingsData } = useQuery({
-    queryKey: ['appSettings'],
-    queryFn: () => settingsApi.getSettings(),
-  });
-
-  const varianceThreshold = Number(settingsData?.variance_threshold_pct || 10);
+  const varianceThreshold = 10;
 
   // Today's default dates
   const todayStr = new Date().toISOString().split('T')[0];
@@ -230,6 +228,29 @@ export default function StageEntryForm({ role: propRole }) {
     };
   }, [rtsReceivedWeight, batch?.quantity, cfg.stageNumber, varianceThreshold]);
 
+  const lockReason = useMemo(() => {
+    if (!batchData) return null;
+    if (cfg.stageNumber === 1) return null;
+    const prevStages = timeline.filter((e) => {
+      const stageMap = { COLLECTION: 1, TRANSPORTATION: 2, RTS: 3, PROCESSING: 4 };
+      return stageMap[e.stage?.toUpperCase()] < cfg.stageNumber;
+    });
+    if (cfg.stageNumber === 2) {
+      const hasCollection = timeline.some((e) => e.stage?.toUpperCase() === 'COLLECTION' && e.status === 'ACTIVE');
+      if (!hasCollection) return 'Waiting for Collection stage completion';
+    } else if (cfg.stageNumber === 3) {
+      const transportEntry = timeline.find((e) => e.stage?.toUpperCase() === 'TRANSPORTATION' && e.status === 'ACTIVE');
+      if (!transportEntry) return 'Waiting for Transportation stage';
+      if (!transportEntry.arrival_time) return 'Waiting for Transportation vehicle arrival time';
+    } else if (cfg.stageNumber === 4) {
+      const hasRts = timeline.some((e) => e.stage?.toUpperCase() === 'RTS' && e.status === 'ACTIVE');
+      if (!hasRts) return 'Waiting for RTS stage handover';
+    }
+    return null;
+  }, [batchData, timeline, cfg.stageNumber]);
+
+  const toast = useToast();
+
   // Mutations
   const createMutation = useMutation({
     mutationFn: (payload) => entriesApi.createEntry(batch.id, payload),
@@ -237,20 +258,39 @@ export default function StageEntryForm({ role: propRole }) {
       queryClient.invalidateQueries({ queryKey: ['stageQueue'] });
       queryClient.invalidateQueries({ queryKey: ['stageBatchView', code] });
       queryClient.invalidateQueries({ queryKey: ['batchDetail', code] });
-      setSubmittedMessage(`Manifest entry successfully committed for batch ${batch.batch_code}.`);
+      queryClient.invalidateQueries({ queryKey: ['batchesList'] });
+      queryClient.invalidateQueries({ queryKey: ['hoBatchesList'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardSummary'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardBreakdowns'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardPending'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardRecent'] });
+      queryClient.invalidateQueries({ queryKey: ['operatorHistory'] });
+      queryClient.invalidateQueries({ queryKey: ['auditLogs'] });
+      const msg = `Manifest entry successfully committed for batch ${batch.batch_code}.`;
+      setSubmittedMessage(msg);
+      toast.success(msg);
       setTimeout(() => {
         navigate(`${cfg.prefix}/batches/${batch.batch_code}`);
       }, 1500);
     },
     onError: (err) => {
-      setFormError(err.message || 'Failed to submit stage entry');
+      const fieldErrs = { ...(err.fieldErrors || {}) };
       if (err.details && Array.isArray(err.details)) {
-        const errors = {};
         err.details.forEach((d) => {
-          if (d.path) errors[d.path.join('.')] = d.message;
+          const lastPath = Array.isArray(d.path) ? d.path[d.path.length - 1] : d.path;
+          const field = d.field || lastPath || d.param;
+          if (field) fieldErrs[field] = d.message || 'Invalid value';
         });
-        setFieldErrors(errors);
       }
+      setFieldErrors(fieldErrs);
+      let errMsg = err.message || 'Failed to submit stage entry';
+      if ((err.status === 422 || err.code === 'VALIDATION_FAILED') && Object.keys(fieldErrs).length > 0) {
+        errMsg = Object.entries(fieldErrs)
+          .slice(0, 3)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n');
+      }
+      toast.error(errMsg);
     },
   });
 
@@ -260,35 +300,53 @@ export default function StageEntryForm({ role: propRole }) {
       queryClient.invalidateQueries({ queryKey: ['stageQueue'] });
       queryClient.invalidateQueries({ queryKey: ['stageBatchView', code] });
       queryClient.invalidateQueries({ queryKey: ['batchDetail', code] });
-      setSubmittedMessage(`Corrected manifest entry for ${batch.batch_code} committed to audit trail.`);
+      queryClient.invalidateQueries({ queryKey: ['batchesList'] });
+      queryClient.invalidateQueries({ queryKey: ['hoBatchesList'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardSummary'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardBreakdowns'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardPending'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardRecent'] });
+      queryClient.invalidateQueries({ queryKey: ['operatorHistory'] });
+      queryClient.invalidateQueries({ queryKey: ['auditLogs'] });
+      const msg = `Corrected manifest entry for ${batch.batch_code} committed to audit trail.`;
+      setSubmittedMessage(msg);
+      toast.success(msg);
       setTimeout(() => {
         navigate(`${cfg.prefix}/batches/${batch.batch_code}`);
       }, 1500);
     },
     onError: (err) => {
-      setFormError(err.message || 'Failed to submit correction');
+      const fieldErrs = { ...(err.fieldErrors || {}) };
       if (err.details && Array.isArray(err.details)) {
-        const errors = {};
         err.details.forEach((d) => {
-          if (d.path) errors[d.path.join('.')] = d.message;
+          const lastPath = Array.isArray(d.path) ? d.path[d.path.length - 1] : d.path;
+          const field = d.field || lastPath || d.param;
+          if (field) fieldErrs[field] = d.message || 'Invalid value';
         });
-        setFieldErrors(errors);
       }
+      setFieldErrors(fieldErrs);
+      let errMsg = err.message || 'Failed to submit correction';
+      if ((err.status === 422 || err.code === 'VALIDATION_FAILED') && Object.keys(fieldErrs).length > 0) {
+        errMsg = Object.entries(fieldErrs)
+          .slice(0, 3)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n');
+      }
+      toast.error(errMsg);
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormError('');
     setFieldErrors({});
 
     if (isCorrection) {
       if (!ownStageEntry) {
-        setFormError('Cannot submit a correction: No prior active entry exists for this stage.');
+        toast.error('Cannot submit a correction: No prior active entry exists for this stage.');
         return;
       }
       if (!correctionReason.trim() || correctionReason.trim().length < 3) {
-        setFormError('Correction reason is mandatory (minimum 3 characters).');
+        toast.error('Correction reason is mandatory (minimum 3 characters).');
         return;
       }
     }
@@ -318,10 +376,20 @@ export default function StageEntryForm({ role: propRole }) {
       };
     } else if (cfg.stageNumber === 2) {
       // Transportation
+      if (!arrivalDate || !arrivalTime) {
+        setFieldErrors({
+          arrival_time: 'Arrival date and time are required before submitting transportation.',
+        });
+        toast.error('Arrival date and time are required.');
+        return;
+      }
       const depIso = new Date(`${departureDate}T${departureTime}:00`).toISOString();
-      let arrIso = null;
-      if (arrivalDate && arrivalTime) {
-        arrIso = new Date(`${arrivalDate}T${arrivalTime}:00`).toISOString();
+      const arrivalDateTime = new Date(`${arrivalDate}T${arrivalTime}:00`);
+      const departureDateTime = new Date(`${departureDate}T${departureTime}:00`);
+      if (arrivalDateTime < departureDateTime) {
+        setFieldErrors({ arrival_time: 'Arrival must be at or after departure.' });
+        toast.error('Arrival must be at or after departure.');
+        return;
       }
       payload = {
         event_time: depIso,
@@ -329,7 +397,7 @@ export default function StageEntryForm({ role: propRole }) {
         destination: destination.trim(),
         rts_location_id: transportRtsId,
         vehicle_id: transportVehicleId,
-        arrival_time: arrIso,
+        arrival_time: arrivalDateTime.toISOString(),
         note: remarks ? remarks.trim() : null,
       };
     } else if (cfg.stageNumber === 3) {
@@ -364,17 +432,10 @@ export default function StageEntryForm({ role: propRole }) {
   };
 
   if (isBatchLoading) {
-    return (
-      <div className="py-20 flex flex-col items-center justify-center gap-3 text-text-muted">
-        <span className="material-symbols-outlined animate-spin text-primary text-[32px]">
-          progress_activity
-        </span>
-        <span className="text-sm font-medium">Loading batch parameters...</span>
-      </div>
-    );
+    return <DetailSkeleton />;
   }
 
-  if (isBatchError || !batch) {
+  if ((isBatchError && !batchData) || !batch) {
     return (
       <div className="py-16 flex flex-col items-center justify-center gap-4 text-center">
         <div className="w-12 h-12 rounded-full bg-error-soft text-error flex items-center justify-center">
@@ -384,37 +445,24 @@ export default function StageEntryForm({ role: propRole }) {
           <h2 className="text-xl font-bold text-text">Batch Not Found</h2>
           <p className="text-sm text-text-muted mt-1">{batchError?.message || `No batch matches code "${code}"`}</p>
         </div>
-        <Link
-          to={`${cfg.prefix}/dashboard`}
-          className="px-4 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary-hover"
-        >
-          Back to Queue
-        </Link>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => refetchBatch()}
+            className="px-4 py-2 bg-surface border border-border text-sm rounded-lg hover:bg-slate-50"
+          >
+            Retry
+          </button>
+          <Link
+            to={`${cfg.prefix}/dashboard`}
+            className="px-4 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary-hover"
+          >
+            Back to Queue
+          </Link>
+        </div>
       </div>
     );
   }
-
-  // Derive stage lock reason from timeline
-  const lockReason = useMemo(() => {
-    if (!batchData) return null;
-    if (cfg.stageNumber === 1) return null; // Collection never locked
-    const prevStages = timeline.filter((e) => {
-      const stageMap = { collection: 1, transportation: 2, rts: 3, processing: 4 };
-      return stageMap[e.stage] < cfg.stageNumber;
-    });
-    if (cfg.stageNumber === 2) {
-      const hasCollection = timeline.some((e) => e.stage === 'collection' && e.status === 'ACTIVE');
-      if (!hasCollection) return 'Waiting for Collection stage completion';
-    } else if (cfg.stageNumber === 3) {
-      const transportEntry = timeline.find((e) => e.stage === 'transportation' && e.status === 'ACTIVE');
-      if (!transportEntry) return 'Waiting for Transportation stage';
-      if (!transportEntry.arrival_time) return 'Waiting for Transportation vehicle arrival time';
-    } else if (cfg.stageNumber === 4) {
-      const hasRts = timeline.some((e) => e.stage === 'rts' && e.status === 'ACTIVE');
-      if (!hasRts) return 'Waiting for RTS stage handover';
-    }
-    return null;
-  }, [batchData, timeline, cfg.stageNumber]);
 
   if (batch && lockReason && !ownStageEntry) {
     return (
@@ -492,14 +540,6 @@ export default function StageEntryForm({ role: propRole }) {
         <div className="bg-primary-soft border border-primary-container/30 text-primary-container p-4 rounded-xl flex items-center gap-3">
           <span className="material-symbols-outlined text-[24px]">task_alt</span>
           <span className="font-body-medium text-body-medium font-medium">{submittedMessage}</span>
-        </div>
-      )}
-
-      {/* Form Error Banner */}
-      {formError && (
-        <div className="bg-error-soft border border-error/30 text-error p-4 rounded-xl flex items-center gap-3">
-          <span className="material-symbols-outlined text-[24px]">error</span>
-          <span className="font-body-medium text-body-medium">{formError}</span>
         </div>
       )}
 
@@ -722,21 +762,28 @@ export default function StageEntryForm({ role: propRole }) {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="font-label text-label text-text-muted">Arrival Date &amp; Time (IST) <span className="text-xs text-text-disabled">(Optional if in-transit)</span></label>
+              <label className="font-label text-label text-text-muted">Arrival Date &amp; Time (IST) <span className="text-error">*</span></label>
               <div className="grid grid-cols-2 gap-2">
                 <input
+                  required
                   type="date"
                   value={arrivalDate}
                   onChange={(e) => setArrivalDate(e.target.value)}
+                  aria-invalid={Boolean(fieldErrors.arrival_time)}
                   className="h-10 px-3 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary transition"
                 />
                 <input
+                  required
                   type="time"
                   value={arrivalTime}
                   onChange={(e) => setArrivalTime(e.target.value)}
+                  aria-invalid={Boolean(fieldErrors.arrival_time)}
                   className="h-10 px-3 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary transition"
                 />
               </div>
+              {fieldErrors.arrival_time && (
+                <p className="text-xs text-error" role="alert">{fieldErrors.arrival_time}</p>
+              )}
             </div>
           </div>
         )}
@@ -985,24 +1032,19 @@ export default function StageEntryForm({ role: propRole }) {
           >
             Discard Changes
           </button>
-          <button
+          <LoadingButton
             type="submit"
-            disabled={isSubmitting}
+            loading={isSubmitting}
+            loadingText="Submitting..."
             className="w-full sm:w-auto h-10 px-5 rounded-lg bg-primary-container hover:bg-primary-hover text-on-primary font-body-medium text-body-medium flex items-center justify-center gap-2 transition-colors cursor-pointer disabled:opacity-60 shadow-sm"
           >
-            {isSubmitting ? (
-              <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
-            ) : (
-              <span className="material-symbols-outlined text-[18px]">check</span>
-            )}
+            <span className="material-symbols-outlined text-[18px]">check</span>
             <span>
-              {isSubmitting
-                ? 'Submitting...'
-                : isCorrection
+              {isCorrection
                 ? 'Submit Corrected Manifest'
                 : `Submit ${cfg.roleLabel} Entry`}
             </span>
-          </button>
+          </LoadingButton>
         </div>
       </form>
 

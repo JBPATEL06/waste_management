@@ -1,6 +1,8 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './components/Toast';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
 // Layouts
@@ -42,6 +44,21 @@ const HeadOfficerDashboard = lazy(() => import('./pages/ho/HeadOfficerDashboard'
 const HeadOfficerBatchList = lazy(() => import('./pages/ho/HeadOfficerBatchList'));
 const HeadOfficerBatchDetail = lazy(() => import('./pages/ho/HeadOfficerBatchDetail'));
 
+function QueryProgress() {
+  const fetching = useIsFetching();
+  const queryClient = useQueryClient();
+  const refreshing = fetching > 0 && queryClient.getQueryCache().getAll().some(
+    (query) => query.state.fetchStatus === 'fetching' && query.state.data !== undefined
+  );
+
+  if (!refreshing) return null;
+  return (
+    <div className="fixed inset-x-0 top-0 z-[9999] h-0.5 overflow-hidden" role="progressbar" aria-label="Refreshing data">
+      <div className="h-full w-1/3 animate-pulse bg-primary" />
+    </div>
+  );
+}
+
 // Root Redirect Helper
 function RootRedirect() {
   const { user, loading } = useAuth();
@@ -75,21 +92,27 @@ function RootRedirect() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Suspense
-          fallback={
-            <div className="min-h-screen bg-background flex items-center justify-center">
-              <div className="flex items-center gap-3 text-text-muted">
-                <span className="material-symbols-outlined animate-spin text-primary text-[28px]">
-                  progress_activity
-                </span>
-                <span className="text-sm font-medium">Loading portal...</span>
+    <ToastProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <QueryProgress />
+          <Suspense
+            fallback={
+              <div className="min-h-screen bg-background p-6">
+                <div className="mx-auto max-w-6xl animate-pulse space-y-5 pt-12">
+                  <div className="h-8 w-56 rounded bg-slate-200" />
+                  <div className="h-4 w-80 max-w-full rounded bg-slate-200" />
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="h-28 rounded-xl bg-slate-200" />
+                    <div className="h-28 rounded-xl bg-slate-200" />
+                    <div className="h-28 rounded-xl bg-slate-200" />
+                  </div>
+                  <div className="h-64 rounded-xl bg-slate-200" />
+                </div>
               </div>
-            </div>
-          }
-        >
-          <Routes>
+            }
+          >
+            <Routes>
             {/* Root Redirect */}
             <Route path="/" element={<RootRedirect />} />
 
@@ -222,9 +245,10 @@ export default function App() {
 
             {/* 404 Catch-All */}
             <Route path="*" element={<NotFound404 />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </AuthProvider>
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </AuthProvider>
+    </ToastProvider>
   );
 }

@@ -5,11 +5,25 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { batchesApi } from '../api/batchesApi';
 import { entriesApi } from '../api/entriesApi';
 import { usersApi } from '../api/usersApi';
+import { masterApi } from '../api/masterApi';
 import StatusBadge from '../components/common/StatusBadge';
 import { useAuth } from '../context/AuthContext';
 import { getPublicBaseUrl } from '../utils/url';
 import { printBatchManifest } from '../utils/printManifest';
 import { formatDateTime } from '../utils/formatDateTime';
+import { useToast } from '../components/Toast';
+import { LoadingButton } from '../components/LoadingButton';
+import { formatApiError } from '../utils/formatApiError';
+import { DetailSkeleton } from '../components/Skeleton';
+
+const toDateTimeInput = (value) => {
+  if (!value) return '';
+  const date = new Date(value);
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 16);
+};
+
+const toIsoDateTime = (value) => (value ? new Date(value).toISOString() : '');
 
 export default function BatchDetail() {
   const { code } = useParams();
@@ -29,10 +43,8 @@ export default function BatchDetail() {
   const [deleteBatchReason, setDeleteBatchReason] = useState('');
 
   const [selectedEntry, setSelectedEntry] = useState(null);
-  const [editNotes, setEditNotes] = useState('');
+  const [editFields, setEditFields] = useState({});
   const [reason, setReason] = useState('');
-  const [toastMessage, setToastMessage] = useState('');
-  const [actionError, setActionError] = useState('');
 
   // Reassign state
   const [reassignStage, setReassignStage] = useState('COLLECTION');
@@ -49,6 +61,7 @@ export default function BatchDetail() {
     queryKey: ['batchDetail', code],
     queryFn: () => batchesApi.getBatch(code),
     enabled: Boolean(code),
+    staleTime: 15 * 1000,
   });
 
   const batch = batchData?.batch;
@@ -57,32 +70,78 @@ export default function BatchDetail() {
   const history = batchData?.history || [];
 
   // Fetch active users for reassignments
+  const toast = useToast();
+
   const { data: usersData } = useQuery({
-    queryKey: ['activeUsersForReassign'],
+    queryKey: ['masters', 'users', { is_active: true }],
     queryFn: () => usersApi.getUsers({ is_active: true }),
     enabled: showReassignModal,
   });
 
-  const availableUsers = (usersData?.users || []).filter((u) => u.role === reassignStage);
+  const { data: editRoutesData } = useQuery({
+    queryKey: ['masters', 'routes'],
+    queryFn: () => masterApi.getRoutes(),
+    enabled: showEditEntryModal,
+  });
+  const { data: editVehiclesData } = useQuery({
+    queryKey: ['masters', 'vehicles'],
+    queryFn: () => masterApi.getVehicles(),
+    enabled: showEditEntryModal,
+  });
+  const { data: editDriversData } = useQuery({
+    queryKey: ['masters', 'drivers'],
+    queryFn: () => masterApi.getDrivers(),
+    enabled: showEditEntryModal,
+  });
+  const { data: editRtsLocationsData } = useQuery({
+    queryKey: ['masters', 'rts-locations'],
+    queryFn: () => masterApi.getRtsLocations(),
+    enabled: showEditEntryModal,
+  });
+  const { data: editWasteCategoriesData } = useQuery({
+    queryKey: ['masters', 'waste-categories'],
+    queryFn: () => masterApi.getWasteCategories(),
+    enabled: showEditEntryModal,
+  });
+  const { data: editFacilitiesData } = useQuery({
+    queryKey: ['masters', 'processing-facilities'],
+    queryFn: () => masterApi.getProcessingFacilities(),
+    enabled: showEditEntryModal,
+  });
+  const { data: editProcessTypesData } = useQuery({
+    queryKey: ['masters', 'process-types'],
+    queryFn: () => masterApi.getProcessTypes(),
+    enabled: showEditEntryModal,
+  });
 
-  const triggerToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(''), 3500);
+  const availableUsers = (usersData?.users || []).filter((u) => u.role === reassignStage);
+  const invalidateBatchRelated = ({ includeBatchDetail = true } = {}) => {
+    if (includeBatchDetail) {
+      queryClient.invalidateQueries({ queryKey: ['batchDetail', code] });
+    }
+    queryClient.invalidateQueries({ queryKey: ['batchesList'] });
+    queryClient.invalidateQueries({ queryKey: ['hoBatchesList'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboardSummary'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboardBreakdowns'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboardPending'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboardRecent'] });
+    queryClient.invalidateQueries({ queryKey: ['stageQueue'] });
+    queryClient.invalidateQueries({ queryKey: ['operatorHistory'] });
+    queryClient.invalidateQueries({ queryKey: ['auditLogs'] });
   };
 
   // Reassign mutation
   const reassignMutation = useMutation({
-    mutationFn: ({ id, payload }) => batchesApi.reassignBatch(id, payload),
+    mutationFn: (payload) => batchesApi.reassignBatch(code, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['batchDetail', code] });
+      invalidateBatchRelated();
       setShowReassignModal(false);
       setReason('');
       setNewAssigneeId('');
-      setActionError('');
-      triggerToast(`Reassigned ${reassignStage} operator successfully`);
+      toast.success(`Reassigned ${reassignStage} operator successfully`);
     },
     onError: (err) => {
-      setActionError(err.message || 'Failed to reassign user');
+      toast.error(formatApiError(err, 'Failed to reassign user'));
     },
   });
 
@@ -90,15 +149,14 @@ export default function BatchDetail() {
   const updateEntryMutation = useMutation({
     mutationFn: ({ id, data }) => entriesApi.updateEntry(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['batchDetail', code] });
+      invalidateBatchRelated();
       setShowEditEntryModal(false);
       setSelectedEntry(null);
       setReason('');
-      setActionError('');
-      triggerToast('Entry updated successfully');
+      toast.success('Entry updated successfully');
     },
     onError: (err) => {
-      setActionError(err.message || 'Failed to update entry');
+      toast.error(formatApiError(err, 'Failed to update entry'));
     },
   });
 
@@ -106,40 +164,39 @@ export default function BatchDetail() {
   const deleteEntryMutation = useMutation({
     mutationFn: ({ id, reasonText }) => entriesApi.deleteEntry(id, reasonText),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['batchDetail', code] });
+      invalidateBatchRelated();
       setShowDeleteEntryModal(false);
       setSelectedEntry(null);
       setReason('');
-      setActionError('');
-      triggerToast('Entry deleted successfully');
+      toast.success('Entry deleted successfully');
     },
     onError: (err) => {
-      setActionError(err.message || 'Failed to delete entry');
+      toast.error(formatApiError(err, 'Failed to delete entry'));
     },
   });
 
   const deleteBatchMutation = useMutation({
     mutationFn: (reasonText) => batchesApi.deleteBatch(batch.id, { reason: reasonText }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['batches'] });
-      triggerToast(`Batch ${batch.batch_code} deleted successfully`);
+      // The deleted detail query must not refetch and turn a successful delete into a 404 toast.
+      invalidateBatchRelated({ includeBatchDetail: false });
+      toast.success(`Batch ${batch.batch_code} deleted successfully`);
       setShowDeleteBatchModal(false);
       setTimeout(() => {
         navigate('/admin/batches');
       }, 700);
     },
     onError: (err) => {
-      setActionError(err.message || 'Failed to delete batch');
+      toast.error(formatApiError(err, 'Failed to delete batch'));
     },
   });
 
   const handleDeleteBatch = (e) => {
     e.preventDefault();
     if (!deleteBatchReason.trim() || deleteBatchReason.trim().length < 5) {
-      setActionError('Reason must be at least 5 characters');
+      toast.error('Reason must be at least 5 characters');
       return;
     }
-    setActionError('');
     deleteBatchMutation.mutate(deleteBatchReason.trim());
   };
 
@@ -148,35 +205,145 @@ export default function BatchDetail() {
     if (!newAssigneeId) return;
 
     reassignMutation.mutate({
-      id: batch.id,
-      payload: {
-        stage: reassignStage,
-        user_id: newAssigneeId,
-        reason: reason.trim() || `Reassigned ${reassignStage} operator by Administrator`,
-      },
+      stage: reassignStage,
+      user_id: newAssigneeId,
+      reason: reason.trim() || `Reassigned ${reassignStage} operator by Administrator`,
     });
   };
 
   const handleAdminEditEntry = (e) => {
     e.preventDefault();
-    if (!reason.trim()) {
-      setActionError('Mandatory justification reason required for administrative modification.');
+    if (reason.trim().length < 3) {
+      toast.error('Justification reason must be at least 3 characters.');
       return;
     }
 
     updateEntryMutation.mutate({
       id: selectedEntry.id,
-      data: {
-        reason: reason.trim(),
-        notes: editNotes.trim(),
-      },
+      data: { ...editEntryPayload(), reason: reason.trim() },
     });
   };
 
+  const startEditingEntry = (entry) => {
+    setSelectedEntry(entry);
+    setReason('');
+    setEditFields({
+      event_time: toDateTimeInput(entry.event_time),
+      note: entry.note || '',
+      collection_area: entry.collection_area || '',
+      route_id: entry.collection_route_id || '',
+      vehicle_id: entry.stage === 'COLLECTION'
+        ? entry.collection_vehicle_id || ''
+        : entry.transportation_vehicle_id || '',
+      waste_type: entry.collection_waste_type || 'WET',
+      quantity: entry.collection_quantity ?? '',
+      driver_id: entry.driver_id || '',
+      start_location: entry.start_location || '',
+      destination: entry.destination || '',
+      rts_location_id: entry.stage === 'RTS'
+        ? entry.rts_location_id || ''
+        : entry.transportation_rts_location_id || '',
+      arrival_time: toDateTimeInput(entry.arrival_time),
+      quantity_received: entry.quantity_received ?? '',
+      waste_category_id: entry.waste_category_id || '',
+      handover_details: entry.handover_details || '',
+      next_facility_id: entry.next_facility_id || '',
+      facility_id: entry.processing_facility_id || '',
+      process_type_id: entry.process_type_id || '',
+      final_status: entry.final_status || 'COMPLETED',
+      processing_quantity: entry.processed_quantity ?? '',
+    });
+    setShowEditEntryModal(true);
+  };
+
+  const updateEditField = (field, value) => {
+    setEditFields((current) => ({ ...current, [field]: value }));
+  };
+
+  const editEntryPayload = () => {
+    const common = {
+      event_time: toIsoDateTime(editFields.event_time),
+      note: editFields.note,
+    };
+
+    if (selectedEntry.stage === 'COLLECTION') {
+      return {
+        ...common,
+        collection_area: editFields.collection_area.trim(),
+        route_id: editFields.route_id,
+        vehicle_id: editFields.vehicle_id,
+        waste_type: editFields.waste_type,
+        quantity: Number(editFields.quantity),
+        driver_id: editFields.driver_id,
+      };
+    }
+    if (selectedEntry.stage === 'TRANSPORTATION') {
+      return {
+        ...common,
+        start_location: editFields.start_location.trim(),
+        destination: editFields.destination.trim(),
+        rts_location_id: editFields.rts_location_id,
+        vehicle_id: editFields.vehicle_id,
+        arrival_time: toIsoDateTime(editFields.arrival_time),
+      };
+    }
+    if (selectedEntry.stage === 'RTS') {
+      return {
+        ...common,
+        rts_location_id: editFields.rts_location_id,
+        quantity_received: Number(editFields.quantity_received),
+        waste_category_id: editFields.waste_category_id,
+        handover_details: editFields.handover_details.trim(),
+        next_facility_id: editFields.next_facility_id,
+      };
+    }
+    return {
+      ...common,
+      facility_id: editFields.facility_id,
+      process_type_id: editFields.process_type_id,
+      quantity: Number(editFields.processing_quantity),
+      final_status: editFields.final_status,
+    };
+  };
+
+  const renderEditField = (name, label, { type = 'text', options, step, min } = {}) => (
+    <div className="flex flex-col gap-1">
+      <label className="text-xs font-medium text-text-muted" htmlFor={`edit-${name}`}>{label}</label>
+      {options ? (
+        <select
+          id={`edit-${name}`}
+          required
+          disabled={updateEntryMutation.isPending}
+          value={editFields[name] ?? ''}
+          onChange={(e) => updateEditField(name, e.target.value)}
+          className="h-10 px-3 bg-surface border border-border rounded-lg text-text text-sm disabled:opacity-75"
+        >
+          <option value="">Select {label}</option>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      ) : (
+        <input
+          id={`edit-${name}`}
+          type={type}
+          required
+          min={min}
+          step={step}
+          maxLength={name === 'note' ? 500 : undefined}
+          disabled={updateEntryMutation.isPending}
+          value={editFields[name] ?? ''}
+          onChange={(e) => updateEditField(name, e.target.value)}
+          className="h-10 px-3 bg-surface border border-border rounded-lg text-text text-sm disabled:opacity-75"
+        />
+      )}
+    </div>
+  );
+
   const handleConfirmDeleteEntry = (e) => {
     e.preventDefault();
-    if (!reason.trim()) {
-      setActionError('Mandatory reason required for deleting stage record.');
+    if (reason.trim().length < 3) {
+      toast.error('Deletion reason must be at least 3 characters.');
       return;
     }
 
@@ -212,17 +379,10 @@ export default function BatchDetail() {
   const trackingUrl = batch ? `${publicBase}/track/${batch.batch_code}` : '';
 
   if (isLoading) {
-    return (
-      <div className="py-20 flex flex-col items-center justify-center gap-3 text-text-muted">
-        <span className="material-symbols-outlined animate-spin text-primary text-[32px]">
-          progress_activity
-        </span>
-        <span className="text-sm">Loading batch details...</span>
-      </div>
-    );
+    return <DetailSkeleton />;
   }
 
-  if (isError || !batch) {
+  if ((isError && !batchData) || !batch) {
     return (
       <div className="py-16 flex flex-col items-center justify-center gap-4 text-center">
         <div className="w-12 h-12 rounded-full bg-error-soft text-error flex items-center justify-center">
@@ -252,14 +412,6 @@ export default function BatchDetail() {
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1200px]">
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-16 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg bg-surface text-text border border-border animate-fade-in">
-          <span className="material-symbols-outlined text-primary text-[20px]">check_circle</span>
-          <span className="font-body text-body text-text">{toastMessage}</span>
-        </div>
-      )}
-
       {/* Top Breadcrumb */}
       <nav className="flex items-center gap-2 text-label font-label text-text-muted">
         <Link to={isHeadOfficer ? '/ho/batches' : '/admin/batches'} className="hover:text-text transition-colors">
@@ -283,11 +435,10 @@ export default function BatchDetail() {
           </div>
 
           <div className="flex items-center gap-2">
-            {isAdmin && timeline.length === 0 && history.length === 0 && (
+            {isAdmin && (
               <button
                 onClick={() => {
                   setDeleteBatchReason('');
-                  setActionError('');
                   setShowDeleteBatchModal(true);
                 }}
                 className="h-9 px-3 bg-error-soft hover:bg-red-100 text-error border border-error/30 font-body-medium text-xs rounded-lg inline-flex items-center gap-1.5 transition-colors cursor-pointer"
@@ -302,7 +453,6 @@ export default function BatchDetail() {
                   setReassignStage('COLLECTION');
                   setNewAssigneeId('');
                   setReason('');
-                  setActionError('');
                   setShowReassignModal(true);
                 }}
                 className="h-9 px-3 bg-surface hover:bg-background border border-border text-text font-body-medium text-xs rounded-lg inline-flex items-center gap-1.5 transition-colors cursor-pointer"
@@ -428,9 +578,9 @@ export default function BatchDetail() {
                       Location: <strong className="text-text">{entry.display_location || '—'}</strong> • Logged by{' '}
                       {entry.operator_name || 'Operator'}
                     </p>
-                    {entry.notes && (
+                    {(entry.note || entry.notes) && (
                       <p className="font-caption text-xs text-text-muted mt-1 bg-slate-50 p-2 rounded border border-border">
-                        Notes: {entry.notes}
+                        Notes: {entry.note || entry.notes}
                       </p>
                     )}
                   </div>
@@ -444,13 +594,8 @@ export default function BatchDetail() {
                   {!isHeadOfficer && (
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => {
-                          setSelectedEntry(entry);
-                          setEditNotes(entry.notes || '');
-                          setReason('');
-                          setActionError('');
-                          setShowEditEntryModal(true);
-                        }}
+                        onClick={() => startEditingEntry(entry)}
+                        type="button"
                         className="text-xs text-primary hover:underline cursor-pointer"
                       >
                         Edit
@@ -460,9 +605,9 @@ export default function BatchDetail() {
                         onClick={() => {
                           setSelectedEntry(entry);
                           setReason('');
-                          setActionError('');
                           setShowDeleteEntryModal(true);
                         }}
+                        type="button"
                         className="text-xs text-error hover:underline cursor-pointer"
                       >
                         Delete
@@ -524,7 +669,9 @@ export default function BatchDetail() {
                   </td>
                   <td className="py-2.5 px-3 text-text-muted">{h.display_location || '—'}</td>
                   <td className="py-2.5 px-3 text-text">{h.operator_name || 'System'}</td>
-                  <td className="py-2.5 px-3 text-text-muted">{h.delete_reason || h.notes || 'Initial Entry'}</td>
+                  <td className="py-2.5 px-3 text-text-muted">
+                    {h.delete_reason || h.note || h.notes || 'Initial Entry'}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -534,24 +681,26 @@ export default function BatchDetail() {
 
       {/* Modal: Reassign Operator */}
       {showReassignModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !reassignMutation.isPending) {
+              setShowReassignModal(false);
+            }
+          }}
+        >
           <div className="bg-surface rounded-xl border border-border max-w-[460px] w-full p-6 flex flex-col gap-4 shadow-xl animate-fade-in">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="font-section-title text-section-title text-text">Reassign Stage Operator</h3>
               <button
                 type="button"
-                onClick={() => setShowReassignModal(false)}
-                className="text-text-muted hover:text-text cursor-pointer"
+                disabled={reassignMutation.isPending}
+                onClick={() => !reassignMutation.isPending && setShowReassignModal(false)}
+                className="text-text-muted hover:text-text cursor-pointer disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
-
-            {actionError && (
-              <div className="p-3 bg-error-soft text-error text-caption rounded-lg border border-error/20">
-                {actionError}
-              </div>
-            )}
 
             <form onSubmit={handleReassign} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
@@ -561,11 +710,12 @@ export default function BatchDetail() {
                 <select
                   id="reassignStage"
                   value={reassignStage}
+                  disabled={reassignMutation.isPending}
                   onChange={(e) => {
                     setReassignStage(e.target.value);
                     setNewAssigneeId('');
                   }}
-                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body"
+                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body disabled:opacity-75"
                 >
                   <option value="COLLECTION">Collection</option>
                   <option value="TRANSPORTATION">Transportation</option>
@@ -581,9 +731,10 @@ export default function BatchDetail() {
                 <select
                   id="reassignUserSelect"
                   required
+                  disabled={reassignMutation.isPending}
                   value={newAssigneeId}
                   onChange={(e) => setNewAssigneeId(e.target.value)}
-                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body"
+                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body disabled:opacity-75"
                 >
                   <option value="">Select active operator...</option>
                   {availableUsers.map((u) => (
@@ -601,28 +752,32 @@ export default function BatchDetail() {
                 <input
                   id="reassignReason"
                   type="text"
+                  disabled={reassignMutation.isPending}
                   placeholder="e.g. Shift rotation or operator absence"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body"
+                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body disabled:opacity-75"
                 />
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-border mt-2">
                 <button
                   type="button"
-                  onClick={() => setShowReassignModal(false)}
-                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer"
+                  disabled={reassignMutation.isPending}
+                  onClick={() => !reassignMutation.isPending && setShowReassignModal(false)}
+                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer disabled:opacity-50"
                 >
                   Cancel
                 </button>
-                <button
+                <LoadingButton
                   type="submit"
-                  disabled={reassignMutation.isPending || !newAssigneeId}
+                  loading={reassignMutation.isPending}
+                  disabled={!newAssigneeId}
+                  loadingText="Updating..."
                   className="h-10 px-5 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors font-medium cursor-pointer disabled:opacity-75"
                 >
-                  {reassignMutation.isPending ? 'Updating...' : 'Confirm Reassignment'}
-                </button>
+                  Confirm Reassignment
+                </LoadingButton>
               </div>
             </form>
           </div>
@@ -631,28 +786,152 @@ export default function BatchDetail() {
 
       {/* Modal: Admin Edit Entry */}
       {showEditEntryModal && selectedEntry && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-surface rounded-xl border border-border max-w-[480px] w-full p-6 flex flex-col gap-4 shadow-xl animate-fade-in">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !updateEntryMutation.isPending) {
+              setShowEditEntryModal(false);
+            }
+          }}
+        >
+          <div className="bg-surface rounded-xl border border-border max-w-2xl w-full p-6 flex flex-col gap-4 shadow-xl animate-fade-in max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="font-section-title text-section-title text-text">
                 Admin Edit Stage Entry ({selectedEntry.stage})
               </h3>
               <button
                 type="button"
-                onClick={() => setShowEditEntryModal(false)}
-                className="text-text-muted hover:text-text cursor-pointer"
+                disabled={updateEntryMutation.isPending}
+                onClick={() => !updateEntryMutation.isPending && setShowEditEntryModal(false)}
+                className="text-text-muted hover:text-text cursor-pointer disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
 
-            {actionError && (
-              <div className="p-3 bg-error-soft text-error text-caption rounded-lg border border-error/20">
-                {actionError}
-              </div>
-            )}
-
             <form onSubmit={handleAdminEditEntry} className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {renderEditField(
+                  'event_time',
+                  selectedEntry.stage === 'COLLECTION'
+                    ? 'Collection Date & Time'
+                    : selectedEntry.stage === 'TRANSPORTATION'
+                    ? 'Departure Date & Time'
+                    : selectedEntry.stage === 'RTS'
+                    ? 'RTS Arrival Date & Time'
+                    : 'Processing Date & Time',
+                  { type: 'datetime-local' }
+                )}
+
+                {selectedEntry.stage === 'COLLECTION' && (
+                  <>
+                    {renderEditField('collection_area', 'Collection Area')}
+                    {renderEditField('route_id', 'Route', {
+                      options: (editRoutesData?.items || []).map((item) => ({
+                        value: item.id,
+                        label: `${item.code} - ${item.name}`,
+                      })),
+                    })}
+                    {renderEditField('vehicle_id', 'Vehicle', {
+                      options: (editVehiclesData?.items || []).map((item) => ({
+                        value: item.id,
+                        label: `${item.vehicle_number} (${item.vehicle_type})`,
+                      })),
+                    })}
+                    {renderEditField('driver_id', 'Driver', {
+                      options: (editDriversData?.items || []).map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      })),
+                    })}
+                    {renderEditField('waste_type', 'Waste Type', {
+                      options: [
+                        { value: 'WET', label: 'Wet' },
+                        { value: 'DRY', label: 'Dry' },
+                      ],
+                    })}
+                    {renderEditField('quantity', 'Quantity (kg)', { type: 'number', min: '0.01', step: '0.01' })}
+                  </>
+                )}
+
+                {selectedEntry.stage === 'TRANSPORTATION' && (
+                  <>
+                    {renderEditField('start_location', 'Start Location')}
+                    {renderEditField('destination', 'Destination')}
+                    {renderEditField('rts_location_id', 'Target RTS Facility', {
+                      options: (editRtsLocationsData?.items || []).map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      })),
+                    })}
+                    {renderEditField('vehicle_id', 'Vehicle', {
+                      options: (editVehiclesData?.items || []).map((item) => ({
+                        value: item.id,
+                        label: `${item.vehicle_number} (${item.vehicle_type})`,
+                      })),
+                    })}
+                    {renderEditField('arrival_time', 'Arrival Date & Time', { type: 'datetime-local' })}
+                  </>
+                )}
+
+                {selectedEntry.stage === 'RTS' && (
+                  <>
+                    {renderEditField('rts_location_id', 'RTS Intake Station', {
+                      options: (editRtsLocationsData?.items || []).map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      })),
+                    })}
+                    {renderEditField('quantity_received', 'Received Quantity (kg)', {
+                      type: 'number',
+                      min: '0.01',
+                      step: '0.01',
+                    })}
+                    {renderEditField('waste_category_id', 'Waste Category', {
+                      options: (editWasteCategoriesData?.items || []).map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      })),
+                    })}
+                    {renderEditField('next_facility_id', 'Next Facility', {
+                      options: (editFacilitiesData?.items || []).map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      })),
+                    })}
+                    {renderEditField('handover_details', 'Handover Details')}
+                  </>
+                )}
+
+                {selectedEntry.stage === 'PROCESSING' && (
+                  <>
+                    {renderEditField('facility_id', 'Processing Facility', {
+                      options: (editFacilitiesData?.items || []).map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      })),
+                    })}
+                    {renderEditField('process_type_id', 'Process Type', {
+                      options: (editProcessTypesData?.items || []).map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                      })),
+                    })}
+                    {renderEditField('processing_quantity', 'Processed Quantity (kg)', {
+                      type: 'number',
+                      min: '0.01',
+                      step: '0.01',
+                    })}
+                    {renderEditField('final_status', 'Final Status', {
+                      options: ['PROCESSED', 'RECOVERED', 'DISPOSED', 'COMPLETED'].map((value) => ({
+                        value,
+                        label: value,
+                      })),
+                    })}
+                  </>
+                )}
+              </div>
+
               <div className="flex flex-col gap-1.5">
                 <label className="font-label text-label text-text-muted" htmlFor="editNotes">
                   Stage Operational Notes
@@ -660,9 +939,11 @@ export default function BatchDetail() {
                 <textarea
                   id="editNotes"
                   rows="3"
-                  value={editNotes}
-                  onChange={(e) => setEditNotes(e.target.value)}
-                  className="p-3 bg-surface border border-border rounded-lg text-text font-body text-body"
+                  maxLength={500}
+                  disabled={updateEntryMutation.isPending}
+                  value={editFields.note || ''}
+                  onChange={(e) => updateEditField('note', e.target.value)}
+                  className="p-3 bg-surface border border-border rounded-lg text-text font-body text-body disabled:opacity-75"
                 />
               </div>
 
@@ -674,28 +955,31 @@ export default function BatchDetail() {
                   id="editReason"
                   type="text"
                   required
+                  disabled={updateEntryMutation.isPending}
                   placeholder="e.g. Corrected operational notes per station supervisor"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body"
+                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body disabled:opacity-75"
                 />
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-border mt-2">
                 <button
                   type="button"
-                  onClick={() => setShowEditEntryModal(false)}
-                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer"
+                  disabled={updateEntryMutation.isPending}
+                  onClick={() => !updateEntryMutation.isPending && setShowEditEntryModal(false)}
+                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer disabled:opacity-50"
                 >
                   Cancel
                 </button>
-                <button
+                <LoadingButton
                   type="submit"
-                  disabled={updateEntryMutation.isPending}
+                  loading={updateEntryMutation.isPending}
+                  loadingText="Saving..."
                   className="h-10 px-5 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors font-medium cursor-pointer disabled:opacity-75"
                 >
-                  {updateEntryMutation.isPending ? 'Saving...' : 'Save & Audit Changes'}
-                </button>
+                  Save &amp; Audit Changes
+                </LoadingButton>
               </div>
             </form>
           </div>
@@ -704,7 +988,14 @@ export default function BatchDetail() {
 
       {/* Modal: Admin Delete Entry */}
       {showDeleteEntryModal && selectedEntry && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !deleteEntryMutation.isPending) {
+              setShowDeleteEntryModal(false);
+            }
+          }}
+        >
           <div className="bg-surface rounded-xl border border-border max-w-[460px] w-full p-6 flex flex-col gap-4 shadow-xl animate-fade-in">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-error-soft flex items-center justify-center text-error shrink-0">
@@ -721,12 +1012,6 @@ export default function BatchDetail() {
               </div>
             </div>
 
-            {actionError && (
-              <div className="p-3 bg-error-soft text-error text-caption rounded-lg border border-error/20">
-                {actionError}
-              </div>
-            )}
-
             <form onSubmit={handleConfirmDeleteEntry} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="font-label text-label text-text-muted" htmlFor="deleteReason">
@@ -736,28 +1021,31 @@ export default function BatchDetail() {
                   id="deleteReason"
                   type="text"
                   required
+                  disabled={deleteEntryMutation.isPending}
                   placeholder="e.g. Accidental duplicate manifest created"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body"
+                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body disabled:opacity-75"
                 />
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-border mt-2">
                 <button
                   type="button"
-                  onClick={() => setShowDeleteEntryModal(false)}
-                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer"
+                  disabled={deleteEntryMutation.isPending}
+                  onClick={() => !deleteEntryMutation.isPending && setShowDeleteEntryModal(false)}
+                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer disabled:opacity-50"
                 >
                   Cancel
                 </button>
-                <button
+                <LoadingButton
                   type="submit"
-                  disabled={deleteEntryMutation.isPending}
+                  loading={deleteEntryMutation.isPending}
+                  loadingText="Deleting..."
                   className="h-10 px-4 bg-error text-white rounded-lg hover:bg-red-700 transition-colors font-medium cursor-pointer disabled:opacity-75"
                 >
-                  {deleteEntryMutation.isPending ? 'Deleting...' : 'Confirm Soft Delete'}
-                </button>
+                  Confirm Soft Delete
+                </LoadingButton>
               </div>
             </form>
           </div>
@@ -766,7 +1054,14 @@ export default function BatchDetail() {
 
       {/* Modal: Admin Delete Batch */}
       {showDeleteBatchModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !deleteBatchMutation.isPending) {
+              setShowDeleteBatchModal(false);
+            }
+          }}
+        >
           <div className="bg-surface rounded-xl border border-border max-w-[460px] w-full p-6 flex flex-col gap-4 shadow-xl animate-fade-in">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-error-soft flex items-center justify-center text-error shrink-0">
@@ -777,16 +1072,10 @@ export default function BatchDetail() {
                   Delete Batch ({batch.batch_code})
                 </h3>
                 <p className="font-body text-body text-text-muted mt-1 text-xs">
-                  This will permanently delete this empty batch and its assignments. This operation is recorded in the immutable audit log.
+                  This permanently deletes the batch, assignments, all stage entries, and their details. A snapshot is retained in the audit log. This action cannot be undone.
                 </p>
               </div>
             </div>
-
-            {actionError && (
-              <div className="p-3 bg-error-soft text-error text-caption rounded-lg border border-error/20">
-                {actionError}
-              </div>
-            )}
 
             <form onSubmit={handleDeleteBatch} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
@@ -797,31 +1086,31 @@ export default function BatchDetail() {
                   id="deleteBatchReason"
                   rows="3"
                   required
-                  placeholder="Specify the reason for deleting this empty batch (min 5 characters)..."
+                  disabled={deleteBatchMutation.isPending}
+                  placeholder="Specify the reason for deleting this batch (min 5 characters)..."
                   value={deleteBatchReason}
                   onChange={(e) => setDeleteBatchReason(e.target.value)}
-                  className="p-3 bg-surface border border-border rounded-lg text-text font-body text-body"
+                  className="p-3 bg-surface border border-border rounded-lg text-text font-body text-body disabled:opacity-75"
                 />
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-border mt-2">
                 <button
                   type="button"
-                  onClick={() => setShowDeleteBatchModal(false)}
-                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer"
+                  disabled={deleteBatchMutation.isPending}
+                  onClick={() => !deleteBatchMutation.isPending && setShowDeleteBatchModal(false)}
+                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer disabled:opacity-50"
                 >
                   Cancel
                 </button>
-                <button
+                <LoadingButton
                   type="submit"
-                  disabled={deleteBatchMutation.isPending}
+                  loading={deleteBatchMutation.isPending}
+                  loadingText="Deleting..."
                   className="h-10 px-4 bg-error text-white rounded-lg hover:bg-red-700 transition-colors font-medium cursor-pointer disabled:opacity-75 flex items-center gap-1.5"
                 >
-                  {deleteBatchMutation.isPending && (
-                    <span className="material-symbols-outlined animate-spin text-[16px]">progress_activity</span>
-                  )}
-                  <span>{deleteBatchMutation.isPending ? 'Deleting...' : 'Confirm Delete Batch'}</span>
-                </button>
+                  Permanently Delete Batch
+                </LoadingButton>
               </div>
             </form>
           </div>

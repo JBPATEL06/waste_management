@@ -1,24 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { auditApi } from '../api/auditApi';
 import { usersApi } from '../api/usersApi';
 import { useAuth } from '../context/AuthContext';
 import { formatDateTime } from '../utils/formatDateTime';
+import { TableSkeleton } from '../components/Skeleton';
+import { useToast } from '../components/Toast';
 
 export default function AuditLog() {
   const { user } = useAuth();
+  const toast = useToast();
   const [filterAction, setFilterAction] = useState('ALL');
   const [filterUser, setFilterUser] = useState('ALL');
   const [searchBatch, setSearchBatch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState('10');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedRows, setExpandedRows] = useState({});
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchBatch);
+      setCurrentPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchBatch]);
+
   // Fetch active users for user dropdown
   const { data: usersData } = useQuery({
-    queryKey: ['auditUsersList'],
+    queryKey: ['masters', 'users'],
     queryFn: () => usersApi.getUsers(),
-    staleTime: 5 * 60 * 1000,
+    enabled: user?.role === 'ADMIN',
   });
 
   const usersList = usersData?.users || [];
@@ -29,7 +41,7 @@ export default function AuditLog() {
     limit: parseInt(rowsPerPage, 10),
     ...(filterAction !== 'ALL' ? { action: filterAction } : {}),
     ...(filterUser === 'ME' ? { user_id: user?.id } : filterUser !== 'ALL' ? { user_id: filterUser } : {}),
-    ...(searchBatch.trim() ? { search: searchBatch.trim() } : {}),
+    ...(debouncedSearch.trim() ? { search: debouncedSearch.trim() } : {}),
   };
 
   const {
@@ -106,6 +118,8 @@ export default function AuditLog() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success('Audit log exported successfully.');
   };
 
   return (
@@ -290,16 +304,9 @@ export default function AuditLog() {
 
       {/* Audit Events Table Card */}
       <div className="bg-surface rounded-xl border border-border overflow-hidden flex flex-col shadow-sm">
-        {isLoading && (
-          <div className="py-12 flex flex-col items-center justify-center gap-3 text-text-muted">
-            <span className="material-symbols-outlined animate-spin text-primary text-[28px]">
-              progress_activity
-            </span>
-            <span className="text-sm">Loading audit ledger events...</span>
-          </div>
-        )}
+        {isLoading && <TableSkeleton columns={7} />}
 
-        {isError && (
+        {isError && !auditData && (
           <div className="py-12 flex flex-col items-center justify-center gap-3 text-center p-4">
             <span className="material-symbols-outlined text-error text-[32px]">error</span>
             <span className="text-sm text-text font-medium">{error?.message || 'Failed to load audit logs'}</span>
@@ -312,7 +319,7 @@ export default function AuditLog() {
           </div>
         )}
 
-        {!isLoading && !isError && (
+        {!isLoading && (auditData || !isError) && (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>

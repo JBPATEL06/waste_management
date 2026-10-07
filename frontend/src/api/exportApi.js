@@ -1,6 +1,17 @@
 import { api } from './client';
 
 export const exportApi = {
+  preview: (dataset, filters = {}) => {
+    const searchParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(filters)) {
+      if (value !== undefined && value !== null && value !== '') {
+        searchParams.set(key, value);
+      }
+    }
+    const query = searchParams.toString();
+    return api.get(`/export/${dataset}/preview${query ? `?${query}` : ''}`);
+  },
+
   download: async (dataset, format, filters = {}) => {
     const searchParams = new URLSearchParams({ format });
     for (const [key, value] of Object.entries(filters)) {
@@ -33,4 +44,3 @@ export const exportApi = {
     window.URL.revokeObjectURL(blobUrl);
   },
 };
-

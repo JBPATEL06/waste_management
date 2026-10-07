@@ -22,7 +22,10 @@ const envSchema = z.object({
     }
     return val === 'true' || val === true;
   }, z.boolean()).default(false),
-  COOKIE_SAMESITE: z.enum(['lax', 'strict', 'none', 'Lax', 'Strict', 'None']).default('lax'),
+  COOKIE_SAMESITE: z.preprocess(
+    (val) => val || (process.env.NODE_ENV === 'production' ? 'none' : 'lax'),
+    z.enum(['lax', 'strict', 'none', 'Lax', 'Strict', 'None'])
+  ),
   FRONTEND_URL: z.string().optional(),
   ALLOW_TEST_BYPASS: z.preprocess((val) => val === 'true' || val === true, z.boolean()).default(false),
   DB_SSL_REJECT_UNAUTHORIZED: z.preprocess((val) => val === 'true' || val === true, z.boolean()).default(false),
@@ -43,4 +46,3 @@ if (!parsed.success) {
 }
 
 export const config = parsed.data;
-

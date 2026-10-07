@@ -2,9 +2,26 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { exportApi } from '../api/exportApi';
 import { masterApi } from '../api/masterApi';
-import { batchesApi } from '../api/batchesApi';
-import StatusBadge from '../components/common/StatusBadge';
 import CustomSelect from '../components/common/CustomSelect';
+import { useToast } from '../components/Toast';
+import { LoadingButton } from '../components/LoadingButton';
+
+const toLocalDateString = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const formatPreviewValue = (value, key) => {
+  if (value === null || value === undefined || value === '') return '—';
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+  if (typeof value === 'string' && /(_at|_time)$/.test(key)) {
+    const date = new Date(value);
+    if (!Number.isNaN(date.getTime())) return date.toLocaleString();
+  }
+  return String(value);
+};
 
 export default function ExportData() {
   const [selectedDataset, setSelectedDataset] = useState('batches');
@@ -17,21 +34,18 @@ export default function ExportData() {
   const [wasteTypeFilter, setWasteTypeFilter] = useState('');
   const [format, setFormat] = useState('csv');
   const [showPreviewModal, setShowPreviewModal] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
-  const [showToast, setShowToast] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const toast = useToast();
 
   // Fetch routes and vehicles for dropdown filters
-  const { data: routesData } = useQuery({
-    queryKey: ['exportRoutes'],
+  const { data: routesData, isLoading: routesLoading } = useQuery({
+    queryKey: ['masters', 'routes'],
     queryFn: () => masterApi.getItems('routes'),
-    staleTime: 5 * 60 * 1000,
   });
 
-  const { data: vehiclesData } = useQuery({
-    queryKey: ['exportVehicles'],
+  const { data: vehiclesData, isLoading: vehiclesLoading } = useQuery({
+    queryKey: ['masters', 'vehicles'],
     queryFn: () => masterApi.getItems('vehicles'),
-    staleTime: 5 * 60 * 1000,
   });
 
   const routesList = routesData?.items || [];
@@ -74,23 +88,29 @@ export default function ExportData() {
     { value: '', label: 'All Types' },
     { value: 'WET', label: 'Wet Waste' },
     { value: 'DRY', label: 'Dry Waste' },
-    { value: 'HAZARDOUS', label: 'Hazardous' },
-    { value: 'ELECTRONIC', label: 'E-Waste' },
   ];
+
+  const customDateError = dateRange !== 'Custom Range'
+    ? ''
+    : !customStartDate || !customEndDate
+    ? 'Select both a start date and an end date.'
+    : customStartDate > customEndDate
+    ? 'The end date must be on or after the start date.'
+    : '';
 
   const getDateFilterParams = () => {
     const now = new Date();
     if (dateRange === 'Last 7 Days') {
       const past = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      return { start_date: past.toISOString().slice(0, 10), end_date: now.toISOString().slice(0, 10) };
+      return { start_date: toLocalDateString(past), end_date: toLocalDateString(now) };
     }
     if (dateRange === 'Last 30 Days') {
       const past = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      return { start_date: past.toISOString().slice(0, 10), end_date: now.toISOString().slice(0, 10) };
+      return { start_date: toLocalDateString(past), end_date: toLocalDateString(now) };
     }
     if (dateRange === 'This Month') {
       const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      return { start_date: startOfMonth.toISOString().slice(0, 10), end_date: now.toISOString().slice(0, 10) };
+      return { start_date: toLocalDateString(startOfMonth), end_date: toLocalDateString(now) };
     }
     if (dateRange === 'Custom Range') {
       return {
@@ -109,14 +129,14 @@ export default function ExportData() {
     ...(wasteTypeFilter ? { waste_type: wasteTypeFilter } : {}),
   };
 
-  // Preview data query (first 10 batches matching current filters)
-  const { data: previewData, isLoading: previewLoading } = useQuery({
-    queryKey: ['exportPreviewBatches', activeFilters],
-    queryFn: () => batchesApi.getBatches({ ...activeFilters, limit: 10 }),
-    enabled: showPreviewModal,
+  const { data: previewData, isLoading: previewLoading, isError: previewError } = useQuery({
+    queryKey: ['exportPreview', selectedDataset, activeFilters],
+    queryFn: () => exportApi.preview(selectedDataset, activeFilters),
+    enabled: showPreviewModal && !customDateError,
   });
 
-  const previewBatches = previewData?.batches || [];
+  const previewRows = previewData?.rows || [];
+  const previewColumns = previewData?.columns || [];
 
   const resetFilters = () => {
     setDateRange('Last 30 Days');
@@ -132,11 +152,9 @@ export default function ExportData() {
     setDownloading(true);
     try {
       await exportApi.download(selectedDataset, format, activeFilters);
-      setToastMessage(`Export downloaded successfully (${selectedDataset}.${format})`);
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3800);
+      toast.success(`Export downloaded successfully (${selectedDataset}.${format})`);
     } catch (err) {
-      alert(err.message || 'Export generation failed. Please try again.');
+      toast.error(err.message || 'Export generation failed. Please try again.');
     } finally {
       setDownloading(false);
     }
@@ -144,16 +162,6 @@ export default function ExportData() {
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      {/* Toast Notification */}
-      <div
-        className={`fixed top-16 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-lg shadow-md bg-primary text-white transition-opacity duration-300 ${
-          showToast ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-      >
-        <span className="material-symbols-outlined text-[20px]">check_circle</span>
-        <span className="font-body text-sm">{toastMessage}</span>
-      </div>
-
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
         <div>
@@ -382,6 +390,7 @@ export default function ExportData() {
               value={routeFilter}
               onChange={(e) => setRouteFilter(e.target.value)}
               options={routeOptions}
+              loading={routesLoading}
             />
           </div>
 
@@ -395,6 +404,7 @@ export default function ExportData() {
               value={vehicleFilter}
               onChange={(e) => setVehicleFilter(e.target.value)}
               options={vehicleOptions}
+              loading={vehiclesLoading}
             />
           </div>
 
@@ -424,6 +434,7 @@ export default function ExportData() {
                 id="custom-start-date"
                 type="date"
                 value={customStartDate}
+                max={customEndDate || undefined}
                 onChange={(e) => setCustomStartDate(e.target.value)}
               />
             </div>
@@ -436,9 +447,13 @@ export default function ExportData() {
                 id="custom-end-date"
                 type="date"
                 value={customEndDate}
+                min={customStartDate || undefined}
                 onChange={(e) => setCustomEndDate(e.target.value)}
               />
             </div>
+            {customDateError && (
+              <p className="w-full text-xs text-error" role="alert">{customDateError}</p>
+            )}
           </div>
         )}
       </section>
@@ -494,24 +509,25 @@ export default function ExportData() {
           {/* Action CTAs */}
           <div className="lg:col-span-5 flex flex-col sm:flex-row items-center gap-2.5 justify-end">
             <button
-              className="w-full sm:w-auto h-11 px-4 rounded-lg bg-surface hover:bg-slate-50 text-text font-medium text-sm flex items-center justify-center gap-2 shadow-xs border border-border transition-colors cursor-pointer"
+              className="w-full sm:w-auto h-11 px-4 rounded-lg bg-surface hover:bg-slate-50 text-text font-medium text-sm flex items-center justify-center gap-2 shadow-xs border border-border transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={() => setShowPreviewModal(true)}
+              disabled={Boolean(customDateError)}
               type="button"
             >
               <span className="material-symbols-outlined text-[18px]">visibility</span>
               <span>Preview Sample Data</span>
             </button>
-            <button
+            <LoadingButton
+              type="button"
               className="w-full sm:w-auto h-11 px-5 rounded-lg bg-primary hover:bg-primary-hover text-white font-medium text-sm flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer disabled:opacity-75"
               onClick={triggerDownload}
-              disabled={downloading}
-              type="button"
+              disabled={Boolean(customDateError)}
+              loading={downloading}
+              loadingText="Streaming Export..."
             >
-              <span className="material-symbols-outlined text-[18px]">
-                {downloading ? 'progress_activity' : 'download'}
-              </span>
-              <span>{downloading ? 'Streaming Export...' : 'Download Export'}</span>
-            </button>
+              <span className="material-symbols-outlined text-[18px]">download</span>
+              <span>Download Export</span>
+            </LoadingButton>
           </div>
         </div>
       </section>
@@ -524,7 +540,9 @@ export default function ExportData() {
             <div className="px-6 py-4 bg-slate-50 border-b border-border flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <span className="material-symbols-outlined text-primary text-[22px]">table_rows</span>
-                <h3 className="text-lg font-semibold text-text">Data Preview: First 10 Batches</h3>
+                <h3 className="text-lg font-semibold text-text">
+                  Data Preview: First 10 {previewData?.name || selectedDataset}
+                </h3>
               </div>
               <button
                 className="text-text-muted hover:text-text p-1 rounded-lg cursor-pointer"
@@ -537,47 +555,45 @@ export default function ExportData() {
             {/* Modal Body */}
             <div className="p-6 overflow-x-auto flex-1">
               <div className="mb-3 flex items-center justify-between text-xs text-text-muted">
-                <span>Displaying live batches matching your active filter criteria.</span>
+                <span>Displaying selected dataset records matching your active filters.</span>
                 <span className="bg-badge-completed-bg text-badge-completed-text font-semibold px-2 py-0.5 rounded">
                   Live DB Records
                 </span>
               </div>
-              {previewLoading ? (
+              {customDateError ? (
+                <p className="py-8 text-center text-error text-sm" role="alert">{customDateError}</p>
+              ) : previewLoading ? (
                 <div className="py-8 flex items-center justify-center gap-2 text-text-muted">
                   <span className="material-symbols-outlined animate-spin text-primary">progress_activity</span>
                   <span>Fetching preview...</span>
                 </div>
+              ) : previewError ? (
+                <p className="py-8 text-center text-error text-sm" role="alert">
+                  Could not load the preview. Please close it and try again.
+                </p>
               ) : (
                 <table className="w-full text-left border-collapse text-[13px]">
                   <thead>
                     <tr className="bg-slate-50 text-text-muted font-medium border-b border-border">
-                      <th className="py-2.5 px-3">Batch Code</th>
-                      <th className="py-2.5 px-3">Date</th>
-                      <th className="py-2.5 px-3">Type</th>
-                      <th className="py-2.5 px-3">Quantity</th>
-                      <th className="py-2.5 px-3">Source Area</th>
-                      <th className="py-2.5 px-3">Status</th>
+                      {previewColumns.map((column) => (
+                        <th className="py-2.5 px-3 whitespace-nowrap" key={column.key}>{column.header}</th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {previewBatches.map((batch) => (
-                      <tr key={batch.id} className="hover:bg-slate-50">
-                        <td className="py-2 px-3 font-semibold text-primary">{batch.batch_code}</td>
-                        <td className="py-2 px-3 text-text-muted">
-                          {batch.batch_date ? new Date(batch.batch_date).toLocaleDateString() : '—'}
-                        </td>
-                        <td className="py-2 px-3 text-text">{batch.waste_type}</td>
-                        <td className="py-2 px-3 text-text">{Number(batch.quantity).toLocaleString()} kg</td>
-                        <td className="py-2 px-3 text-text">{batch.source_area}</td>
-                        <td className="py-2 px-3">
-                          <StatusBadge status={batch.current_status} />
-                        </td>
+                    {previewRows.map((row, index) => (
+                      <tr key={`${row.batch_code || row.action || 'preview'}-${index}`} className="hover:bg-slate-50">
+                        {previewColumns.map((column) => (
+                          <td className="py-2 px-3 text-text whitespace-nowrap" key={column.key}>
+                            {formatPreviewValue(row[column.key], column.key)}
+                          </td>
+                        ))}
                       </tr>
                     ))}
-                    {previewBatches.length === 0 && (
+                    {previewRows.length === 0 && (
                       <tr>
-                        <td colSpan={6} className="py-6 text-center text-text-muted">
-                          No batches found matching filter criteria.
+                        <td colSpan={Math.max(previewColumns.length, 1)} className="py-6 text-center text-text-muted">
+                          No records found matching filter criteria.
                         </td>
                       </tr>
                     )}
@@ -597,7 +613,8 @@ export default function ExportData() {
                   Close Preview
                 </button>
                 <button
-                  className="h-9 px-4 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-medium flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                  className="h-9 px-4 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-medium flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={Boolean(customDateError) || downloading}
                   onClick={() => {
                     setShowPreviewModal(false);
                     triggerDownload();

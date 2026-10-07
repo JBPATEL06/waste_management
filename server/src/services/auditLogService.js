@@ -31,7 +31,9 @@ export async function listAuditLogs({
   const batchSearch = batch || search;
   if (batchSearch) {
     params.push(`%${batchSearch}%`);
-    whereClauses.push(`b.batch_code ILIKE $${params.length}`);
+    whereClauses.push(
+      `COALESCE(b.batch_code, al.old_values->'batch'->>'batch_code', al.old_values->>'batch_code') ILIKE $${params.length}`
+    );
   }
 
   if (start_date) {
@@ -67,7 +69,8 @@ export async function listAuditLogs({
       al.id, al.action, al.batch_id, al.entry_id, al.entity_type, al.entity_id,
       al.old_values, al.new_values, al.reason, al.performed_at,
       u.name AS user_name, u.email AS user_email, u.role AS user_role,
-      b.batch_code
+      COALESCE(b.batch_code, al.old_values->'batch'->>'batch_code', al.old_values->>'batch_code') AS batch_code,
+      COALESCE(al.new_values, al.old_values) AS details
     FROM audit_log al
     JOIN users u ON u.id = al.performed_by
     LEFT JOIN batches b ON b.id = al.batch_id
@@ -85,4 +88,3 @@ export async function listAuditLogs({
     offset,
   };
 }
-

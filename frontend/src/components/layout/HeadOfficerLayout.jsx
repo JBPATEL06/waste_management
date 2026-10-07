@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { LoadingButton } from '../LoadingButton';
+import BrandLogo from '../common/BrandLogo';
 
 export default function HeadOfficerLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logout();
+    } catch {
+      // AuthContext reports the failure.
+    } finally {
+      navigate('/login');
+      setIsLoggingOut(false);
+    }
   };
 
   const navItems = [
@@ -34,7 +44,7 @@ export default function HeadOfficerLayout() {
               <span className="material-symbols-outlined text-[24px]">menu</span>
             </button>
             <Link to="/" className="flex items-center gap-2 sm:gap-space-sm hover:opacity-90 transition-opacity">
-              <span className="material-symbols-outlined text-primary-container text-[22px] sm:text-[24px]">eco</span>
+              <BrandLogo />
               <span className="font-section-title text-[15px] sm:text-section-title tracking-tight text-text truncate max-w-[140px] sm:max-w-none">
                 Waste Journey Tracker
               </span>
@@ -108,13 +118,16 @@ export default function HeadOfficerLayout() {
               <span>Profile</span>
             </NavLink>
 
-            <button
+            <LoadingButton
+              type="button"
               onClick={handleLogout}
+              loading={isLoggingOut}
+              loadingText="Signing out..."
               className="flex items-center gap-space-md px-3 h-10 rounded-lg font-body-medium text-body-medium text-text-muted hover:bg-background hover:text-error transition-colors text-left w-full cursor-pointer"
             >
               <span className="material-symbols-outlined text-[20px]">logout</span>
               <span>Logout</span>
-            </button>
+            </LoadingButton>
           </nav>
         </div>
 
@@ -141,4 +154,3 @@ export default function HeadOfficerLayout() {
     </div>
   );
 }
-

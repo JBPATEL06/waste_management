@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { authApi } from '../api/authApi';
 import { meApi } from '../api/meApi';
 import { clearAccessToken } from '../api/client';
+import { queryClient } from '../queryClient';
+import { toastBus } from '../utils/toastBus';
 
 const AuthContext = createContext(null);
 
@@ -34,6 +36,8 @@ export function AuthProvider({ children }) {
     restoreSession();
 
     const handleSessionExpired = () => {
+      queryClient.clear();
+      clearAccessToken();
       setUser(null);
     };
 
@@ -46,6 +50,7 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (email, password) => {
     const res = await authApi.login(email, password);
+    queryClient.clear();
     setUser(res.user);
     return res.user;
   }, []);
@@ -53,7 +58,12 @@ export function AuthProvider({ children }) {
   const logout = useCallback(async () => {
     try {
       await authApi.logout();
+      toastBus.emit('success', 'Signed out successfully.');
+    } catch (error) {
+      toastBus.emit('error', error?.message || 'Failed to sign out.');
+      throw error;
     } finally {
+      queryClient.clear();
       setUser(null);
     }
   }, []);
@@ -61,7 +71,12 @@ export function AuthProvider({ children }) {
   const logoutAll = useCallback(async () => {
     try {
       await authApi.logoutAll();
+      toastBus.emit('success', 'Signed out of all sessions successfully.');
+    } catch (error) {
+      toastBus.emit('error', error?.message || 'Failed to sign out of all sessions.');
+      throw error;
     } finally {
+      queryClient.clear();
       setUser(null);
     }
   }, []);

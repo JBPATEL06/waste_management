@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../components/Toast';
+import { LoadingButton } from '../components/LoadingButton';
+import BrandLogo from '../components/common/BrandLogo';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const { user, login } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -37,16 +40,17 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
 
     if (!email.trim() || !password) {
-      setError('Please fill in both fields.');
+      toast.error('Please fill in both fields.');
       return;
     }
 
     setLoading(true);
     try {
       const loggedUser = await login(email.trim(), password);
+      toast.success('Signed in successfully.');
+
       if (loggedUser.must_change_password) {
         navigate('/change-password');
         return;
@@ -68,7 +72,14 @@ export default function Login() {
         navigate('/profile');
       }
     } catch (err) {
-      setError(err.message || 'Invalid email or password. Please verify your credentials.');
+      let errMsg = err.message || 'Invalid email or password. Please verify your credentials.';
+      if ((err.status === 422 || err.code === 'VALIDATION_FAILED') && err.fieldErrors && Object.keys(err.fieldErrors).length > 0) {
+        errMsg = Object.entries(err.fieldErrors)
+          .slice(0, 3)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n');
+      }
+      toast.error(errMsg);
     } finally {
       setLoading(false);
     }
@@ -80,9 +91,7 @@ export default function Login() {
         <div className="flex flex-col w-full">
           {/* Logo and App Title */}
           <div className="flex items-center justify-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white shrink-0">
-              <span className="material-symbols-outlined text-[20px]">recycling</span>
-            </div>
+            <BrandLogo />
             <span className="font-page-title text-page-title text-text tracking-tight font-semibold">
               Waste Journey Tracker
             </span>
@@ -91,17 +100,6 @@ export default function Login() {
           {/* Form Card */}
           <div className="w-full bg-surface border border-border rounded-xl p-[20px] shadow-sm">
             <h1 className="font-page-title text-page-title text-text mb-6">Sign in</h1>
-
-            {error && (
-              <div className="mb-4 p-3 bg-error-soft rounded-lg flex items-start gap-2 border border-error/20" role="alert">
-                <span className="material-symbols-outlined text-error text-[18px] leading-none shrink-0 mt-0.5">
-                  error
-                </span>
-                <p className="font-caption text-caption text-error font-medium leading-tight">
-                  {error}
-                </p>
-              </div>
-            )}
 
             <form className="space-y-4" onSubmit={handleLogin}>
               <div className="space-y-1">
@@ -151,14 +149,15 @@ export default function Login() {
                 </div>
               </div>
 
-              <button
+              <LoadingButton
                 type="submit"
                 id="submit-btn"
-                disabled={loading}
+                loading={loading}
+                loadingText="Signing in..."
                 className="w-full h-[40px] bg-primary hover:bg-primary-hover text-on-primary font-body-medium text-body-medium rounded-lg flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 cursor-pointer disabled:opacity-75"
               >
-                {loading ? 'Signing in...' : 'Login'}
-              </button>
+                Login
+              </LoadingButton>
             </form>
 
             <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs text-text-muted">

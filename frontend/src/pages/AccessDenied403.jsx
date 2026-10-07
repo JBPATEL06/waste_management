@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import BrandLogo from '../components/common/BrandLogo';
 
 export default function AccessDenied403() {
   const navigate = useNavigate();
@@ -12,9 +13,7 @@ export default function AccessDenied403() {
         <div className="flex flex-col w-full items-center">
           {/* Logo */}
           <div className="flex items-center gap-2.5 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white shrink-0">
-              <span className="material-symbols-outlined text-[20px]">recycling</span>
-            </div>
+            <BrandLogo />
             <span className="font-section-title text-section-title text-text tracking-tight font-semibold">
               Waste Journey Tracker
             </span>

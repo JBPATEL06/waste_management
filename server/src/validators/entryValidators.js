@@ -42,17 +42,12 @@ export const transportationEntrySchema = z
     arrival_time: z
       .string()
       .datetime({ offset: true })
-      .refine(notFutureTime, { message: 'Arrival time cannot be in the future' })
-      .optional()
-      .nullable(),
+      .refine(notFutureTime, { message: 'Arrival time cannot be in the future' }),
     note: z.string().trim().max(500, 'Note cannot exceed 500 characters').optional().nullable(),
   })
   .refine(
     (data) => {
-      if (data.arrival_time) {
-        return new Date(data.arrival_time) >= new Date(data.event_time);
-      }
-      return true;
+      return new Date(data.arrival_time) >= new Date(data.event_time);
     },
     {
       message: 'Arrival time must be after or equal to departure time',
@@ -127,4 +122,3 @@ export const adminDeleteEntrySchema = {
     reason: z.string().trim().min(3, 'Reason for deletion is mandatory (min 3 characters)'),
   }),
 };
-
