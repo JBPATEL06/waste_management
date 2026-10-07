@@ -1,6 +1,14 @@
-# Frontend Mock Audit & Migration Checklist
+# Historical Frontend Mock Audit & Migration Checklist
 
-This document tracks all mock data, hardcoded structures, fake authentication, and client-side simulations in the frontend, along with their status as they are migrated to the real Node.js/Supabase backend API.
+> **Historical checklist:** The unchecked tasks below describe the frontend
+> before its live API integration and are no longer an accurate status report.
+> Do not use them as current TODOs. The live architecture, roles, workflow,
+> caching, export, and deployment notes are in
+> [`project_context.md`](./project_context.md).
+
+This is an archived pre-integration checklist. Its unchecked boxes are not
+current work items and do not describe the current implementation. Use
+[`project_context.md`](./project_context.md) for current system behavior.
 
 ---
 
@@ -143,4 +151,3 @@ This document tracks all mock data, hardcoded structures, fake authentication, a
 - [ ] Delete `src/data/mockData.js`.
 - [ ] Grep for all occurrences of `mockData`, `MOCK_`, `dummy`, `sample`, `fake`, `lorem`, `WB-2026-`, `setTimeout`.
 - [ ] Verify zero mock data remains in frontend code.
-

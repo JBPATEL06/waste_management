@@ -27,7 +27,7 @@ This document outlines the complete deployment procedure for hosting the **Munic
     |  - Root Directory: `server`                                             |
     |  - Framework: Express (Node.js 20+ Fluid Compute)                       |
     |  - Trust Proxy: `app.set('trust proxy', 1)`                             |
-    |  - Session: HttpOnly, Secure, SameSite=Lax, Path=`/api/auth` Cookie     |
+    |  - Session: HttpOnly, Secure, SameSite=None (production defaults)       |
     +-------------------------------------------------------------------------+
                                            |
                                            | Port 6543 (Transaction Pooler)
@@ -75,9 +75,9 @@ You will create **two separate Vercel projects** from the same GitHub repository
 | `REFRESH_TOKEN_EXPIRES_DAYS` | `7` | Refresh token lifespan in database |
 | `FRONTEND_URL` | `https://waste-journey-frontend.vercel.app` | Allowed CORS origin |
 | `COOKIE_SECURE` | `true` | Restricts cookies to HTTPS |
-| `COOKIE_SAMESITE` | `lax` | Lax SameSite protection |
-| `COOKIE_PATH` | `/api/auth` | Matches proxied path seen by browser |
+| `COOKIE_SAMESITE` | `none` (production default) | Cross-origin refresh cookies require HTTPS; set explicitly only when overriding the default |
 | `DB_SSL_REJECT_UNAUTHORIZED` | `false` | Required for Supabase transaction pooler |
+| `DB_POOL_MAX` | Leave unset for Vercel default `1` | Optional per-function-instance PostgreSQL pool size; not a global cap |
 | `ALLOW_TEST_BYPASS` | `false` | Disables test header bypass in production |
 
 ---
@@ -193,11 +193,10 @@ node scripts/smoke-test.js https://waste-journey-frontend.vercel.app WB-2026-001
 
 | Issue / Symptom | Probable Cause | Resolution |
 |---|---|---|
-| **Cold start latency (1–2s)** | Serverless instance initialization on first wake | Normal behavior for Vercel Fluid Compute. Ensure connection timeout is 5s and `idleTimeoutMillis` is 10s. Keep pool max at 3. |
-| **Cookie not saved on login** | `COOKIE_SECURE=true` sent over plain HTTP, or cookie path mismatch | Ensure frontend is accessed over HTTPS. Confirm `COOKIE_PATH=/api/auth` matches the browser-facing proxied path. |
+| **Cold start latency (1–2s)** | Serverless instance initialization on first wake | Normal behavior for Vercel Fluid Compute. Pool connection timeout is 5s and idle timeout is 10s. On Vercel the default pool maximum is 1 per function instance. |
+| **Cookie not saved on login** | Cookie security/SameSite configuration or frontend/backend origin mismatch | Ensure frontend is accessed over HTTPS. Production defaults are `COOKIE_SECURE=true` and `COOKIE_SAMESITE=none`; explicit environment values override them. |
 | **502 Bad Gateway on `/api/*`** | Frontend proxy target is down, wrong URL, or crashed | Verify `destination` in `frontend/vercel.json` matches the backend Vercel URL. Check Vercel backend Function logs. |
-| **PostgreSQL Connection Limit Exceeded** | Connecting to Direct Port 5432 instead of Transaction Pooler | Ensure `DATABASE_URL` uses port **6543** and the pooler hostname (`...pooler.supabase.com`). Keep `max: 3` in `server/src/db/index.js`. |
+| **PostgreSQL Connection Limit Exceeded** (`max clients reached`) | Too many simultaneous Vercel instances/connections, an excessive `DB_POOL_MAX`, or direct database connections | Vercel defaults to `max: 1` per function instance in `server/src/db/index.js`. Remove an unnecessarily high `DB_POOL_MAX`; use the database provider's pooler and check its total connection budget. Each serverless instance has its own pool, so per-instance values multiply under concurrency. |
 | **CORS error in browser console** | Browser calling backend directly rather than via `/api` | Ensure frontend code uses relative path `/api` (handled by `client.js`). Verify `FRONTEND_URL` in backend env matches frontend domain. |
 | **Database SSL Error: `SELF_SIGNED_CERT_IN_CHAIN`** | Node.js rejecting Supavisor transaction pooler certificate | Set `DB_SSL_REJECT_UNAUTHORIZED=false` in backend environment variables. |
 | **Test header bypass active** | `ALLOW_TEST_BYPASS` set to true in production | Ensure `ALLOW_TEST_BYPASS` is absent or set to `false`. Rate limiter strictly ignores test headers when `NODE_ENV=production`. |
-

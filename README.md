@@ -4,11 +4,15 @@ A production-style web portal to track municipal solid waste batches through the
 **Collection $\rightarrow$ Transportation $\rightarrow$ RTS (Transfer) $\rightarrow$ Processing**
 using unique Batch IDs (`WB-YYYY-NNNN`) and QR codes.
 
+> **Current developer guide:** [Project structure, frontend/backend locations,
+> local setup, and API workflow](docs/developer_guide.md). The guide reflects
+> the current code and should be preferred over older setup notes below.
+
 ---
 
 ## 1. Prerequisites
 
-- **Node.js**: v18.0.0 or higher (v20+ recommended)
+- **Node.js**: v20.0.0 or higher (required by the backend)
 - **npm**: v9.0.0 or higher
 - **PostgreSQL Database**:
   - **Option A (Cloud Supabase - Recommended & Free)**: Free Supabase project using the **Session Pooler** (IPv4 enabled, port 5432 / 6543, no paid add-ons required).
@@ -165,4 +169,3 @@ The stage entry forms ([`src/pages/stage/StageEntryForm.jsx`](frontend/src/pages
 - Touch targets $\ge 40$px for all buttons and inputs.
 - Mobile drawer navigation with responsive hamburger menu.
 - Stacked action buttons (`flex-col-reverse`) prioritizing primary submission on mobile screens.
-
