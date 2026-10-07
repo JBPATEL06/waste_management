@@ -113,3 +113,13 @@ export const listBatchesSchema = {
   }),
 };
 
+export const deleteBatchSchema = {
+  params: z.object({
+    id: z.string().min(1, 'Batch ID is required'),
+  }),
+  body: z.object({
+    reason: z.string().trim().min(5, 'Reason must be at least 5 characters'),
+  }),
+};
+
+

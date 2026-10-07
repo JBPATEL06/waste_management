@@ -64,3 +64,13 @@ export async function getBatchQr(req, res, next) {
   }
 }
 
+export async function deleteBatch(req, res, next) {
+  try {
+    const result = await batchService.deleteBatch(req.params.id, req.body.reason, req.user.id);
+    return res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+

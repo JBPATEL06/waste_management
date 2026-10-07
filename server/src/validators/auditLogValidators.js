@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const auditActionEnum = z.enum([
   'BATCH_CREATE',
   'BATCH_EDIT',
+  'BATCH_DELETE',
   'ASSIGN',
   'REASSIGN',
   'ENTRY_CREATE',

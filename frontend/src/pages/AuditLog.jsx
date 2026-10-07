@@ -78,6 +78,7 @@ export default function AuditLog() {
         return 'bg-badge-transit-bg text-badge-transit-text';
       case 'ENTRY_ADMIN_DELETE':
       case 'ENTRY_DELETE':
+      case 'BATCH_DELETE':
       case 'DELETED':
       case 'USER_DEACTIVATE':
         return 'bg-badge-deleted-bg text-badge-deleted-text';
@@ -156,6 +157,7 @@ export default function AuditLog() {
                 <option value="ALL">All Actions</option>
                 <option value="BATCH_CREATE">Batch Created</option>
                 <option value="BATCH_EDIT">Batch Edited</option>
+                <option value="BATCH_DELETE">Batch Deleted</option>
                 <option value="ENTRY_CREATE">Entry Created</option>
                 <option value="ENTRY_CORRECT">Entry Corrected</option>
                 <option value="ENTRY_ADMIN_EDIT">Entry Edited</option>

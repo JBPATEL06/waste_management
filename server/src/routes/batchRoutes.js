@@ -5,6 +5,7 @@ import { authenticate, requireAssignment, requireRole, stageGuard } from '../mid
 import { validate } from '../middleware/validate.js';
 import {
   createBatchSchema,
+  deleteBatchSchema,
   listBatchesSchema,
   reassignSchema,
   updateBatchSchema,
@@ -20,6 +21,7 @@ router.post('/', requireRole('ADMIN'), validate(createBatchSchema), batchControl
 
 router.get('/:id', batchController.getBatchById);
 router.patch('/:id', requireRole('ADMIN'), validate(updateBatchSchema), batchController.updateBatch);
+router.delete('/:id', requireRole('ADMIN'), validate(deleteBatchSchema), batchController.deleteBatch);
 router.put('/:id/assignments', requireRole('ADMIN'), validate(reassignSchema), batchController.reassignBatch);
 router.get('/:id/qr', requireRole('ADMIN', 'HEAD_OFFICER'), batchController.getBatchQr);
 

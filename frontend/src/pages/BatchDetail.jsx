@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { QRCodeCanvas } from 'qrcode.react';
 import { batchesApi } from '../api/batchesApi';
@@ -14,15 +14,19 @@ import { formatDateTime } from '../utils/formatDateTime';
 export default function BatchDetail() {
   const { code } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const qrRef = useRef(null);
 
   const isHeadOfficer = user?.role === 'HEAD_OFFICER';
+  const isAdmin = user?.role === 'ADMIN';
 
   // Modal dialog states
   const [showReassignModal, setShowReassignModal] = useState(false);
   const [showEditEntryModal, setShowEditEntryModal] = useState(false);
   const [showDeleteEntryModal, setShowDeleteEntryModal] = useState(false);
+  const [showDeleteBatchModal, setShowDeleteBatchModal] = useState(false);
+  const [deleteBatchReason, setDeleteBatchReason] = useState('');
 
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [editNotes, setEditNotes] = useState('');
@@ -113,6 +117,31 @@ export default function BatchDetail() {
       setActionError(err.message || 'Failed to delete entry');
     },
   });
+
+  const deleteBatchMutation = useMutation({
+    mutationFn: (reasonText) => batchesApi.deleteBatch(batch.id, { reason: reasonText }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['batches'] });
+      triggerToast(`Batch ${batch.batch_code} deleted successfully`);
+      setShowDeleteBatchModal(false);
+      setTimeout(() => {
+        navigate('/admin/batches');
+      }, 700);
+    },
+    onError: (err) => {
+      setActionError(err.message || 'Failed to delete batch');
+    },
+  });
+
+  const handleDeleteBatch = (e) => {
+    e.preventDefault();
+    if (!deleteBatchReason.trim() || deleteBatchReason.trim().length < 5) {
+      setActionError('Reason must be at least 5 characters');
+      return;
+    }
+    setActionError('');
+    deleteBatchMutation.mutate(deleteBatchReason.trim());
+  };
 
   const handleReassign = (e) => {
     e.preventDefault();
@@ -254,6 +283,19 @@ export default function BatchDetail() {
           </div>
 
           <div className="flex items-center gap-2">
+            {isAdmin && timeline.length === 0 && history.length === 0 && (
+              <button
+                onClick={() => {
+                  setDeleteBatchReason('');
+                  setActionError('');
+                  setShowDeleteBatchModal(true);
+                }}
+                className="h-9 px-3 bg-error-soft hover:bg-red-100 text-error border border-error/30 font-body-medium text-xs rounded-lg inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[16px]">delete</span>
+                <span>Delete Batch</span>
+              </button>
+            )}
             {!isHeadOfficer && (
               <button
                 onClick={() => {
@@ -715,6 +757,70 @@ export default function BatchDetail() {
                   className="h-10 px-4 bg-error text-white rounded-lg hover:bg-red-700 transition-colors font-medium cursor-pointer disabled:opacity-75"
                 >
                   {deleteEntryMutation.isPending ? 'Deleting...' : 'Confirm Soft Delete'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Admin Delete Batch */}
+      {showDeleteBatchModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-surface rounded-xl border border-border max-w-[460px] w-full p-6 flex flex-col gap-4 shadow-xl animate-fade-in">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-full bg-error-soft flex items-center justify-center text-error shrink-0">
+                <span className="material-symbols-outlined text-[22px]">delete_forever</span>
+              </div>
+              <div>
+                <h3 className="font-section-title text-section-title text-text">
+                  Delete Batch ({batch.batch_code})
+                </h3>
+                <p className="font-body text-body text-text-muted mt-1 text-xs">
+                  This will permanently delete this empty batch and its assignments. This operation is recorded in the immutable audit log.
+                </p>
+              </div>
+            </div>
+
+            {actionError && (
+              <div className="p-3 bg-error-soft text-error text-caption rounded-lg border border-error/20">
+                {actionError}
+              </div>
+            )}
+
+            <form onSubmit={handleDeleteBatch} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="font-label text-label text-text-muted" htmlFor="deleteBatchReason">
+                  Deletion Reason <span className="text-error">*</span>
+                </label>
+                <textarea
+                  id="deleteBatchReason"
+                  rows="3"
+                  required
+                  placeholder="Specify the reason for deleting this empty batch (min 5 characters)..."
+                  value={deleteBatchReason}
+                  onChange={(e) => setDeleteBatchReason(e.target.value)}
+                  className="p-3 bg-surface border border-border rounded-lg text-text font-body text-body"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-border mt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteBatchModal(false)}
+                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={deleteBatchMutation.isPending}
+                  className="h-10 px-4 bg-error text-white rounded-lg hover:bg-red-700 transition-colors font-medium cursor-pointer disabled:opacity-75 flex items-center gap-1.5"
+                >
+                  {deleteBatchMutation.isPending && (
+                    <span className="material-symbols-outlined animate-spin text-[16px]">progress_activity</span>
+                  )}
+                  <span>{deleteBatchMutation.isPending ? 'Deleting...' : 'Confirm Delete Batch'}</span>
                 </button>
               </div>
             </form>

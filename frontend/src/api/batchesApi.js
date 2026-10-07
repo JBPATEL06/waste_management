@@ -20,6 +20,8 @@ export const batchesApi = {
 
   reassignBatch: (id, payload) => api.put(`/batches/${id}/assignments`, payload),
 
+  deleteBatch: (id, data) => api.delete(`/batches/${id}`, data),
+
   getBatchQr: (id) => api.get(`/batches/${id}/qr`),
 };
 

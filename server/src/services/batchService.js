@@ -511,3 +511,76 @@ export async function getBatchQr(identifier) {
   };
 }
 
+export async function deleteBatch(batchId, reason, adminId) {
+  const client = await getClient();
+  try {
+    await client.query('BEGIN');
+
+    // 1. Lock the batch row
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(batchId);
+    const whereBatch = isUuid ? 'id = $1' : 'batch_code = $1';
+    const batchRes = await client.query(`SELECT * FROM batches WHERE ${whereBatch} FOR UPDATE`, [batchId]);
+
+    if (batchRes.rows.length === 0) {
+      throw new AppError(404, ErrorCodes.NOT_FOUND, 'Batch not found');
+    }
+    const batch = batchRes.rows[0];
+    const actualBatchId = batch.id;
+
+    // 2. Check if ANY row exists in stage_entries (any status)
+    const entriesRes = await client.query(
+      'SELECT count(*) FROM stage_entries WHERE batch_id = $1',
+      [actualBatchId]
+    );
+    if (Number(entriesRes.rows[0].count) > 0) {
+      throw new AppError(409, ErrorCodes.DELETE_BLOCKED, 'Batch has entries, cannot delete');
+    }
+
+    // 3. Fetch assignments for audit old_values
+    const assignRes = await client.query(
+      'SELECT stage, user_id FROM batch_assignments WHERE batch_id = $1',
+      [actualBatchId]
+    );
+
+    const oldValues = {
+      batch_code: batch.batch_code,
+      waste_type: batch.waste_type,
+      quantity: batch.quantity,
+      source_area: batch.source_area,
+      assigned_user_ids: assignRes.rows.map((a) => a.user_id),
+      reason,
+      performed_by: adminId,
+    };
+
+    // 4. Insert audit_log (action BATCH_DELETE, batch_id NULL)
+    await logAudit({
+      action: 'BATCH_DELETE',
+      batchId: null,
+      entityType: 'batches',
+      entityId: actualBatchId,
+      oldValues,
+      newValues: null,
+      reason,
+      performedBy: adminId,
+      client,
+    });
+
+    // 5. Delete the batch (assignments cascade)
+    await client.query('DELETE FROM batches WHERE id = $1', [actualBatchId]);
+
+    await client.query('COMMIT');
+    invalidateDashboardCache();
+
+    return {
+      message: 'Batch deleted successfully',
+      batch_code: batch.batch_code,
+    };
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+
