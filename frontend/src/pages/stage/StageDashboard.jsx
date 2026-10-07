@@ -5,23 +5,8 @@ import { STAGE_CONFIG } from '../../constants/stages';
 import { dashboardApi } from '../../api/dashboardApi';
 import StatusBadge from '../../components/common/StatusBadge';
 
-function formatDateTime(dateStr) {
-  if (!dateStr) return '—';
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleString('en-IN', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
-  } catch {
-    return dateStr;
-  }
-}
+import { formatDateTime } from '../../utils/formatDateTime';
+
 
 export default function StageDashboard({ role: propRole }) {
   const location = useLocation();

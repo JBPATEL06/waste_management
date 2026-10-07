@@ -5,6 +5,7 @@ import { batchesApi } from '../api/batchesApi';
 import { masterApi } from '../api/masterApi';
 import { dashboardApi } from '../api/dashboardApi';
 import StatusBadge from '../components/common/StatusBadge';
+import { formatDateTime } from '../utils/formatDateTime';
 
 export default function BatchList() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -315,7 +316,7 @@ export default function BatchList() {
                         </Link>
                       </td>
                       <td className="py-3.5 px-4 font-body text-xs text-text-muted">
-                        {batch.created_at ? new Date(batch.created_at).toLocaleString() : '—'}
+                        {formatDateTime(batch.created_at)}
                       </td>
                       <td className="py-3.5 px-4 font-body text-sm text-text">
                         {batch.waste_type}

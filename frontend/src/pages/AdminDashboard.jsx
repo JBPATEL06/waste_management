@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { dashboardApi } from '../api/dashboardApi';
 import { masterApi } from '../api/masterApi';
 import StatusBadge from '../components/common/StatusBadge';
+import { formatDateTime } from '../utils/formatDateTime';
 
 function getFilterDates(filterKey) {
   if (filterKey === 'all') return {};
@@ -720,7 +721,7 @@ export default function AdminDashboard() {
                     </td>
                     <td className="py-3 px-3 text-text-muted">{v.rts_name || '—'}</td>
                     <td className="py-3 px-3 text-text-muted">
-                      {v.event_time ? new Date(v.event_time).toLocaleDateString('en-IN') : '—'}
+                      {formatDateTime(v.event_time)}
                     </td>
                     <td className="py-3 px-3 text-right">
                       <Link

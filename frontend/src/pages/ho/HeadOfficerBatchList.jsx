@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { batchesApi } from '../../api/batchesApi';
 import { masterApi } from '../../api/masterApi';
 import StatusBadge from '../../components/common/StatusBadge';
+import { formatDateTime } from '../../utils/formatDateTime';
 
 export default function HeadOfficerBatchList() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -216,7 +217,7 @@ export default function HeadOfficerBatchList() {
                         </Link>
                       </td>
                       <td className="py-3.5 px-4 font-body text-xs text-text-muted">
-                        {batch.created_at ? new Date(batch.created_at).toLocaleString() : '—'}
+                        {formatDateTime(batch.created_at)}
                       </td>
                       <td className="py-3.5 px-4 font-body text-sm text-text">{batch.waste_type}</td>
                       <td className="py-3.5 px-4 font-body text-sm text-text font-medium">

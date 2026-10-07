@@ -25,11 +25,6 @@ export default function StageEntryForm({ role: propRole }) {
 
   const cfg = STAGE_CONFIG[roleKey] || STAGE_CONFIG.collection;
 
-  // Mode state: 'new' or 'correction'
-  const initialMode = searchParams.get('mode') === 'correction' ? 'correction' : 'new';
-  const [mode, setMode] = useState(initialMode);
-  const isCorrection = mode === 'correction';
-
   // Fetch real batch details
   const {
     data: batchData,
@@ -48,6 +43,20 @@ export default function StageEntryForm({ role: propRole }) {
   const ownStageEntry = useMemo(() => {
     return timeline.find((e) => e.stage === cfg.roleKey && e.status === 'ACTIVE');
   }, [timeline, cfg.roleKey]);
+
+  // Auto-derive mode: ACTIVE entry exists -> correction, else -> new
+  const isCorrection = Boolean(batchData && ownStageEntry);
+  const urlMode = searchParams.get('mode');
+
+  // Redirect URL to match actual mode once data loaded
+  useEffect(() => {
+    if (!batchData) return;
+    if (ownStageEntry && urlMode !== 'correction') {
+      navigate(`${cfg.prefix}/batches/${code}/entry?mode=correction`, { replace: true });
+    } else if (!ownStageEntry && urlMode === 'correction') {
+      navigate(`${cfg.prefix}/batches/${code}/entry`, { replace: true });
+    }
+  }, [batchData, ownStageEntry, urlMode, navigate, cfg.prefix, code]);
 
   // Master lists
   const { data: routesData } = useQuery({
@@ -154,13 +163,18 @@ export default function StageEntryForm({ role: propRole }) {
         setTransportVehicleId(batch.vehicle_id || '');
         setDestination('Central RTS');
       } else if (cfg.stageNumber === 3) {
-        setRtsReceivedWeight(batch.quantity || '');
+        // In correction mode prefill existing received weight; in add mode leave empty
+        if (ownStageEntry) {
+          setRtsReceivedWeight(ownStageEntry.quantity_received ?? ownStageEntry.quantity ?? '');
+        } else {
+          setRtsReceivedWeight('');
+        }
         setHandoverDetails(`Handover of batch ${batch.batch_code} at RTS`);
       } else if (cfg.stageNumber === 4) {
         setProcessedWeight(batch.quantity || '');
       }
     }
-  }, [batch, cfg.stageNumber]);
+  }, [batch, cfg.stageNumber, ownStageEntry]);
 
   // Set default dropdown selections when data loads
   useEffect(() => {
@@ -380,7 +394,50 @@ export default function StageEntryForm({ role: propRole }) {
     );
   }
 
+  // Derive stage lock reason from timeline
+  const lockReason = useMemo(() => {
+    if (!batchData) return null;
+    if (cfg.stageNumber === 1) return null; // Collection never locked
+    const prevStages = timeline.filter((e) => {
+      const stageMap = { collection: 1, transportation: 2, rts: 3, processing: 4 };
+      return stageMap[e.stage] < cfg.stageNumber;
+    });
+    if (cfg.stageNumber === 2) {
+      const hasCollection = timeline.some((e) => e.stage === 'collection' && e.status === 'ACTIVE');
+      if (!hasCollection) return 'Waiting for Collection stage completion';
+    } else if (cfg.stageNumber === 3) {
+      const transportEntry = timeline.find((e) => e.stage === 'transportation' && e.status === 'ACTIVE');
+      if (!transportEntry) return 'Waiting for Transportation stage';
+      if (!transportEntry.arrival_time) return 'Waiting for Transportation vehicle arrival time';
+    } else if (cfg.stageNumber === 4) {
+      const hasRts = timeline.some((e) => e.stage === 'rts' && e.status === 'ACTIVE');
+      if (!hasRts) return 'Waiting for RTS stage handover';
+    }
+    return null;
+  }, [batchData, timeline, cfg.stageNumber]);
+
+  if (batch && lockReason && !ownStageEntry) {
+    return (
+      <div className="py-16 flex flex-col items-center justify-center gap-4 text-center">
+        <div className="w-12 h-12 rounded-full bg-slate-100 text-text-muted flex items-center justify-center">
+          <span className="material-symbols-outlined text-[28px]">lock_clock</span>
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-text">Stage Locked</h2>
+          <p className="text-sm text-text-muted mt-1">{lockReason}</p>
+        </div>
+        <Link
+          to={`${cfg.prefix}/batches/${batch.batch_code}`}
+          className="px-4 py-2 bg-surface border border-border text-sm rounded-lg hover:bg-slate-50"
+        >
+          Back to Batch
+        </Link>
+      </div>
+    );
+  }
+
   const isSubmitting = createMutation.isPending || correctMutation.isPending;
+
 
   return (
     <div className="flex flex-col w-full max-w-5xl mx-auto space-y-6">
@@ -486,40 +543,6 @@ export default function StageEntryForm({ role: propRole }) {
               {batch.waste_type} • {Number(batch.quantity).toLocaleString()} kg
             </span>
           </div>
-        </div>
-      </div>
-
-      {/* Mode Switcher Strip */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-4 py-2.5 bg-surface border border-border rounded-lg text-body text-text shadow-sm">
-        <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-text-muted text-[18px]">rule</span>
-          <span className="font-body-medium text-body-medium">Entry Operation Mode</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            id="btnModeNew"
-            onClick={() => setMode('new')}
-            className={`px-3 py-1 rounded font-label text-label transition-colors cursor-pointer ${
-              !isCorrection
-                ? 'bg-primary-soft text-primary-container font-medium border border-primary-container/20'
-                : 'text-text-muted hover:text-text hover:bg-background border border-transparent'
-            }`}
-          >
-            Initial Entry
-          </button>
-          <button
-            type="button"
-            id="btnModeCorrection"
-            onClick={() => setMode('correction')}
-            className={`px-3 py-1 rounded font-label text-label transition-colors cursor-pointer ${
-              isCorrection
-                ? 'bg-warning-soft text-warning font-medium border border-warning/30'
-                : 'text-text-muted hover:text-text hover:bg-background border border-transparent'
-            }`}
-          >
-            Correction / Amendment
-          </button>
         </div>
       </div>
 
@@ -658,7 +681,7 @@ export default function StageEntryForm({ role: propRole }) {
               >
                 <option value="">Select RTS Facility</option>
                 {(rtsData?.items || []).map((loc) => (
-                  <option key={loc.id} value={loc.id}>{loc.name} ({loc.code})</option>
+                  <option key={loc.id} value={loc.id}>{loc.name}{loc.location ? ` (${loc.location})` : ''}</option>
                 ))}
               </select>
             </div>
@@ -731,7 +754,7 @@ export default function StageEntryForm({ role: propRole }) {
               >
                 <option value="">Select RTS Station</option>
                 {(rtsData?.items || []).map((loc) => (
-                  <option key={loc.id} value={loc.id}>{loc.name} ({loc.code})</option>
+                  <option key={loc.id} value={loc.id}>{loc.name}{loc.location ? ` (${loc.location})` : ''}</option>
                 ))}
               </select>
             </div>
@@ -746,7 +769,7 @@ export default function StageEntryForm({ role: propRole }) {
               >
                 <option value="">Select Category</option>
                 {(wasteCategoriesData?.items || []).map((cat) => (
-                  <option key={cat.id} value={cat.id}>{cat.name} ({cat.code})</option>
+                  <option key={cat.id} value={cat.id}>{cat.name}{cat.location ? ` (${cat.location})` : ''}</option>
                 ))}
               </select>
             </div>
@@ -758,6 +781,7 @@ export default function StageEntryForm({ role: propRole }) {
                 min="1"
                 step="0.5"
                 type="number"
+                placeholder="Enter weighed quantity (kg)"
                 value={rtsReceivedWeight}
                 onChange={(e) => setRtsReceivedWeight(e.target.value)}
                 className="h-10 px-3 rounded-lg border border-border bg-surface text-body text-text focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -774,7 +798,7 @@ export default function StageEntryForm({ role: propRole }) {
               >
                 <option value="">Select Target Facility</option>
                 {(facilitiesData?.items || []).map((f) => (
-                  <option key={f.id} value={f.id}>{f.name} ({f.code})</option>
+                  <option key={f.id} value={f.id}>{f.name}{f.location ? ` (${f.location})` : ''}</option>
                 ))}
               </select>
             </div>
@@ -829,7 +853,7 @@ export default function StageEntryForm({ role: propRole }) {
               >
                 <option value="">Select Facility</option>
                 {(facilitiesData?.items || []).map((f) => (
-                  <option key={f.id} value={f.id}>{f.name} ({f.code})</option>
+                  <option key={f.id} value={f.id}>{f.name}{f.location ? ` (${f.location})` : ''}</option>
                 ))}
               </select>
             </div>
@@ -844,7 +868,7 @@ export default function StageEntryForm({ role: propRole }) {
               >
                 <option value="">Select Process Type</option>
                 {(processTypesData?.items || []).map((pt) => (
-                  <option key={pt.id} value={pt.id}>{pt.name} ({pt.code})</option>
+                  <option key={pt.id} value={pt.id}>{pt.name}{pt.location ? ` (${pt.location})` : ''}</option>
                 ))}
               </select>
             </div>

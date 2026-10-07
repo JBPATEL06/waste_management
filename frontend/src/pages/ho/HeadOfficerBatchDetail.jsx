@@ -7,23 +7,8 @@ import StatusBadge from '../../components/common/StatusBadge';
 import { getPublicBaseUrl } from '../../utils/url';
 import { printBatchManifest } from '../../utils/printManifest';
 
-function formatDateTime(dateStr) {
-  if (!dateStr) return '—';
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleString('en-IN', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
-  } catch {
-    return dateStr;
-  }
-}
+import { formatDateTime } from '../../utils/formatDateTime';
+
 
 export default function HeadOfficerBatchDetail() {
   const { code } = useParams();

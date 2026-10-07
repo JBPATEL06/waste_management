@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { auditApi } from '../api/auditApi';
 import { usersApi } from '../api/usersApi';
 import { useAuth } from '../context/AuthContext';
+import { formatDateTime } from '../utils/formatDateTime';
 
 export default function AuditLog() {
   const { user } = useAuth();
@@ -88,7 +89,7 @@ export default function AuditLog() {
   const handleExportCsv = () => {
     if (entries.length === 0) return;
     const rows = entries.map((r) =>
-      `"${new Date(r.created_at).toLocaleString()}","${r.action}","${r.user_name || 'System'}","${r.batch_code || '—'}","${r.entity_type}","${r.details?.reason || ''}"`
+      `"${formatDateTime(r.performed_at)}","${r.action}","${r.user_name || 'System'}","${r.batch_code || '—'}","${r.entity_type}","${r.details?.reason || ''}"`
     );
     const csvContent =
       `"Time","Action","User","Batch Code","Entity","Reason"\n` + rows.join('\n');
@@ -346,7 +347,7 @@ export default function AuditLog() {
                           )}
                         </td>
                         <td className="px-3 whitespace-nowrap text-text-muted text-xs">
-                          {new Date(item.created_at).toLocaleString()}
+                          {formatDateTime(item.performed_at)}
                         </td>
                         <td className="px-3 whitespace-nowrap">
                           <span

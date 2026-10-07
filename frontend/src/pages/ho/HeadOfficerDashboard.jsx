@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { dashboardApi } from '../../api/dashboardApi';
 import { masterApi } from '../../api/masterApi';
 import StatusBadge from '../../components/common/StatusBadge';
+import { formatDateTime } from '../../utils/formatDateTime';
 
 function getFilterDates(filterKey) {
   if (filterKey === 'all') return {};
@@ -21,23 +22,6 @@ function getFilterDates(filterKey) {
   return { start_date, end_date };
 }
 
-function formatDateTime(dateStr) {
-  if (!dateStr) return '—';
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return dateStr;
-    return d.toLocaleString('en-IN', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
-  } catch {
-    return dateStr;
-  }
-}
 
 export default function HeadOfficerDashboard() {
   const [dateFilter, setDateFilter] = useState('7d');

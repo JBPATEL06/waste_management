@@ -9,6 +9,7 @@ import StatusBadge from '../components/common/StatusBadge';
 import { useAuth } from '../context/AuthContext';
 import { getPublicBaseUrl } from '../utils/url';
 import { printBatchManifest } from '../utils/printManifest';
+import { formatDateTime } from '../utils/formatDateTime';
 
 export default function BatchDetail() {
   const { code } = useParams();
@@ -248,7 +249,7 @@ export default function BatchDetail() {
               <StatusBadge status={batch.current_status} />
             </div>
             <p className="font-body text-body text-text-muted mt-1">
-              {batch.source_area} • Created {new Date(batch.created_at).toLocaleString()}
+              {batch.source_area} • Created {formatDateTime(batch.created_at)}
             </p>
           </div>
 
@@ -339,7 +340,7 @@ export default function BatchDetail() {
                 <span className="text-xs text-text-muted block mt-0.5">{assign?.user_email || '—'}</span>
               </div>
               <div className="mt-3 pt-2 border-t border-border flex items-center justify-between text-[11px] text-text-disabled">
-                <span>Assigned {assign?.assigned_at ? new Date(assign.assigned_at).toLocaleDateString() : 'Initial'}</span>
+                <span>Assigned {assign?.assigned_at ? formatDateTime(assign.assigned_at) : 'Initial'}</span>
                 <span className="material-symbols-outlined text-[16px] text-badge-completed-text">verified</span>
               </div>
             </div>
@@ -395,7 +396,7 @@ export default function BatchDetail() {
 
                 <div className="flex sm:flex-col items-end justify-between sm:justify-start gap-2 shrink-0">
                   <span className="font-caption text-xs text-text-muted">
-                    {entry.event_time ? new Date(entry.event_time).toLocaleString() : '—'}
+                    {formatDateTime(entry.event_time)}
                   </span>
 
                   {!isHeadOfficer && (
@@ -462,7 +463,7 @@ export default function BatchDetail() {
               {history.map((h) => (
                 <tr key={h.id} className="hover:bg-slate-50/75">
                   <td className="py-2.5 px-3 text-text-muted whitespace-nowrap">
-                    {h.event_time ? new Date(h.event_time).toLocaleString() : '—'}
+                    {formatDateTime(h.event_time)}
                   </td>
                   <td className="py-2.5 px-3 font-semibold text-text">{h.stage}</td>
                   <td className="py-2.5 px-3 font-mono">v{h.version_no}</td>
