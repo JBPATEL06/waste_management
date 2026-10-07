@@ -210,10 +210,64 @@ export async function fetchDatasetRows(dataset, filters = {}) {
     };
   }
 
+  if (normDataset === 'audit' || normDataset === 'audit-log' || normDataset === 'audit-logs') {
+    const whereClauses = [];
+    const params = [];
+
+    if (filters.action && filters.action !== 'ALL') {
+      params.push(filters.action);
+      whereClauses.push(`al.action = $${params.length}`);
+    }
+
+    if (filters.user) {
+      params.push(`%${filters.user}%`);
+      whereClauses.push(`(u.name ILIKE $${params.length} OR u.email ILIKE $${params.length})`);
+    }
+
+    if (filters.batch) {
+      params.push(`%${filters.batch}%`);
+      whereClauses.push(`b.batch_code ILIKE $${params.length}`);
+    }
+
+    if (filters.start_date) {
+      params.push(filters.start_date);
+      whereClauses.push(`al.performed_at >= $${params.length}`);
+    }
+
+    if (filters.end_date) {
+      params.push(filters.end_date);
+      whereClauses.push(`al.performed_at <= $${params.length}`);
+    }
+
+    const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
+    const sql = `
+      SELECT 
+        al.performed_at, al.action, u.name AS user_name, b.batch_code, al.entity_type, al.reason
+      FROM audit_log al
+      JOIN users u ON u.id = al.performed_by
+      LEFT JOIN batches b ON b.id = al.batch_id
+      ${whereSql}
+      ORDER BY al.performed_at DESC
+    `;
+    const res = await query(sql, params);
+    return {
+      name: 'Audit-Log',
+      columns: [
+        { key: 'performed_at', header: 'Time', width: 22 },
+        { key: 'action', header: 'Action', width: 18 },
+        { key: 'user_name', header: 'User', width: 18 },
+        { key: 'batch_code', header: 'Batch Code', width: 16 },
+        { key: 'entity_type', header: 'Entity', width: 16 },
+        { key: 'reason', header: 'Reason', width: 28 },
+      ],
+      rows: res.rows,
+    };
+  }
+
   throw new AppError(
     404,
     ErrorCodes.NOT_FOUND,
-    `Unknown dataset '${dataset}'. Allowed: batches, stage-records, full-history, current-status`
+    `Unknown dataset '${dataset}'. Allowed: batches, stage-records, full-history, current-status, audit`
   );
 }
 

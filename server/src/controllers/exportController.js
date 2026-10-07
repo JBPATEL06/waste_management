@@ -1,10 +1,15 @@
 import * as exportService from '../services/exportService.js';
 import { AppError, ErrorCodes } from '../utils/errors.js';
+import { auditActionEnum } from '../validators/auditLogValidators.js';
 
 export async function exportDataset(req, res, next) {
   try {
     const { dataset } = req.params;
     const format = (req.query.format || 'csv').toLowerCase();
+
+    if (req.query.action && req.query.action !== 'ALL') {
+      auditActionEnum.parse(req.query.action);
+    }
 
     if (format === 'csv') {
       await exportService.exportCsv(dataset, req.query, res);

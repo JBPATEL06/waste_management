@@ -72,12 +72,16 @@ export default function AuditLog() {
       case 'ENTRY_CORRECT':
       case 'CORRECTED':
       case 'ENTRY_UPDATE':
+      case 'ENTRY_ADMIN_EDIT':
+      case 'BATCH_EDIT':
       case 'MASTER_CHANGE':
         return 'bg-badge-transit-bg text-badge-transit-text';
+      case 'ENTRY_ADMIN_DELETE':
       case 'ENTRY_DELETE':
       case 'DELETED':
       case 'USER_DEACTIVATE':
         return 'bg-badge-deleted-bg text-badge-deleted-text';
+      case 'PASSWORD_RESET':
       case 'ASSIGN':
       case 'REASSIGN':
         return 'bg-badge-rts-bg text-badge-rts-text';
@@ -151,15 +155,18 @@ export default function AuditLog() {
               >
                 <option value="ALL">All Actions</option>
                 <option value="BATCH_CREATE">Batch Created</option>
+                <option value="BATCH_EDIT">Batch Edited</option>
                 <option value="ENTRY_CREATE">Entry Created</option>
                 <option value="ENTRY_CORRECT">Entry Corrected</option>
-                <option value="ENTRY_DELETE">Entry Deleted</option>
+                <option value="ENTRY_ADMIN_EDIT">Entry Edited</option>
+                <option value="ENTRY_ADMIN_DELETE">Entry Deleted</option>
                 <option value="ASSIGN">Assigned</option>
                 <option value="REASSIGN">Reassigned</option>
                 <option value="MASTER_CHANGE">Master Data Changed</option>
                 <option value="USER_CREATE">User Created</option>
                 <option value="USER_UPDATE">User Updated</option>
                 <option value="USER_DEACTIVATE">User Deactivated</option>
+                <option value="PASSWORD_RESET">Password Reset</option>
               </select>
               <span className="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-text-disabled text-[20px]">
                 expand_more
@@ -255,12 +262,12 @@ export default function AuditLog() {
             </button>
             <button
               className={`h-8 px-3 rounded-full border text-xs font-medium hover:bg-slate-50 transition-colors cursor-pointer ${
-                filterAction === 'ENTRY_DELETE'
+                filterAction === 'ENTRY_ADMIN_DELETE'
                   ? 'bg-primary-soft text-primary border-primary/30'
                   : 'bg-surface border-border text-text-muted'
               }`}
               onClick={() => {
-                setFilterAction(filterAction === 'ENTRY_DELETE' ? 'ALL' : 'ENTRY_DELETE');
+                setFilterAction(filterAction === 'ENTRY_ADMIN_DELETE' ? 'ALL' : 'ENTRY_ADMIN_DELETE');
                 setCurrentPage(1);
               }}
               type="button"

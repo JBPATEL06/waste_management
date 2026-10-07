@@ -3,9 +3,12 @@ import { query } from '../db/index.js';
 export async function listAuditLogs({
   action,
   user,
+  user_id,
   batch,
+  search,
   start_date,
   end_date,
+  page,
   limit = 50,
   offset = 0,
 }) {
@@ -17,13 +20,17 @@ export async function listAuditLogs({
     whereClauses.push(`al.action = $${params.length}`);
   }
 
-  if (user) {
+  if (user_id) {
+    params.push(user_id);
+    whereClauses.push(`al.performed_by = $${params.length}`);
+  } else if (user) {
     params.push(`%${user}%`);
     whereClauses.push(`(u.name ILIKE $${params.length} OR u.email ILIKE $${params.length})`);
   }
 
-  if (batch) {
-    params.push(`%${batch}%`);
+  const batchSearch = batch || search;
+  if (batchSearch) {
+    params.push(`%${batchSearch}%`);
     whereClauses.push(`b.batch_code ILIKE $${params.length}`);
   }
 
@@ -49,9 +56,10 @@ export async function listAuditLogs({
   const countRes = await query(countQuery, params);
   const total = Number(countRes.rows[0].count);
 
+  const resolvedOffset = page ? (Math.max(1, Number(page)) - 1) * Number(limit) : Number(offset);
   params.push(limit);
   const limitParam = `$${params.length}`;
-  params.push(offset);
+  params.push(resolvedOffset);
   const offsetParam = `$${params.length}`;
 
   const listQuery = `
