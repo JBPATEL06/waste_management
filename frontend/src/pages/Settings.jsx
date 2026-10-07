@@ -3,16 +3,18 @@ import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { settingsApi } from '../api/settingsApi';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../components/Toast';
+import { LoadingButton } from '../components/LoadingButton';
+import { formatApiError } from '../utils/formatApiError';
 
 export default function Settings() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const toast = useToast();
   const isHeadOfficer = user?.role === 'HEAD_OFFICER';
 
   const [varianceThreshold, setVarianceThreshold] = useState(10);
-  const [toastVisible, setToastVisible] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [thresholdError, setThresholdError] = useState('');
 
   const { data: settingsData, isLoading } = useQuery({
     queryKey: ['appSettings'],
@@ -30,13 +32,11 @@ export default function Settings() {
       settingsApi.updateSettings({ variance_threshold_pct: parseFloat(newThreshold) }),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['appSettings'] });
-      setToastMessage(`Settings updated successfully: Threshold set to ${res.settings?.variance_threshold_pct}%`);
-      setToastVisible(true);
-      setErrorMessage('');
-      setTimeout(() => setToastVisible(false), 4000);
+      toast.success(`Settings updated successfully: Threshold set to ${res.settings?.variance_threshold_pct}%`);
     },
     onError: (err) => {
-      setErrorMessage(err.message || 'Failed to update settings');
+      setThresholdError(err.fieldErrors?.variance_threshold_pct || '');
+      toast.error(formatApiError(err, 'Failed to update settings'));
     },
   });
 
@@ -66,30 +66,6 @@ export default function Settings() {
           Configure global system thresholds and validation parameters.
         </p>
       </div>
-
-      {/* Feedback Notification */}
-      {toastVisible && (
-        <div className="flex items-center justify-between bg-primary-soft border border-primary text-badge-completed-text px-4 py-3 rounded-lg">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[18px]">check_circle</span>
-            <span className="font-label text-label font-medium">{toastMessage}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setToastVisible(false)}
-            className="text-badge-completed-text hover:opacity-75 flex items-center cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-[16px]">close</span>
-          </button>
-        </div>
-      )}
-
-      {errorMessage && (
-        <div className="p-3 bg-error-soft text-error text-caption rounded-lg border border-error/20 flex items-center gap-2">
-          <span className="material-symbols-outlined text-[18px]">error</span>
-          <span>{errorMessage}</span>
-        </div>
-      )}
 
       {/* Main Settings Card */}
       <div className="bg-surface rounded-xl border border-border p-[20px] flex flex-col gap-6 shadow-sm">
@@ -121,12 +97,20 @@ export default function Settings() {
                 required
                 disabled={isHeadOfficer || isLoading}
                 value={varianceThreshold}
-                onChange={(e) => setVarianceThreshold(e.target.value)}
+                onChange={(e) => {
+                  setVarianceThreshold(e.target.value);
+                  setThresholdError('');
+                }}
                 className="w-full h-10 px-3 pr-9 bg-surface rounded-lg border border-border text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-background disabled:cursor-not-allowed"
               />
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-text-muted font-body-medium text-body-medium">
                 %
               </div>
+              {thresholdError && (
+                <p className="font-caption text-caption text-error" role="alert">
+                  {thresholdError}
+                </p>
+              )}
             </div>
 
             <p className="font-caption text-caption text-text-muted mt-0.5">
@@ -144,7 +128,7 @@ export default function Settings() {
           {/* Formula Evaluation Logic & Preview */}
           <div className="bg-background rounded-lg border border-border p-3.5 flex flex-col gap-2">
             <span className="font-caption text-caption text-text font-semibold uppercase tracking-wider">
-              Evaluation Logic & Preview
+              Evaluation Logic &amp; Preview
             </span>
             <div className="font-batch-id text-[12px] leading-5 text-text-muted bg-surface px-2.5 py-1.5 rounded border border-border inline-block overflow-x-auto">
               | (Net Weight RTS - Net Weight Collection) / Net Weight Collection | × 100 &gt; <span className="text-text font-semibold">{numVal}</span>%
@@ -161,21 +145,20 @@ export default function Settings() {
                 type="button"
                 onClick={handleReset}
                 disabled={updateMutation.isPending}
-                className="w-full sm:w-auto justify-center h-10 px-4 bg-surface text-text hover:bg-background border border-border rounded-lg font-body-medium text-body-medium transition-colors flex items-center gap-1.5 focus:outline-none cursor-pointer"
+                className="w-full sm:w-auto justify-center h-10 px-4 bg-surface text-text hover:bg-background border border-border rounded-lg font-body-medium text-body-medium transition-colors flex items-center gap-1.5 focus:outline-none cursor-pointer disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-[16px] text-text-muted">restart_alt</span>
                 <span>Reset to Default</span>
               </button>
-              <button
+              <LoadingButton
                 type="submit"
-                disabled={updateMutation.isPending}
+                loading={updateMutation.isPending}
+                loadingText="Saving..."
                 className="w-full sm:w-auto justify-center h-10 px-5 bg-primary text-on-primary hover:bg-primary-hover rounded-lg font-body-medium text-body-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-70"
               >
-                <span className="material-symbols-outlined text-[18px]">
-                  {updateMutation.isPending ? 'progress_activity' : 'save'}
-                </span>
-                <span>{updateMutation.isPending ? 'Saving...' : 'Save Settings'}</span>
-              </button>
+                <span className="material-symbols-outlined text-[18px]">save</span>
+                <span>Save Settings</span>
+              </LoadingButton>
             </div>
           )}
         </form>
@@ -196,7 +179,7 @@ export default function Settings() {
           </div>
           <div className="flex flex-col gap-0.5">
             <dt className="font-label text-label text-text-muted">Configuration Scope</dt>
-            <dd className="font-body-medium text-body-medium text-text">Global (All active routes & RTS facilities)</dd>
+            <dd className="font-body-medium text-body-medium text-text">Global (All active routes &amp; RTS facilities)</dd>
           </div>
           <div className="flex flex-col gap-0.5">
             <dt className="font-label text-label text-text-muted">Last Modified</dt>

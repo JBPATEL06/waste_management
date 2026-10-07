@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { batchesApi } from '../../api/batchesApi';
 import { masterApi } from '../../api/masterApi';
 import StatusBadge from '../../components/common/StatusBadge';
 import { formatDateTime } from '../../utils/formatDateTime';
+import { TableSkeleton } from '../../components/Skeleton';
 
 export default function HeadOfficerBatchList() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,6 +15,7 @@ export default function HeadOfficerBatchList() {
   const [wasteFilter, setWasteFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,9 +26,8 @@ export default function HeadOfficerBatchList() {
   }, [searchTerm]);
 
   const { data: routesData } = useQuery({
-    queryKey: ['hoRoutesDropdown'],
+    queryKey: ['masters', 'routes'],
     queryFn: () => masterApi.getItems('routes'),
-    staleTime: 5 * 60 * 1000,
   });
 
   const routes = routesData?.items || [];
@@ -54,6 +55,11 @@ export default function HeadOfficerBatchList() {
   const batches = batchesData?.batches || [];
   const total = batchesData?.total || 0;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const prefetchBatch = (batchCode) => queryClient.prefetchQuery({
+    queryKey: ['hoBatchDetail', batchCode],
+    queryFn: () => batchesApi.getBatch(batchCode),
+    staleTime: 15 * 1000,
+  });
 
   const handleResetFilters = () => {
     setSearchTerm('');
@@ -161,16 +167,9 @@ export default function HeadOfficerBatchList() {
 
       {/* Batches Table Card */}
       <div className="bg-surface rounded-xl border border-border overflow-hidden shadow-xs">
-        {isLoading && (
-          <div className="py-16 flex flex-col items-center justify-center gap-3 text-text-muted">
-            <span className="material-symbols-outlined animate-spin text-primary text-[28px]">
-              progress_activity
-            </span>
-            <span className="text-sm">Loading batch registry...</span>
-          </div>
-        )}
+        {isLoading && <TableSkeleton columns={8} />}
 
-        {isError && (
+        {isError && !batchesData && (
           <div className="py-16 flex flex-col items-center justify-center gap-3 text-center p-4">
             <span className="material-symbols-outlined text-error text-[32px]">error</span>
             <span className="text-sm text-text font-medium">{error?.message || 'Failed to load batches'}</span>
@@ -183,7 +182,7 @@ export default function HeadOfficerBatchList() {
           </div>
         )}
 
-        {!isLoading && !isError && (
+        {!isLoading && (batchesData || !isError) && (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[850px]">
               <thead>
@@ -211,6 +210,8 @@ export default function HeadOfficerBatchList() {
                       <td className="py-3.5 px-4">
                         <Link
                           to={`/ho/batches/${batch.batch_code}`}
+                          onMouseEnter={() => prefetchBatch(batch.batch_code)}
+                          onFocus={() => prefetchBatch(batch.batch_code)}
                           className="font-mono text-sm font-bold text-primary hover:underline"
                         >
                           {batch.batch_code}
@@ -238,6 +239,8 @@ export default function HeadOfficerBatchList() {
                       <td className="py-3.5 px-4 text-right">
                         <Link
                           to={`/ho/batches/${batch.batch_code}`}
+                          onMouseEnter={() => prefetchBatch(batch.batch_code)}
+                          onFocus={() => prefetchBatch(batch.batch_code)}
                           className="h-8 px-3 bg-surface hover:bg-slate-100 border border-border text-text font-body-medium text-xs rounded-lg inline-flex items-center gap-1.5 transition-colors"
                         >
                           <span>Inspect</span>

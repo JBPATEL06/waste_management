@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { STAGE_CONFIG } from '../../constants/stages';
 import { batchesApi } from '../../api/batchesApi';
 import StatusBadge from '../../components/common/StatusBadge';
-
+import { DetailSkeleton } from '../../components/Skeleton';
 import { formatDateTime } from '../../utils/formatDateTime';
 
 
@@ -35,6 +35,7 @@ export default function StageBatchView({ role: propRole }) {
     queryKey: ['stageBatchView', code],
     queryFn: () => batchesApi.getBatch(code),
     enabled: Boolean(code),
+    staleTime: 15 * 1000,
   });
 
   const batch = batchData?.batch;
@@ -57,17 +58,10 @@ export default function StageBatchView({ role: propRole }) {
   }, [timeline, cfg.roleKey]);
 
   if (isLoading) {
-    return (
-      <div className="py-20 flex flex-col items-center justify-center gap-3 text-text-muted">
-        <span className="material-symbols-outlined animate-spin text-primary text-[32px]">
-          progress_activity
-        </span>
-        <span className="text-sm font-medium">Loading batch view...</span>
-      </div>
-    );
+    return <DetailSkeleton />;
   }
 
-  if (isError || !batch) {
+  if ((isError && !batchData) || !batch) {
     return (
       <div className="py-16 flex flex-col items-center justify-center gap-4 text-center">
         <div className="w-12 h-12 rounded-full bg-error-soft text-error flex items-center justify-center">

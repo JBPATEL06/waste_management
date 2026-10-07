@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { STAGE_CONFIG } from '../../constants/stages';
@@ -6,6 +6,7 @@ import { meApi } from '../../api/meApi';
 import { useAuth } from '../../context/AuthContext';
 
 import { formatDateTime } from '../../utils/formatDateTime';
+import { TableSkeleton } from '../../components/Skeleton';
 
 
 export default function StageHistory({ role: propRole }) {
@@ -24,18 +25,27 @@ export default function StageHistory({ role: propRole }) {
   const cfg = STAGE_CONFIG[roleKey] || STAGE_CONFIG.collection;
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 15;
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setCurrentPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   const queryParams = useMemo(() => {
     return {
-      search: searchTerm.trim() || undefined,
+      search: debouncedSearch.trim() || undefined,
       status: statusFilter !== 'ALL' ? statusFilter : undefined,
       limit: pageSize,
       offset: (currentPage - 1) * pageSize,
     };
-  }, [searchTerm, statusFilter, currentPage, pageSize]);
+  }, [debouncedSearch, statusFilter, currentPage, pageSize]);
 
   // Fetch operator's history
   const { data: historyData, isLoading, isError, error, refetch } = useQuery({
@@ -172,8 +182,15 @@ export default function StageHistory({ role: propRole }) {
             <tbody className="divide-y divide-border" id="historyTableBody">
               {isLoading ? (
                 <tr>
-                  <td colSpan={9} className="px-space-lg py-12 text-center text-text-muted font-body">
-                    Loading history logs...
+                  <td colSpan={9} className="p-0">
+                    <TableSkeleton columns={9} />
+                  </td>
+                </tr>
+              ) : isError && !historyData ? (
+                <tr>
+                  <td colSpan={9} className="px-space-lg py-12 text-center text-error">
+                    {error?.message || 'Failed to load history logs.'}{' '}
+                    <button type="button" onClick={() => refetch()} className="ml-2 underline">Retry</button>
                   </td>
                 </tr>
               ) : entries.length === 0 ? (

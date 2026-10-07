@@ -5,6 +5,7 @@ import { dashboardApi } from '../../api/dashboardApi';
 import { masterApi } from '../../api/masterApi';
 import StatusBadge from '../../components/common/StatusBadge';
 import { formatDateTime } from '../../utils/formatDateTime';
+import { ValueSkeleton } from '../../components/Skeleton';
 
 function getFilterDates(filterKey) {
   if (filterKey === 'all') return {};
@@ -53,13 +54,11 @@ export default function HeadOfficerDashboard() {
   const { data: routesData } = useQuery({
     queryKey: ['masters', 'routes'],
     queryFn: () => masterApi.getRoutes(),
-    staleTime: 5 * 60 * 1000,
   });
 
   const { data: vehiclesData } = useQuery({
     queryKey: ['masters', 'vehicles'],
     queryFn: () => masterApi.getVehicles(),
-    staleTime: 5 * 60 * 1000,
   });
 
   const routes = routesData?.items || [];
@@ -253,42 +252,42 @@ export default function HeadOfficerDashboard() {
         <div className="bg-surface border border-border rounded-xl p-5 shadow-sm">
           <span className="font-label text-label text-text-muted block mb-2">Total Batches</span>
           <div className="font-kpi-number text-kpi-number text-text tracking-tight text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.total}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.total}
           </div>
         </div>
 
         <div className="bg-surface border border-border rounded-xl p-5 shadow-sm">
           <span className="font-label text-label text-text-muted block mb-2">Created</span>
           <div className="font-kpi-number text-kpi-number text-text tracking-tight text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.created}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.created}
           </div>
         </div>
 
         <div className="bg-surface border border-border rounded-xl p-5 shadow-sm">
           <span className="font-label text-label text-text-muted block mb-2">Collected</span>
           <div className="font-kpi-number text-kpi-number text-text tracking-tight text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.collected}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.collected}
           </div>
         </div>
 
         <div className="bg-surface border border-border rounded-xl p-5 shadow-sm">
           <span className="font-label text-label text-text-muted block mb-2">In Transit</span>
           <div className="font-kpi-number text-kpi-number text-text tracking-tight text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.in_transit}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.in_transit}
           </div>
         </div>
 
         <div className="bg-surface border border-border rounded-xl p-5 shadow-sm">
           <span className="font-label text-label text-text-muted block mb-2">At RTS</span>
           <div className="font-kpi-number text-kpi-number text-text tracking-tight text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.at_rts}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.at_rts}
           </div>
         </div>
 
         <div className="bg-surface border border-border rounded-xl p-5 shadow-sm">
           <span className="font-label text-label text-text-muted block mb-2">Completed</span>
           <div className="font-kpi-number text-kpi-number text-primary tracking-tight text-2xl font-bold">
-            {isSummaryLoading ? '—' : kpis.completed}
+            {isSummaryLoading ? <ValueSkeleton /> : kpis.completed}
           </div>
         </div>
       </div>

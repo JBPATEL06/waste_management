@@ -2,6 +2,22 @@ import * as exportService from '../services/exportService.js';
 import { AppError, ErrorCodes } from '../utils/errors.js';
 import { auditActionEnum } from '../validators/auditLogValidators.js';
 
+export async function previewDataset(req, res, next) {
+  try {
+    const data = await exportService.fetchDatasetRows(req.params.dataset, {
+      ...req.query,
+      limit: 10,
+    });
+    res.json({
+      name: data.name,
+      columns: data.columns.map(({ key, header }) => ({ key, header })),
+      rows: data.rows,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function exportDataset(req, res, next) {
   try {
     const { dataset } = req.params;
@@ -22,4 +38,3 @@ export async function exportDataset(req, res, next) {
     next(err);
   }
 }
-

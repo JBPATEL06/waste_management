@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../components/Toast';
+import { LoadingButton } from '../components/LoadingButton';
 import TopBar from '../components/common/TopBar';
 import { STAGE_CONFIG } from '../constants/stages';
 import { dashboardApi } from '../api/dashboardApi';
+import { formatApiError } from '../utils/formatApiError';
 
 export default function Profile() {
   const { user, updateProfileName, changePassword } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
   // Role detection
   const roleLower = (user?.role || 'ADMIN').toLowerCase();
@@ -33,6 +37,7 @@ export default function Profile() {
   const [newPwd, setNewPwd] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
   const [pwdError, setPwdError] = useState('');
+  const [pwdSaving, setPwdSaving] = useState(false);
 
   // Fetch operator's real queue metrics if stage operator
   const { data: queueData } = useQuery({
@@ -55,9 +60,12 @@ export default function Profile() {
     try {
       await updateProfileName(fullName.trim());
       setSaveSuccess(true);
+      toast.success('Profile updated successfully.');
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {
-      setSaveError(err.message || 'Failed to update profile name');
+      const message = formatApiError(err, 'Failed to update profile name');
+      setSaveError(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }
@@ -80,15 +88,23 @@ export default function Profile() {
       return;
     }
 
+    setPwdSaving(true);
     try {
       await changePassword(currentPwd, newPwd);
       setShowPwdModal(false);
       setCurrentPwd('');
       setNewPwd('');
       setConfirmPwd('');
-      alert('Password updated successfully.');
+      toast.success('Password updated successfully.');
     } catch (err) {
-      setPwdError(err.message || 'Failed to update password');
+      const fields = Object.entries(err.fieldErrors || {}).slice(0, 3);
+      const message = fields.length
+        ? fields.map(([field, detail]) => `${field}: ${detail}`).join('\n')
+        : err.message || 'Failed to update password';
+      setPwdError(message);
+      toast.error(message);
+    } finally {
+      setPwdSaving(false);
     }
   };
 
@@ -315,23 +331,16 @@ export default function Profile() {
                         Profile updated successfully
                       </span>
                     )}
-                    <button
+                    <LoadingButton
                       type="submit"
+                      loading={saving}
+                      loadingText="Saving..."
                       disabled={saving}
                       className="h-10 px-5 bg-primary hover:bg-primary-hover text-on-primary rounded-lg font-body-medium text-body-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-primary flex items-center justify-center gap-2 self-end sm:self-auto cursor-pointer"
                     >
-                      {saving ? (
-                        <>
-                          <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
-                          <span>Saving...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="material-symbols-outlined text-[18px]">save</span>
-                          <span>Save Changes</span>
-                        </>
-                      )}
-                    </button>
+                      <span className="material-symbols-outlined text-[18px]">save</span>
+                      <span>Save Changes</span>
+                    </LoadingButton>
                   </div>
                 </div>
               </form>
@@ -380,11 +389,12 @@ export default function Profile() {
               <h3 className="font-section-title text-section-title text-text">Change Account Password</h3>
               <button
                 type="button"
+                disabled={pwdSaving}
                 onClick={() => {
                   setShowPwdModal(false);
                   setPwdError('');
                 }}
-                className="text-text-muted hover:text-text cursor-pointer"
+                className="text-text-muted hover:text-text cursor-pointer disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
@@ -436,17 +446,20 @@ export default function Profile() {
               <div className="mt-6 flex justify-end gap-2 pt-2 border-t border-border">
                 <button
                   type="button"
+                  disabled={pwdSaving}
                   onClick={() => setShowPwdModal(false)}
-                  className="h-10 px-4 border border-border rounded-lg text-body-medium text-text bg-surface hover:bg-background cursor-pointer"
+                  className="h-10 px-4 border border-border rounded-lg text-body-medium text-text bg-surface hover:bg-background cursor-pointer disabled:opacity-50"
                 >
                   Cancel
                 </button>
-                <button
+                <LoadingButton
                   type="submit"
+                  loading={pwdSaving}
+                  loadingText="Updating..."
                   className="h-10 px-4 bg-primary hover:bg-primary-hover text-on-primary rounded-lg text-body-medium cursor-pointer"
                 >
                   Update Password
-                </button>
+                </LoadingButton>
               </div>
             </form>
           </div>

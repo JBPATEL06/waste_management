@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+import { config } from '../config/env.js';
 import { query } from '../db/index.js';
 import { AppError, ErrorCodes } from '../utils/errors.js';
 import {
@@ -91,8 +92,8 @@ export async function login({ email, password, userAgent = null, ipAddress = nul
   await query(
     `INSERT INTO refresh_tokens (
        user_id, token_hash, family_id, expires_at, user_agent, ip_address
-     ) VALUES ($1, $2, $3, now() + INTERVAL '7 days', $4, $5)`,
-    [user.id, tokenHash, familyId, userAgent, ipAddress]
+     ) VALUES ($1, $2, $3, now() + ($6::int * INTERVAL '1 day'), $4, $5)`,
+    [user.id, tokenHash, familyId, userAgent, ipAddress, config.REFRESH_TOKEN_EXPIRES_DAYS]
   );
 
   return {
@@ -175,8 +176,8 @@ export async function refresh({ rawRefreshToken, userAgent = null, ipAddress = n
   await query(
     `INSERT INTO refresh_tokens (
        user_id, token_hash, family_id, expires_at, user_agent, ip_address
-     ) VALUES ($1, $2, $3, now() + INTERVAL '7 days', $4, $5)`,
-    [user.id, newTokenHash, tokenRecord.family_id, userAgent, ipAddress]
+     ) VALUES ($1, $2, $3, now() + ($6::int * INTERVAL '1 day'), $4, $5)`,
+    [user.id, newTokenHash, tokenRecord.family_id, userAgent, ipAddress, config.REFRESH_TOKEN_EXPIRES_DAYS]
   );
 
   const accessToken = signAccessToken(user);
@@ -276,8 +277,8 @@ export async function changePassword({ userId, currentPassword, newPassword, use
   await query(
     `INSERT INTO refresh_tokens (
        user_id, token_hash, family_id, expires_at, user_agent, ip_address
-     ) VALUES ($1, $2, $3, now() + INTERVAL '7 days', $4, $5)`,
-    [userId, tokenHash, familyId, userAgent, ipAddress]
+     ) VALUES ($1, $2, $3, now() + ($6::int * INTERVAL '1 day'), $4, $5)`,
+    [userId, tokenHash, familyId, userAgent, ipAddress, config.REFRESH_TOKEN_EXPIRES_DAYS]
   );
 
   return {
@@ -292,4 +293,3 @@ export async function changePassword({ userId, currentPassword, newPassword, use
     },
   };
 }
-

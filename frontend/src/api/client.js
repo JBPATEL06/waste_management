@@ -1,8 +1,9 @@
 /**
  * Centralized API Client with In-Memory Access Token Management & Automatic 401 Token Refresh
  */
+import { toastBus } from '../utils/toastBus';
 
-const BASE_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+const BASE_URL = (import.meta.env.DEV ? '/api' : import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
 
 function buildUrl(endpoint) {
   if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) {
@@ -18,6 +19,22 @@ function buildUrl(endpoint) {
 let inMemoryAccessToken = null;
 let isRefreshing = false;
 let failedQueue = [];
+let lastSessionExpiredToast = 0;
+
+function fetchWithRefreshLock(request) {
+  if (typeof navigator !== 'undefined' && navigator.locks?.request) {
+    return navigator.locks.request('wasteflow-auth-refresh', request);
+  }
+  return request();
+}
+
+function emitSessionExpiredToast() {
+  const now = Date.now();
+  if (now - lastSessionExpiredToast > 3000) {
+    lastSessionExpiredToast = now;
+    toastBus.emit('error', 'Session expired, please log in again');
+  }
+}
 
 export function getAccessToken() {
   return inMemoryAccessToken;
@@ -42,13 +59,50 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
+function extractFieldErrors(data) {
+  const fieldErrors = {};
+  if (!data) return fieldErrors;
+
+  const rawDetails = data?.error?.details || data?.errors || data?.error?.errors || data?.details;
+
+  if (Array.isArray(rawDetails)) {
+    rawDetails.forEach((err) => {
+      if (typeof err === 'string') {
+        fieldErrors.general = err;
+      } else if (err && typeof err === 'object') {
+        const lastPath = Array.isArray(err.path) ? err.path[err.path.length - 1] : err.path;
+        const field = err.field || lastPath || err.param || err.key;
+        const msg = err.message || err.msg || err.error || 'Invalid value';
+        if (field) {
+          fieldErrors[field] = msg;
+        }
+      }
+    });
+  } else if (rawDetails && typeof rawDetails === 'object') {
+    Object.entries(rawDetails).forEach(([k, v]) => {
+      if (typeof v === 'string') {
+        fieldErrors[k] = v;
+      } else if (v && typeof v === 'object') {
+        fieldErrors[k] = v.message || v.msg || JSON.stringify(v);
+      }
+    });
+  }
+  return fieldErrors;
+}
+
 export class ApiError extends Error {
-  constructor(status, code, message, details = null) {
+  constructor(status, code, message, details = null, fieldErrors = {}) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.code = code;
+    this.message = message;
     this.details = details;
+    this.fieldErrors = fieldErrors || {};
+    this.response = {
+      status,
+      data: details || { error: { code, message, details } }
+    };
   }
 }
 
@@ -75,9 +129,16 @@ export async function apiFetch(endpoint, options = {}, isRetry = false) {
 
   let response;
   try {
-    response = await fetch(url, fetchOptions);
+    response = endpoint.includes('/auth/refresh')
+      ? await fetchWithRefreshLock(() => fetch(url, fetchOptions))
+      : await fetch(url, fetchOptions);
   } catch (netErr) {
-    throw new ApiError(0, 'NETWORK_ERROR', 'Network connection failed. Please check your internet connection.');
+    const err = new ApiError(0, 'NETWORK_ERROR', 'Network connection failed. Please check your internet connection.', null, {});
+    err.status = 0;
+    err.code = 'NETWORK_ERROR';
+    err.message = 'Network connection failed. Please check your internet connection.';
+    err.fieldErrors = {};
+    throw err;
   }
 
   // Handle 401 Unauthorized with single token refresh
@@ -97,11 +158,13 @@ export async function apiFetch(endpoint, options = {}, isRetry = false) {
     isRefreshing = true;
 
     try {
-      const refreshRes = await fetch(buildUrl('/auth/refresh'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      });
+      const refreshRes = await fetchWithRefreshLock(() =>
+        fetch(buildUrl('/auth/refresh'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        })
+      );
 
       if (!refreshRes.ok) {
         throw new Error('Refresh token invalid or expired');
@@ -117,7 +180,13 @@ export async function apiFetch(endpoint, options = {}, isRetry = false) {
       clearAccessToken();
       // Dispatch custom event for AuthContext to catch and redirect
       window.dispatchEvent(new CustomEvent('auth:session-expired'));
-      throw new ApiError(401, 'SESSION_EXPIRED', 'Your session has expired. Please log in again.');
+      emitSessionExpiredToast();
+      const expiredError = new ApiError(401, 'SESSION_EXPIRED', 'Your session has expired. Please log in again.', null, {});
+      expiredError.status = 401;
+      expiredError.code = 'SESSION_EXPIRED';
+      expiredError.message = 'Your session has expired. Please log in again.';
+      expiredError.fieldErrors = {};
+      throw expiredError;
     } finally {
       isRefreshing = false;
     }
@@ -135,13 +204,28 @@ export async function apiFetch(endpoint, options = {}, isRetry = false) {
   }
 
   if (!response.ok) {
-    const errorObj = data?.error || {};
-    throw new ApiError(
-      response.status,
-      errorObj.code || `HTTP_${response.status}`,
-      errorObj.message || data?.message || response.statusText || 'An error occurred',
-      errorObj.details || null
+    const errorObj = (typeof data === 'object' && data !== null) ? (data.error || data) : {};
+    const status = response.status;
+    const code = errorObj.code || (status === 422 ? 'VALIDATION_FAILED' : `HTTP_${status}`);
+    const message = errorObj.message || (typeof data === 'string' ? data : null) || response.statusText || 'An error occurred';
+    const fieldErrors = extractFieldErrors(data);
+
+    const apiError = new ApiError(
+      status,
+      code,
+      message,
+      data?.error?.details || data?.errors || null,
+      fieldErrors
     );
+    apiError.status = status;
+    apiError.code = code;
+    apiError.message = message;
+    apiError.fieldErrors = fieldErrors;
+    apiError.response = {
+      status,
+      data,
+    };
+    throw apiError;
   }
 
   return data;
@@ -174,4 +258,3 @@ export const api = {
       ...(body ? { body: JSON.stringify(body) } : {}),
     }),
 };
-

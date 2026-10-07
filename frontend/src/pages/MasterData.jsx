@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { masterApi } from '../api/masterApi';
+import { useToast } from '../components/Toast';
+import { LoadingButton } from '../components/LoadingButton';
+import { TableSkeleton } from '../components/Skeleton';
+import { formatApiError } from '../utils/formatApiError';
 
 const TAB_TO_TYPE = {
   routes: 'routes',
@@ -34,17 +38,20 @@ export default function MasterData() {
 
   const items = masterData?.items || [];
 
+  const toast = useToast();
+
   // Mutations
   const createMutation = useMutation({
     mutationFn: (data) => masterApi.createItem(currentType, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['masterItems', activeTab] });
+      queryClient.invalidateQueries({ queryKey: ['masters', currentType] });
       setShowModal(false);
       setFormData({});
-      setModalError('');
+      toast.success('Record created successfully.');
     },
     onError: (err) => {
-      setModalError(err.message || 'Failed to create record');
+      toast.error(formatApiError(err, 'Failed to create record'));
     },
   });
 
@@ -52,12 +59,13 @@ export default function MasterData() {
     mutationFn: ({ id, data }) => masterApi.updateItem(currentType, id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['masterItems', activeTab] });
+      queryClient.invalidateQueries({ queryKey: ['masters', currentType] });
       setShowModal(false);
       setEditingItem(null);
-      setModalError('');
+      toast.success('Record updated successfully.');
     },
     onError: (err) => {
-      setModalError(err.message || 'Failed to update record');
+      toast.error(formatApiError(err, 'Failed to update record'));
     },
   });
 
@@ -65,9 +73,11 @@ export default function MasterData() {
     mutationFn: (id) => masterApi.deactivateItem(currentType, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['masterItems', activeTab] });
+      queryClient.invalidateQueries({ queryKey: ['masters', currentType] });
+      toast.success('Status updated successfully.');
     },
     onError: (err) => {
-      alert(err.message || 'Failed to toggle status');
+      toast.error(formatApiError(err, 'Failed to toggle status'));
     },
   });
 
@@ -85,7 +95,6 @@ export default function MasterData() {
     setModalMode('add');
     setEditingItem(null);
     setFormData({});
-    setModalError('');
     setShowModal(true);
   };
 
@@ -93,7 +102,6 @@ export default function MasterData() {
     setModalMode('edit');
     setEditingItem(item);
     setFormData({ ...item });
-    setModalError('');
     setShowModal(true);
   };
 
@@ -109,7 +117,6 @@ export default function MasterData() {
 
   const handleSaveModal = (e) => {
     e.preventDefault();
-    setModalError('');
 
     let payload = {};
     if (activeTab === 'routes') {
@@ -138,7 +145,7 @@ export default function MasterData() {
       payload = {
         name: formData.name,
         phone: formData.phone || '',
-        license_number: formData.license_number || formData.licenseNumber || 'MH-LIC-0000',
+        designation: formData.designation || '',
       };
     }
 
@@ -210,16 +217,9 @@ export default function MasterData() {
 
       {/* Table Card */}
       <div className="bg-surface rounded-xl border border-border overflow-hidden shadow-xs">
-        {isLoading && (
-          <div className="py-12 flex flex-col items-center justify-center gap-3 text-text-muted">
-            <span className="material-symbols-outlined animate-spin text-primary text-[28px]">
-              progress_activity
-            </span>
-            <span className="text-sm">Loading master records...</span>
-          </div>
-        )}
+        {isLoading && <TableSkeleton columns={4} />}
 
-        {isError && (
+        {isError && !masterData && (
           <div className="py-12 flex flex-col items-center justify-center gap-3 text-center p-4">
             <span className="material-symbols-outlined text-error text-[32px]">error</span>
             <span className="text-sm text-text font-medium">{error?.message || 'Failed to load records'}</span>
@@ -232,7 +232,7 @@ export default function MasterData() {
           </div>
         )}
 
-        {!isLoading && !isError && (
+        {!isLoading && (masterData || !isError) && (
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -260,7 +260,9 @@ export default function MasterData() {
                         {r.description ||
                           r.location ||
                           (r.vehicle_type ? `${r.vehicle_type} (${r.capacity_kg} kg)` : null) ||
-                          (r.phone ? `Phone: ${r.phone}` : null) ||
+                          (activeTab === 'drivers'
+                            ? [r.designation, r.phone ? `Phone: ${r.phone}` : null].filter(Boolean).join(' · ')
+                            : null) ||
                           '—'}
                       </td>
                       <td className="py-3.5 px-4">
@@ -287,6 +289,7 @@ export default function MasterData() {
                           </button>
                           <button
                             onClick={() => handleToggleActive(r)}
+                            disabled={deactivateMutation.isPending || updateMutation.isPending}
                             className="text-text-muted hover:text-error p-1 cursor-pointer"
                             title={r.is_active ? 'Deactivate' : 'Activate'}
                           >
@@ -307,7 +310,14 @@ export default function MasterData() {
 
       {/* Add / Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !createMutation.isPending && !updateMutation.isPending) {
+              setShowModal(false);
+            }
+          }}
+        >
           <div className="bg-surface rounded-xl border border-border max-w-[480px] w-full p-6 flex flex-col gap-4 shadow-xl animate-fade-in">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="font-section-title text-section-title text-text">
@@ -315,18 +325,13 @@ export default function MasterData() {
               </h3>
               <button
                 type="button"
-                onClick={() => setShowModal(false)}
-                className="text-text-muted hover:text-text cursor-pointer"
+                disabled={createMutation.isPending || updateMutation.isPending}
+                onClick={() => !createMutation.isPending && !updateMutation.isPending && setShowModal(false)}
+                className="text-text-muted hover:text-text cursor-pointer disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
-
-            {modalError && (
-              <div className="p-3 bg-error-soft text-error text-caption rounded-lg border border-error/20">
-                {modalError}
-              </div>
-            )}
 
             <form onSubmit={handleSaveModal} className="flex flex-col gap-4">
               {activeTab === 'routes' && (
@@ -518,17 +523,17 @@ export default function MasterData() {
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-label text-label text-text-muted" htmlFor="driverLic">
-                      License Number *
+                    <label className="font-label text-label text-text-muted" htmlFor="driverDesignation">
+                      Designation *
                     </label>
                     <input
-                      id="driverLic"
+                      id="driverDesignation"
                       type="text"
                       required
-                      placeholder="MH-02-2020-00123"
-                      value={formData.license_number || formData.licenseNumber || ''}
-                      onChange={(e) => setFormData({ ...formData, license_number: e.target.value })}
-                      className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body font-mono text-sm"
+                      placeholder="e.g. Driver or Supervisor"
+                      value={formData.designation || ''}
+                      onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+                      className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body"
                     />
                   </div>
                 </>
@@ -537,18 +542,20 @@ export default function MasterData() {
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-border mt-2">
                 <button
                   type="button"
-                  onClick={() => setShowModal(false)}
-                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                  onClick={() => !createMutation.isPending && !updateMutation.isPending && setShowModal(false)}
+                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer disabled:opacity-50"
                 >
                   Cancel
                 </button>
-                <button
+                <LoadingButton
                   type="submit"
-                  disabled={createMutation.isPending || updateMutation.isPending}
+                  loading={createMutation.isPending || updateMutation.isPending}
+                  loadingText="Saving..."
                   className="h-10 px-5 bg-primary hover:bg-primary-hover text-white rounded-lg transition-colors font-medium shadow-xs cursor-pointer disabled:opacity-75"
                 >
-                  {createMutation.isPending || updateMutation.isPending ? 'Saving...' : 'Save Record'}
-                </button>
+                  Save Record
+                </LoadingButton>
               </div>
             </form>
           </div>

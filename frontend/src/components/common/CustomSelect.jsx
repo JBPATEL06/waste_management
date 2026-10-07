@@ -13,6 +13,7 @@ export default function CustomSelect({
   className = '',
   id,
   disabled = false,
+  loading = false,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -48,7 +49,7 @@ export default function CustomSelect({
   }, [isOpen]);
 
   const selectedOption = options.find((opt) => String(opt.value) === String(value));
-  const displayText = selectedOption ? selectedOption.label : placeholder;
+  const displayText = loading ? 'Loading...' : selectedOption ? selectedOption.label : placeholder;
 
   const handleSelect = (optValue) => {
     if (onChange) {
@@ -63,7 +64,7 @@ export default function CustomSelect({
       <button
         id={id}
         type="button"
-        disabled={disabled}
+        disabled={disabled || loading}
         onClick={() => setIsOpen((prev) => !prev)}
         className={`w-full h-10 px-3 bg-slate-100 hover:bg-slate-200/70 text-text text-sm rounded-lg flex items-center justify-between transition-colors border ${
           isOpen ? 'border-primary ring-2 ring-primary/20 bg-white' : 'border-transparent'
@@ -121,4 +122,3 @@ export default function CustomSelect({
     </div>
   );
 }
-

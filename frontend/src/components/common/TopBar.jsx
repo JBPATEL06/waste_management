@@ -1,36 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { LoadingButton } from '../LoadingButton';
+import BrandLogo from './BrandLogo';
 
 export default function TopBar({ onToggleSidebar }) {
   const { user, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogout = async () => {
+    setIsLoggingOut(true);
     try {
       await logout();
+    } catch {
+      // AuthContext reports the failure.
     } finally {
       navigate('/login');
-    }
-  };
-
-  const getDashboardPath = (role) => {
-    switch (role) {
-      case 'ADMIN':
-        return '/admin/dashboard';
-      case 'HEAD_OFFICER':
-        return '/ho/dashboard';
-      case 'COLLECTION':
-        return '/collection/dashboard';
-      case 'TRANSPORTATION':
-        return '/transportation/dashboard';
-      case 'RTS':
-        return '/rts/dashboard';
-      case 'PROCESSING':
-        return '/processing/dashboard';
-      default:
-        return '/';
+      setIsLoggingOut(false);
     }
   };
 
@@ -68,9 +56,7 @@ export default function TopBar({ onToggleSidebar }) {
           </button>
         )}
         <Link to="/" className="flex items-center gap-2 sm:gap-2.5 hover:opacity-90 transition-opacity">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white shrink-0">
-            <span className="material-symbols-outlined text-[20px]">recycling</span>
-          </div>
+          <BrandLogo />
           <span className="font-semibold text-[15px] sm:text-[17px] text-text tracking-tight truncate max-w-[150px] sm:max-w-none">
             Waste Journey Tracker
           </span>
@@ -85,16 +71,7 @@ export default function TopBar({ onToggleSidebar }) {
             {getRoleBadge(user.role)}
           </div>
           <div className="h-4 w-[1px] bg-border hidden sm:block"></div>
-          {location.pathname === '/profile' ? (
-            <Link
-              to={getDashboardPath(user.role)}
-              className="text-xs sm:text-sm font-semibold text-primary hover:text-primary-hover transition-colors flex items-center gap-1 bg-primary-soft px-2.5 py-1 rounded-lg border border-primary/20 shrink-0"
-            >
-              <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-              <span className="hidden sm:inline">Back to Dashboard</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-          ) : (
+          {location.pathname !== '/profile' && (
             <Link
               to="/profile"
               className="text-sm font-medium text-text-muted hover:text-text transition-colors hidden sm:inline"
@@ -102,14 +79,17 @@ export default function TopBar({ onToggleSidebar }) {
               Profile
             </Link>
           )}
-          <button
+          <LoadingButton
+            type="button"
             onClick={handleLogout}
+            loading={isLoggingOut}
+            loadingText="Signing out..."
             className="text-sm font-medium text-text-muted hover:text-error transition-colors flex items-center gap-1 p-1 sm:p-0 cursor-pointer"
             title="Logout"
           >
             <span className="material-symbols-outlined text-[20px] sm:text-[18px]">logout</span>
             <span className="hidden sm:inline">Logout</span>
-          </button>
+          </LoadingButton>
         </div>
       ) : (
         <div className="flex items-center gap-4">
@@ -130,4 +110,3 @@ export default function TopBar({ onToggleSidebar }) {
     </header>
   );
 }
-

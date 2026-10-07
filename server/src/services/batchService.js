@@ -290,9 +290,16 @@ export async function getBatchByIdOrCode(identifier, user) {
        se.*,
        u.name AS creator_name,
        cd.collection_area, cd.driver_id, d.name AS driver_name,
+       cd.route_id AS collection_route_id, cd.vehicle_id AS collection_vehicle_id,
+       cd.waste_type AS collection_waste_type, cd.quantity AS collection_quantity,
        td.start_location, td.destination, td.departure_time, td.arrival_time, td.duration_minutes,
+       td.rts_location_id AS transportation_rts_location_id,
+       td.vehicle_id AS transportation_vehicle_id,
        rd.quantity_received, rd.handover_details, rd.variance_pct, rd.is_flagged,
-       pd.quantity AS processed_quantity, pd.final_status
+       rd.rts_location_id AS rts_location_id,
+       rd.waste_category_id, rd.next_facility_id,
+       pd.quantity AS processed_quantity, pd.final_status,
+       pd.facility_id AS processing_facility_id, pd.process_type_id
      FROM stage_entries se
      LEFT JOIN users u ON u.id = se.created_by
      LEFT JOIN collection_details cd ON cd.entry_id = se.id
@@ -527,32 +534,49 @@ export async function deleteBatch(batchId, reason, adminId) {
     const batch = batchRes.rows[0];
     const actualBatchId = batch.id;
 
-    // 2. Check if ANY row exists in stage_entries (any status)
+    // 2. Snapshot entries and their stage-specific data before cascading deletion.
     const entriesRes = await client.query(
-      'SELECT count(*) FROM stage_entries WHERE batch_id = $1',
+      `SELECT
+         se.*,
+         to_jsonb(cd) AS collection_details,
+         to_jsonb(td) AS transportation_details,
+         to_jsonb(rd) AS rts_details,
+         to_jsonb(pd) AS processing_details
+       FROM stage_entries se
+       LEFT JOIN collection_details cd ON cd.entry_id = se.id
+       LEFT JOIN transportation_details td ON td.entry_id = se.id
+       LEFT JOIN rts_details rd ON rd.entry_id = se.id
+       LEFT JOIN processing_details pd ON pd.entry_id = se.id
+       WHERE se.batch_id = $1
+       ORDER BY se.created_at, se.version_no`,
       [actualBatchId]
     );
-    if (Number(entriesRes.rows[0].count) > 0) {
-      throw new AppError(409, ErrorCodes.DELETE_BLOCKED, 'Batch has entries, cannot delete');
-    }
 
-    // 3. Fetch assignments for audit old_values
+    // 3. Snapshot assignments before they cascade with the batch.
     const assignRes = await client.query(
-      'SELECT stage, user_id FROM batch_assignments WHERE batch_id = $1',
+      'SELECT * FROM batch_assignments WHERE batch_id = $1 ORDER BY stage, assigned_at',
       [actualBatchId]
     );
 
     const oldValues = {
+      batch,
       batch_code: batch.batch_code,
       waste_type: batch.waste_type,
       quantity: batch.quantity,
       source_area: batch.source_area,
-      assigned_user_ids: assignRes.rows.map((a) => a.user_id),
+      assignments: assignRes.rows,
+      stage_entries: entriesRes.rows,
       reason,
       performed_by: adminId,
     };
 
-    // 4. Insert audit_log (action BATCH_DELETE, batch_id NULL)
+    // Break self-references so all entry versions can cascade-delete together.
+    await client.query(
+      'UPDATE stage_entries SET supersedes_id = NULL WHERE batch_id = $1',
+      [actualBatchId]
+    );
+
+    // Keep the deletion event independent of rows removed by the cascade.
     await logAudit({
       action: 'BATCH_DELETE',
       batchId: null,
@@ -565,7 +589,7 @@ export async function deleteBatch(batchId, reason, adminId) {
       client,
     });
 
-    // 5. Delete the batch (assignments cascade)
+    // Assignments, entries, and stage-specific details cascade with the batch.
     await client.query('DELETE FROM batches WHERE id = $1', [actualBatchId]);
 
     await client.query('COMMIT');
@@ -582,5 +606,3 @@ export async function deleteBatch(batchId, reason, adminId) {
     client.release();
   }
 }
-
-

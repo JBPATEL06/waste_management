@@ -567,6 +567,43 @@ export async function adminEditEntry(entryId, body, adminId) {
       throw new AppError(409, ErrorCodes.CONFLICT, 'Only ACTIVE entries can be edited');
     }
 
+    const editFields = Object.keys(data);
+    if (editFields.length > 0 && editFields.every((field) => field === 'note' || field === 'notes')) {
+      const note = data.note ?? data.notes;
+      if (typeof note !== 'string' || note.length > 500) {
+        throw new AppError(422, ErrorCodes.VALIDATION_FAILED, 'Note must be a string no longer than 500 characters');
+      }
+
+      const updatedEntryRes = await client.query(
+        `UPDATE stage_entries SET note = $1 WHERE id = $2 RETURNING *`,
+        [note.trim() || null, entryId]
+      );
+      const updatedEntry = updatedEntryRes.rows[0];
+      const updatedBatch = await deriveBatchStatus(client, currentEntry.batch_id);
+
+      await logAudit({
+        action: 'ENTRY_ADMIN_EDIT',
+        batchId: currentEntry.batch_id,
+        entryId,
+        entityType: 'stage_entry',
+        entityId: entryId,
+        reason,
+        oldValues: currentEntry,
+        newValues: updatedEntry,
+        performedBy: adminId,
+        client,
+      });
+
+      await client.query('COMMIT');
+      invalidateDashboardCache();
+
+      return {
+        entry: updatedEntry,
+        detail: null,
+        batch: updatedBatch,
+      };
+    }
+
     const stage = currentEntry.stage;
     const validatedData = validateStagePayload(stage, data);
 
@@ -863,4 +900,3 @@ export async function getMyHistory(user, { search, status, start_date, end_date,
     offset,
   };
 }
-

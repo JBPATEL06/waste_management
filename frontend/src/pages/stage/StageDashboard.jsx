@@ -6,6 +6,7 @@ import { dashboardApi } from '../../api/dashboardApi';
 import StatusBadge from '../../components/common/StatusBadge';
 
 import { formatDateTime } from '../../utils/formatDateTime';
+import { ValueSkeleton } from '../../components/Skeleton';
 
 
 export default function StageDashboard({ role: propRole }) {
@@ -133,7 +134,7 @@ export default function StageDashboard({ role: propRole }) {
           </div>
           <div className="mt-space-md flex items-baseline justify-between">
             <span className="font-kpi-number text-kpi-number text-text text-2xl font-bold">
-              {isLoading ? '—' : counts.ready_count}
+              {isLoading ? <ValueSkeleton /> : counts.ready_count}
             </span>
             <span className="font-caption text-caption text-primary-container whitespace-nowrap">
               Action needed
@@ -161,7 +162,7 @@ export default function StageDashboard({ role: propRole }) {
           </div>
           <div className="mt-space-md flex items-baseline justify-between">
             <span className="font-kpi-number text-kpi-number text-text text-2xl font-bold">
-              {isLoading ? '—' : counts.locked_count}
+              {isLoading ? <ValueSkeleton /> : counts.locked_count}
             </span>
             <span className="font-caption text-caption text-badge-transit-text whitespace-nowrap">
               Waiting previous stage
@@ -189,7 +190,7 @@ export default function StageDashboard({ role: propRole }) {
           </div>
           <div className="mt-space-md flex items-baseline justify-between">
             <span className="font-kpi-number text-kpi-number text-text text-2xl font-bold">
-              {isLoading ? '—' : counts.submitted_count}
+              {isLoading ? <ValueSkeleton /> : counts.submitted_count}
             </span>
             <span className="font-caption text-caption text-text-muted whitespace-nowrap">
               Completed entries

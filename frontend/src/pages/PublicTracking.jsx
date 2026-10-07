@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QRCodeCanvas } from 'qrcode.react';
 import { publicApi } from '../api/publicApi';
 import StatusBadge from '../components/common/StatusBadge';
+import BrandLogo from '../components/common/BrandLogo';
 import { getPublicBaseUrl } from '../utils/url';
 import { printBatchManifest } from '../utils/printManifest';
 
@@ -21,7 +22,7 @@ export default function PublicTracking() {
     queryKey: ['publicBatch', batchCode],
     queryFn: () => publicApi.trackBatch(batchCode),
     enabled: Boolean(batchCode),
-    retry: 1,
+    staleTime: 30 * 1000,
   });
 
   const batch = data?.batch || (data?.batch_code ? data : null);
@@ -66,9 +67,7 @@ export default function PublicTracking() {
       <header className="h-14 bg-surface border-b border-border flex items-center px-6">
         <div className="max-w-[720px] w-full mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white shrink-0">
-              <span className="material-symbols-outlined text-[20px]">recycling</span>
-            </div>
+            <BrandLogo />
             <span className="font-semibold text-[17px] text-text tracking-tight">
               Waste Journey Tracker
             </span>

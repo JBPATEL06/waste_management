@@ -6,7 +6,7 @@ const router = Router();
 
 router.use(authenticate, requireRole('ADMIN', 'HEAD_OFFICER'));
 
+router.get('/:dataset/preview', exportController.previewDataset);
 router.get('/:dataset', exportController.exportDataset);
 
 export default router;
-

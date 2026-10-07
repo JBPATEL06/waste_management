@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import BrandLogo from '../components/common/BrandLogo';
 
 export default function PublicSearch() {
   const [batchId, setBatchId] = useState('');
@@ -21,9 +22,7 @@ export default function PublicSearch() {
         <div className="flex flex-col w-full items-center">
           {/* Logo */}
           <div className="flex items-center gap-space-sm mb-space-xl">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white shrink-0">
-              <span className="material-symbols-outlined text-[20px]">recycling</span>
-            </div>
+            <BrandLogo />
             <span className="font-section-title text-section-title text-text tracking-tight font-semibold">
               Waste Journey Tracker
             </span>

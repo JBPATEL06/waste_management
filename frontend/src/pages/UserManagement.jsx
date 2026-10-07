@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { usersApi } from '../api/usersApi';
+import { useToast } from '../components/Toast';
+import { LoadingButton } from '../components/LoadingButton';
+import { TableSkeleton } from '../components/Skeleton';
 
 export default function UserManagement() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedRole, setSelectedRole] = useState('ALL');
   const [selectedStatus, setSelectedStatus] = useState('ALL');
 
@@ -16,6 +20,11 @@ export default function UserManagement() {
   const [pwdCopied, setPwdCopied] = useState(false);
   const [formError, setFormError] = useState('');
 
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   // New user form state
   const [newUser, setNewUser] = useState({
     name: '',
@@ -25,17 +34,18 @@ export default function UserManagement() {
 
   // Query users
   const { data: usersData, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ['usersList', selectedRole, selectedStatus, searchTerm],
+    queryKey: ['usersList', selectedRole, selectedStatus, debouncedSearch],
     queryFn: () => {
       const params = {};
       if (selectedRole !== 'ALL') params.role = selectedRole;
       if (selectedStatus === 'ACTIVE') params.is_active = true;
       if (selectedStatus === 'INACTIVE') params.is_active = false;
-      if (searchTerm.trim()) params.search = searchTerm.trim();
+      if (debouncedSearch.trim()) params.search = debouncedSearch.trim();
       return usersApi.getUsers(params);
     },
   });
 
+  const toast = useToast();
   const users = usersData?.users || [];
 
   // Mutations
@@ -43,9 +53,10 @@ export default function UserManagement() {
     mutationFn: (data) => usersApi.createUser(data),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['usersList'] });
+      queryClient.invalidateQueries({ queryKey: ['masters', 'users'] });
       setShowAddModal(false);
       setNewUser({ name: '', email: '', role: 'COLLECTION' });
-      setFormError('');
+      toast.success('User created successfully.');
       const pwd = res?.temporaryPassword || res?.tempPassword || res?.temporary_password;
       if (pwd) {
         setTempPasswordModal({
@@ -57,7 +68,14 @@ export default function UserManagement() {
       }
     },
     onError: (err) => {
-      setFormError(err.message || 'Failed to create user');
+      let errMsg = err.message || 'Failed to create user';
+      if ((err.status === 422 || err.code === 'VALIDATION_FAILED') && err.fieldErrors && Object.keys(err.fieldErrors).length > 0) {
+        errMsg = Object.entries(err.fieldErrors)
+          .slice(0, 3)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n');
+      }
+      toast.error(errMsg);
     },
   });
 
@@ -65,12 +83,20 @@ export default function UserManagement() {
     mutationFn: ({ id, data }) => usersApi.updateUser(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['usersList'] });
+      queryClient.invalidateQueries({ queryKey: ['masters', 'users'] });
       setShowEditModal(false);
       setCurrentUser(null);
-      setFormError('');
+      toast.success('User updated successfully.');
     },
     onError: (err) => {
-      setFormError(err.message || 'Failed to update user');
+      let errMsg = err.message || 'Failed to update user';
+      if ((err.status === 422 || err.code === 'VALIDATION_FAILED') && err.fieldErrors && Object.keys(err.fieldErrors).length > 0) {
+        errMsg = Object.entries(err.fieldErrors)
+          .slice(0, 3)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n');
+      }
+      toast.error(errMsg);
     },
   });
 
@@ -85,9 +111,10 @@ export default function UserManagement() {
         userName: targetUser?.name || 'User',
       });
       setPwdCopied(false);
+      toast.success('Temporary password generated.');
     },
     onError: (err) => {
-      alert(err.message || 'Failed to reset password');
+      toast.error(err.message || 'Failed to reset password');
     },
   });
 
@@ -95,22 +122,22 @@ export default function UserManagement() {
     mutationFn: (id) => usersApi.deactivateUser(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['usersList'] });
+      queryClient.invalidateQueries({ queryKey: ['masters', 'users'] });
+      toast.success('User deactivated successfully.');
     },
     onError: (err) => {
-      alert(err.message || 'Failed to deactivate user. User may have active batch assignments.');
+      toast.error(err.message || 'Failed to deactivate user. User may have active batch assignments.');
     },
   });
 
   const handleAddUser = (e) => {
     e.preventDefault();
-    setFormError('');
     createMutation.mutate(newUser);
   };
 
   const handleEditUser = (e) => {
     e.preventDefault();
     if (!currentUser) return;
-    setFormError('');
     updateMutation.mutate({
       id: currentUser.id,
       data: { name: currentUser.name, is_active: currentUser.is_active },
@@ -237,16 +264,9 @@ export default function UserManagement() {
 
       {/* Users Table */}
       <div className="bg-surface rounded-xl border border-border overflow-hidden shadow-xs">
-        {isLoading && (
-          <div className="py-12 flex flex-col items-center justify-center gap-3 text-text-muted">
-            <span className="material-symbols-outlined animate-spin text-primary text-[28px]">
-              progress_activity
-            </span>
-            <span className="text-sm">Loading users directory...</span>
-          </div>
-        )}
+        {isLoading && <TableSkeleton columns={5} />}
 
-        {isError && (
+        {isError && !usersData && (
           <div className="py-12 flex flex-col items-center justify-center gap-3 text-center p-4">
             <span className="material-symbols-outlined text-error text-[32px]">error</span>
             <span className="text-sm text-text font-medium">{error?.message || 'Failed to load users'}</span>
@@ -259,7 +279,7 @@ export default function UserManagement() {
           </div>
         )}
 
-        {!isLoading && !isError && (
+        {!isLoading && (usersData || !isError) && (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
@@ -380,24 +400,26 @@ export default function UserManagement() {
 
       {/* Add User Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !createMutation.isPending) {
+              setShowAddModal(false);
+            }
+          }}
+        >
           <div className="bg-surface rounded-xl border border-border max-w-[480px] w-full p-6 flex flex-col gap-5 shadow-xl animate-fade-in">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="font-section-title text-section-title text-text">Create New User</h3>
               <button
                 type="button"
-                onClick={() => setShowAddModal(false)}
-                className="text-text-muted hover:text-text cursor-pointer"
+                disabled={createMutation.isPending}
+                onClick={() => !createMutation.isPending && setShowAddModal(false)}
+                className="text-text-muted hover:text-text cursor-pointer disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
-
-            {formError && (
-              <div className="p-3 bg-error-soft text-error text-caption rounded-lg border border-error/20">
-                {formError}
-              </div>
-            )}
 
             <form onSubmit={handleAddUser} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
@@ -408,10 +430,11 @@ export default function UserManagement() {
                   id="userName"
                   type="text"
                   required
+                  disabled={createMutation.isPending}
                   placeholder="e.g. Ramesh Kulkarni"
                   value={newUser.name}
                   onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-75"
                 />
               </div>
 
@@ -423,10 +446,11 @@ export default function UserManagement() {
                   id="userEmail"
                   type="email"
                   required
+                  disabled={createMutation.isPending}
                   placeholder="name@cleanwaste.org"
                   value={newUser.email}
                   onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-75"
                 />
               </div>
 
@@ -436,9 +460,10 @@ export default function UserManagement() {
                 </label>
                 <select
                   id="userRole"
+                  disabled={createMutation.isPending}
                   value={newUser.role}
                   onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-75"
                 >
                   <option value="COLLECTION">Collection</option>
                   <option value="TRANSPORTATION">Transportation</option>
@@ -452,18 +477,20 @@ export default function UserManagement() {
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-border">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
-                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer"
+                  disabled={createMutation.isPending}
+                  onClick={() => !createMutation.isPending && setShowAddModal(false)}
+                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer disabled:opacity-50"
                 >
                   Cancel
                 </button>
-                <button
+                <LoadingButton
                   type="submit"
-                  disabled={createMutation.isPending}
+                  loading={createMutation.isPending}
+                  loadingText="Creating..."
                   className="h-10 px-5 bg-primary hover:bg-primary-hover text-white rounded-lg transition-colors font-medium shadow-xs cursor-pointer disabled:opacity-75"
                 >
-                  {createMutation.isPending ? 'Creating...' : 'Create User'}
-                </button>
+                  Create User
+                </LoadingButton>
               </div>
             </form>
           </div>
@@ -528,24 +555,26 @@ export default function UserManagement() {
 
       {/* Edit User Modal */}
       {showEditModal && currentUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !updateMutation.isPending) {
+              setShowEditModal(false);
+            }
+          }}
+        >
           <div className="bg-surface rounded-xl border border-border max-w-[460px] w-full p-6 flex flex-col gap-4 shadow-xl animate-fade-in">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="font-section-title text-section-title text-text">Edit User</h3>
               <button
                 type="button"
-                onClick={() => setShowEditModal(false)}
-                className="text-text-muted hover:text-text cursor-pointer"
+                disabled={updateMutation.isPending}
+                onClick={() => !updateMutation.isPending && setShowEditModal(false)}
+                className="text-text-muted hover:text-text cursor-pointer disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
-
-            {formError && (
-              <div className="p-3 bg-error-soft text-error text-caption rounded-lg border border-error/20">
-                {formError}
-              </div>
-            )}
 
             <form onSubmit={handleEditUser} className="flex flex-col gap-4">
               {/* Email (Read-only) */}
@@ -589,9 +618,10 @@ export default function UserManagement() {
                   id="editName"
                   type="text"
                   required
+                  disabled={updateMutation.isPending}
                   value={currentUser.name}
                   onChange={(e) => setCurrentUser({ ...currentUser, name: e.target.value })}
-                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="h-10 px-3 bg-surface border border-border rounded-lg text-text font-body text-body focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-75"
                 />
               </div>
 
@@ -600,9 +630,10 @@ export default function UserManagement() {
                 <input
                   id="editActive"
                   type="checkbox"
+                  disabled={updateMutation.isPending}
                   checked={currentUser.is_active}
                   onChange={(e) => setCurrentUser({ ...currentUser, is_active: e.target.checked })}
-                  className="h-4 w-4 rounded border-border text-primary focus:ring-primary cursor-pointer"
+                  className="h-4 w-4 rounded border-border text-primary focus:ring-primary cursor-pointer disabled:opacity-75"
                 />
                 <label htmlFor="editActive" className="text-sm text-text font-medium cursor-pointer">
                   Account Active {currentUser.is_active ? '(Enabled)' : '(Deactivated - user cannot log in)'}
@@ -612,18 +643,20 @@ export default function UserManagement() {
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-border">
                 <button
                   type="button"
-                  onClick={() => setShowEditModal(false)}
-                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer"
+                  disabled={updateMutation.isPending}
+                  onClick={() => !updateMutation.isPending && setShowEditModal(false)}
+                  className="h-10 px-4 bg-surface border border-border text-text rounded-lg hover:bg-background transition-colors cursor-pointer disabled:opacity-50"
                 >
                   Cancel
                 </button>
-                <button
+                <LoadingButton
                   type="submit"
-                  disabled={updateMutation.isPending}
+                  loading={updateMutation.isPending}
+                  loadingText="Saving..."
                   className="h-10 px-5 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors font-medium shadow-xs cursor-pointer disabled:opacity-75"
                 >
-                  {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
-                </button>
+                  Save Changes
+                </LoadingButton>
               </div>
             </form>
           </div>
